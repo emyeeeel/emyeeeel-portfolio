@@ -1,0 +1,29 @@
+body.cursor-none,
+body.cursor-none a,
+body.cursor-none button {
+  cursor: none;
+}
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--coral);
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  transition:
+    width 150ms ease,
+    height 150ms ease,
+    opacity 150ms ease;
+  will-change: transform;
+}
+
+.cursor--hover {
+  width: 34px;
+  height: 34px;
+  opacity: 0.35;
+}

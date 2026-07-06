@@ -1,0 +1,71 @@
+.about-page {
+  padding-top: 56px;
+}
+
+.about-page__content {
+  margin-bottom: 56px;
+}
+
+.about-page__todo {
+  border: 1px dashed var(--placeholder-border-on-bone);
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 560px;
+  margin: 0 0 20px;
+}
+
+.about-page__todo-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--muted-on-bone);
+}
+
+.about-page__todo-bar {
+  display: block;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--placeholder-border-on-bone);
+  opacity: 0.35;
+}
+
+.about-page__todo-bar--full {
+  width: 100%;
+}
+
+.about-page__todo-bar--short {
+  width: 40%;
+}
+
+.about-page__photo-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.about-page__photo-img,
+.about-page__photo-placeholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.about-page__photo-placeholder {
+  border: 1px dashed var(--placeholder-border-on-bone);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+}
+
+.about-page__photo-placeholder span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--muted-on-bone);
+}

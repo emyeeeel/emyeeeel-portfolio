@@ -1,0 +1,129 @@
+.contact {
+  padding: 120px 0 96px;
+  text-align: center;
+}
+
+.contact__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.contact__label {
+  color: var(--lilac);
+  margin: 0 0 24px;
+}
+
+.contact__headline {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--size-contact-headline);
+  line-height: 1.03;
+  color: var(--bone);
+  margin: 0 0 40px;
+}
+
+.contact__headline span {
+  display: block;
+}
+
+.contact__period {
+  color: var(--coral);
+}
+
+.contact__ctas {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0 0 40px;
+}
+
+.contact__cta {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 14px 24px;
+  border-radius: 999px;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.contact__cta--primary {
+  background: var(--coral);
+  color: var(--ink);
+}
+
+.contact__cta--secondary {
+  background: transparent;
+  color: var(--bone);
+  border: 1px dashed var(--ink-dashed);
+}
+
+@media (hover: hover) {
+  .contact__cta--primary:hover {
+    background: var(--bone);
+  }
+
+  .contact__cta--secondary:hover {
+    color: var(--coral);
+    border-color: var(--coral);
+  }
+
+  .contact__line a:hover {
+    color: var(--coral);
+  }
+}
+
+.contact__line {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--lilac);
+  margin: 0;
+  max-width: 100%;
+  word-break: break-word;
+}
+
+.footer {
+  border-top: 1px solid var(--ink-border);
+}
+
+.footer__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--lilac);
+  opacity: 0.7;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .contact {
+    padding: 88px 0 72px;
+  }
+
+  .contact__ctas {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .contact__cta {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer__inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}

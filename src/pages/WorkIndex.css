@@ -1,0 +1,50 @@
+.work-page {
+  padding-top: 56px;
+}
+
+.work-filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.work-filters__pill {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px dashed var(--ink-dashed);
+  color: var(--lilac);
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+@media (hover: hover) {
+  .work-filters__pill:hover {
+    border-color: var(--coral);
+    color: var(--bone);
+  }
+}
+
+.work-filters__pill--active {
+  background: var(--coral);
+  border-color: var(--coral);
+  color: var(--ink);
+}
+
+.work__list {
+  animation: work-fade 150ms ease;
+}
+
+@keyframes work-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,47 @@
+.wipe {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--coral);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transform: translateY(100%);
+}
+
+.wipe--idle {
+  transform: translateY(100%);
+}
+
+.wipe--covering {
+  transform: translateY(0%);
+  transition: transform 190ms ease-in-out;
+}
+
+.wipe--held {
+  transform: translateY(0%);
+}
+
+.wipe--revealing {
+  transform: translateY(-100%);
+  transition: transform 190ms ease-in-out;
+}
+
+.wipe__mark.logotype {
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  opacity: 0;
+}
+
+.wipe__mark .logotype__chevron,
+.wipe__mark .logotype__cursor {
+  color: var(--ink);
+  background: var(--ink);
+}
+
+.wipe--held .wipe__mark {
+  opacity: 1;
+  transition: opacity 60ms ease;
+}
