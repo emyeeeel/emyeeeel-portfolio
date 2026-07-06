@@ -75,7 +75,7 @@ const projects = [
     index: "03",
     title: "Paagi",
     tag: "ai / ml",
-    mediaSrc: "../../dist/assets/projects/paagi/paagi.gif",
+    mediaSrc: "/assets/paagi/paagi.gif",
     mediaLabel: "box-sizing visual",
     pitch:
       "Dynamic box-sizing algorithms to cut logistics packaging waste — pitched to Gothong Southern executives. 1st place of 38 teams.",
@@ -97,12 +97,12 @@ const projects = [
     // outcomeTodo:
     //   "TODO(amiel): add the projected waste/cost reduction figure if you have the deck number.",
     heroMedia: {
-      src: "../../dist/assets/projects/paagi/paagi.gif",
+      src: "/assets/paagi/paagi.gif",
       label: "Paagi box-sizing visual",
     },
     supportMedia: [
-      { src: "../../dist/assets/projects/paagi/paagi_pitch_2.png", label: "algorithm diagram" },
-      { src: "../../dist/assets/projects/paagi/paagi_pitch.png", label: "pitch deck excerpt" },
+      { src: "/assets/paagi/paagi_pitch_2.png", label: "algorithm diagram" },
+      { src: "/assets/paagi/paagi_pitch.png", label: "pitch deck excerpt" },
     ],
     next: "gabai",
   },
@@ -111,7 +111,7 @@ const projects = [
     index: "04",
     title: "GabAI",
     tag: "ai / ml",
-    mediaSrc: "../../dist/assets/projects/gabai/gabai.gif",
+    mediaSrc: "/assets/gabai/gabai.gif",
     mediaLabel: "box-sizing visual",
     pitch:
       "Dynamic box-sizing algorithms to cut logistics packaging waste — pitched to Gothong Southern executives. 1st place of 38 teams.",
@@ -129,12 +129,12 @@ const projects = [
       "We designed dynamic box-sizing algorithms that fit packaging to shipment contents, and presented the solution directly to Gothong Southern executives.",
     outcome: null,
     heroMedia: {
-      src: "../../dist/assets/projects/gabai/gabai.gif",
+      src: "/assets/gabai/gabai.gif",
       label: "Paagi box-sizing visual",
     },
     supportMedia: [
-      { src: "../../dist/assets/projects/gabai/gabai_1.png", label: "algorithm diagram" },
-      { src: "../../dist/assets/projects/gabai/gabai_2.png", label: "pitch deck excerpt" },
+      { src: "/assets/gabai/gabai_1.png", label: "algorithm diagram" },
+      { src: "/assets/gabai/gabai_2.png", label: "pitch deck excerpt" },
     ],
     next: "spoonfull",
   },

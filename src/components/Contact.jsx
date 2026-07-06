@@ -1,7 +1,8 @@
 import useMagnetic from "../hooks/useMagnetic.js";
 import Reveal from "./Reveal.jsx";
-import resumeUrl from "../../dist/assets/resume/Amiel_Catado_Resume.pdf";
 import "./Contact.css";
+
+const resumeUrl = "/Amiel_Catado_Resume.pdf";
 
 const AI_MAILTO =
   "mailto:maryamielcatado@gmail.com?subject=AI%20engineer%20role%20—%20via%20portfolio&body=Hi%20Amiel%2C%20saw%20your%20portfolio%20—%20are%20you%20available%20for%20a%20chat%3F";
