@@ -7,7 +7,7 @@ function Experience() {
     <section id="experience" className="experience">
       <div className="wrap">
         <Reveal as="p" className="section-label experience__label">
-          03 / experience
+          04 / experience
         </Reveal>
         <ul className="experience__list">
           {experience.map((job) => (

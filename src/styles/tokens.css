@@ -16,10 +16,9 @@
   /* fonts */
   --font-display: "Clash Display", "Space Grotesk", "Noto Sans TC", sans-serif;
   --font-body: "Inter", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-mono: "SF Mono", "JetBrains Mono", "Consolas", monospace;
 
   /* type scale */
-  --size-hero: clamp(44px, 8vw, 88px);
   --size-row-title: clamp(28px, 5vw, 56px);
   --size-contact-headline: clamp(44px, 8vw, 80px);
 

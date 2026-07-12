@@ -14,7 +14,7 @@ function About() {
     <section id="about" className="about">
       <div className="wrap about__inner">
         <Reveal as="p" className="section-label about__label">
-          02 / about
+          03 / about
         </Reveal>
         <div className="about__content">
           <MediaWithFallback

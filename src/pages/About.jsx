@@ -38,7 +38,7 @@ function AboutPage() {
     <section className="about about-page">
       <div className="wrap about__inner">
         <Reveal as="p" className="section-label about__label">
-          02 / about
+          03 / about
         </Reveal>
         <div className="about__content about-page__content">
           <MediaWithFallback
