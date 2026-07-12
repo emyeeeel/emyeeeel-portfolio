@@ -3,12 +3,6 @@ import MediaWithFallback from "./MediaWithFallback.jsx";
 import Reveal from "./Reveal.jsx";
 import "./About.css";
 
-const STATS = [
-  { number: "26", label: "weeks in taiwan" },
-  { number: "2", label: "competition wins" },
-  { number: "5", label: "orgs shipped for" },
-];
-
 function About() {
   return (
     <section id="about" className="about">
@@ -36,13 +30,12 @@ function About() {
               engineering, and a loyalty platform. I like shipping the whole
               thing — model, backend, and the UI people actually touch.
             </p>
-            <div className="about__stats">
-              {STATS.map((stat) => (
-                <div className="about__stat" key={stat.label}>
-                  <span className="about__stat-number">{stat.number}</span>
-                  <span className="about__stat-label">{stat.label}</span>
-                </div>
-              ))}
+            <div className="about__currently">
+              <span className="about__currently-label">currently</span>
+              <p className="about__currently-text">
+                Deepening my technical ops and automation skills — the work
+                that keeps a business running long after launch.
+              </p>
             </div>
             <Link to="/about" className="about__full-link">
               full story →

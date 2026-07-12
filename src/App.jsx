@@ -32,7 +32,6 @@ function App() {
 
     if (reducedMotion) {
       updateDisplayLocation(location);
-      window.scrollTo(0, 0);
       return;
     }
 
@@ -41,7 +40,6 @@ function App() {
 
     const t1 = setTimeout(() => {
       updateDisplayLocation(location);
-      window.scrollTo(0, 0);
       setStage("held");
 
       const t2 = setTimeout(() => {
@@ -58,6 +56,17 @@ function App() {
 
     return () => timers.current.forEach(clearTimeout);
   }, [location, reducedMotion]);
+
+  useEffect(() => {
+    if (displayLocation.hash) {
+      const target = document.getElementById(displayLocation.hash.slice(1));
+      if (target) {
+        target.scrollIntoView();
+        return;
+      }
+    }
+    window.scrollTo(0, 0);
+  }, [displayLocation]);
 
   return (
     <>

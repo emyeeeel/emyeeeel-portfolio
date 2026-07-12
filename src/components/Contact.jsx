@@ -49,7 +49,7 @@ function Contact() {
       <section id="contact" className="contact">
         <div className="wrap contact__inner">
           <Reveal as="p" className="section-label contact__label">
-            06 / contact
+            07 / contact
           </Reveal>
           <Reveal
             as="h2"

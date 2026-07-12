@@ -1,0 +1,25 @@
+.pointer-highlight {
+  position: relative;
+  display: inline;
+}
+
+.pointer-highlight__text {
+  position: relative;
+  z-index: 1;
+}
+
+.pointer-highlight__rect {
+  position: absolute;
+  inset: -3px -6px;
+  background: #404040;
+  border: 2px solid #525252;
+  border-radius: 6px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 500ms ease var(--pointer-highlight-delay, 0ms);
+  pointer-events: none;
+}
+
+.pointer-highlight--visible .pointer-highlight__rect {
+  transform: scaleX(1);
+}

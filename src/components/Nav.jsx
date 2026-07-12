@@ -9,36 +9,59 @@ function Nav() {
   const { current, total } = useSectionProgress(isHome);
 
   return (
-    <nav className="nav">
-      <div className="wrap nav__inner">
-        <Link to="/" className="nav__wordmark" aria-label="emyeeeel — home">
+    <nav className="pill-nav">
+      <div className="pill-nav__bar">
+        <Link
+          to="/"
+          className="pill-nav__logo"
+          aria-label="emyeeeel — home"
+        >
           <Logotype blink />
         </Link>
-        <div className="nav__right">
-          <ul className="nav__links">
-            <li>
-              <Link to="/work" className="nav__link">
+        <ul className="pill-nav__links">
+          <li>
+            {isHome ? (
+              <a href="#work" className="pill-nav__link">
+                work
+              </a>
+            ) : (
+              <Link to="/work" className="pill-nav__link">
                 work
               </Link>
-            </li>
-            <li>
-              <Link to="/about" className="nav__link">
+            )}
+          </li>
+          <li>
+            {isHome ? (
+              <a href="#services" className="pill-nav__link">
+                services
+              </a>
+            ) : (
+              <Link to="/#services" className="pill-nav__link">
+                services
+              </Link>
+            )}
+          </li>
+          <li>
+            {isHome ? (
+              <a href="#about" className="pill-nav__link">
+                about
+              </a>
+            ) : (
+              <Link to="/about" className="pill-nav__link">
                 about
               </Link>
-            </li>
-            <li>
-              <a href="#contact" className="nav__link nav__link--contact">
-                contact
-              </a>
-            </li>
-          </ul>
-          {isHome && (
-            <span className="nav__progress" aria-hidden="true">
-              {String(current).padStart(2, "0")} —{" "}
-              {String(total).padStart(2, "0")}
-            </span>
-          )}
-        </div>
+            )}
+          </li>
+        </ul>
+        {/* {isHome && (
+          <span className="pill-nav__progress" aria-hidden="true">
+            {String(current).padStart(2, "0")} —{" "}
+            {String(total).padStart(2, "0")}
+          </span>
+        )} */}
+        <a href="#contact" className="pill-nav__cta">
+          start a project →
+        </a>
       </div>
     </nav>
   );

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Reveal from "./Reveal.jsx";
+import PointerHighlight from "./PointerHighlight.jsx";
 import "./Hero.css";
 
 const resumeUrl = "/Amiel_Catado_Resume.pdf";
@@ -20,21 +20,15 @@ function Hero() {
           <p className="hero__eyebrow">
             cebu · remote — open to work
           </p>
-          <p className="hero__role">AI Engineer &amp; Fullstack Developer</p>
-          <Reveal
-            as="h1"
-            className="hero__headline"
-            lines={[
-              <span>I build and support</span>,
-              <span>the technical systems</span>,
-              <span>
-                that power growing businesses.
-              </span>,
-            ]}
-          />
+          <p className="hero__role">Software Engineer &amp; Fullstack Developer</p>
+          <h1 className="hero__headline">
+            Helping businesses scale
+            <br />
+            through <PointerHighlight>better software</PointerHighlight>
+          </h1>
           <p className="hero__intro">
             Hi, I'm Amiel Catado — but you can call me{" "}
-            <span className="hero__name">emyeeeel</span>. I help founders and small teams design AI systems, build the fullstack products they run on, and handle the technical work that keeps things moving — from model to production to your inbox.
+            <span className="hero__name">emyeeeel</span>. I help founders and small teams build software, automate workflows, and manage the technical operations that keep their business moving.
           </p>
           <div className="hero__ctas">
             <a

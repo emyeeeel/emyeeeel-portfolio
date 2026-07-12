@@ -71,6 +71,31 @@
   margin-bottom: 28px;
 }
 
+.about__currently {
+  border-left: 2px solid var(--coral);
+  padding-left: 16px;
+  max-width: 420px;
+  margin: 0 0 28px;
+}
+
+.about__currently-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-on-bone);
+  margin: 0 0 6px;
+}
+
+.about__currently-text {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--body-on-bone);
+  margin: 0;
+}
+
 .about__full-link {
   display: inline-block;
   font-family: var(--font-mono);

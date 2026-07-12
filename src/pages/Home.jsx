@@ -5,6 +5,7 @@ import WorkIndex from "../components/WorkIndex.jsx";
 import Services from "../components/Services.jsx";
 import About from "../components/About.jsx";
 import Experience from "../components/Experience.jsx";
+import Testimonials from "../components/Testimonials.jsx";
 import Process from "../components/Process.jsx";
 
 function Home() {
@@ -20,6 +21,7 @@ function Home() {
       <Services />
       <About />
       <Experience />
+      <Testimonials />
       <Process />
     </>
   );
