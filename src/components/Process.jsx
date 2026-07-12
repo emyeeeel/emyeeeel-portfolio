@@ -7,8 +7,11 @@ function Process() {
     <section id="process" className="process-section">
       <div className="wrap">
         <Reveal as="p" className="section-label process__label">
-          06 / process
+          04 / process
         </Reveal>
+        <h2 className="max-w-7xl pl-4 mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
+          Get to know how it is done.
+        </h2>
         <ul className="process__list">
           {processSteps.map((step) => (
             <li className="process__step" key={step.number}>
