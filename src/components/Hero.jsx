@@ -36,13 +36,13 @@ function Hero() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="View resume — PDF, opens in new tab"
-              className="hero__cta hero__cta--primary"
+              className="hero__cta hero__cta--secondary"
             >
               resume ↓
             </a>
-            <a href="#contact" className="hero__cta hero__cta--secondary">
+            {/* <a href="#contact" className="hero__cta hero__cta--secondary">
               start a project →
-            </a>
+            </a> */}
           </div>
         </div>
         {/* <div className="hero__avatar" aria-hidden={avatarError ? "true" : undefined}>
