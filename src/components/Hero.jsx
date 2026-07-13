@@ -1,5 +1,5 @@
-import { useState } from "react";
 import PointerHighlight from "./PointerHighlight.jsx";
+import HeroDevice from "./HeroDevice.jsx";
 import "./Hero.css";
 
 const resumeUrl = "/Amiel_Catado_Resume.pdf";
@@ -11,27 +11,28 @@ const HERO_STATS = [
 ];
 
 function Hero() {
-  const [avatarError, setAvatarError] = useState(false);
-
   return (
     <section id="hero-section" className="hero" aria-label="Introduction">
       <div className="wrap hero__inner">
         <div className="hero__text">
-          <p className="hero__eyebrow">
+          {/* <p className="hero__eyebrow">
             cebu · remote — open to work
           </p>
-          <p className="hero__role">Software Engineer &amp; Fullstack Developer</p>
-          <h1 className="hero__headline">
+          <p className="hero__role">Software Engineer &amp; Fullstack Developer</p> */}
+          {/* <h1 className="hero__headline">
             Helping businesses scale
             <br />
             through <PointerHighlight>better software</PointerHighlight>
+          </h1> */}
+          <h1 className="hero__headline">
+            Type what's <span className="hero__emphasis">next</span>.
           </h1>
-          <p className="hero__intro">
+          {/* <p className="hero__intro">
             Hi, I'm Amiel Catado — but you can call me{" "}
             <span className="hero__name">emyeeeel</span>. I help founders and small teams build software, automate workflows, and manage the technical operations that keep their business moving.
-          </p>
+          </p> */}
           <div className="hero__ctas">
-            <a
+            {/* <a
               href={resumeUrl}
               target="_blank"
               rel="noopener noreferrer"
@@ -39,30 +40,15 @@ function Hero() {
               className="hero__cta hero__cta--secondary"
             >
               resume ↓
-            </a>
+            </a> */}
             {/* <a href="#contact" className="hero__cta hero__cta--secondary">
               start a project →
             </a> */}
           </div>
         </div>
-        {/* <div className="hero__avatar" aria-hidden={avatarError ? "true" : undefined}>
-          {!avatarError ? (
-            <img
-              src="/assets/avatar.png"
-              alt="Portrait of Mary Amiel Catado"
-              className="hero__avatar-img"
-              onError={() => setAvatarError(true)}
-            />
-          ) : (
-            <div
-              className="hero__avatar-placeholder"
-              role="img"
-              aria-label="Portrait placeholder"
-            >
-              <span>portrait</span>
-            </div>
-          )}
-        </div> */}
+        <div className="hero__device-slot">
+          <HeroDevice />
+        </div>
       </div>
       <div className="wrap">
         <ul className="hero__stats">

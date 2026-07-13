@@ -1,0 +1,341 @@
+.hero-device {
+  position: relative;
+  width: 300px;
+  height: 400px;
+}
+
+/* -------- monitor -------- */
+.hero-device__monitor {
+  position: absolute;
+  top: 0;
+  left: 15px;
+  width: 270px;
+  height: 250px;
+  border-radius: 16px;
+  background:
+    radial-gradient(120% 130% at 28% 14%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 48%),
+    linear-gradient(160deg, #d8d3c2, #a49e89);
+  box-shadow:
+    inset 0 3px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -7px 12px rgba(0, 0, 0, 0.2),
+    inset 7px 0 10px rgba(0, 0, 0, 0.06),
+    inset -7px 0 10px rgba(0, 0, 0, 0.1),
+    0 2px 4px rgba(0, 0, 0, 0.25),
+    0 16px 32px rgba(0, 0, 0, 0.45);
+}
+
+.hero-device__monitor-highlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 46%;
+  border-radius: 16px 16px 0 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+}
+
+.hero-device__screen {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  width: 226px;
+  height: 172px;
+  border-radius: 8px;
+  background: linear-gradient(160deg, #232c40, #0f1420);
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 0 2px rgba(0, 0, 0, 0.6),
+    inset 0 9px 18px rgba(0, 0, 0, 0.8),
+    inset 0 -4px 8px rgba(0, 0, 0, 0.55),
+    inset 5px 0 10px rgba(0, 0, 0, 0.4),
+    inset -5px 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.hero-device__screen-shine {
+  position: absolute;
+  top: -10%;
+  left: -15%;
+  width: 150%;
+  height: 65%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.14) 28%,
+    rgba(255, 255, 255, 0) 55%
+  );
+  transform: rotate(-6deg);
+  pointer-events: none;
+}
+
+.hero-device__glow {
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  width: 70px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 244, 214, 0.9) 0%,
+    rgba(255, 244, 214, 0) 72%
+  );
+  filter: blur(4px);
+}
+
+.hero-device__cursor {
+  position: absolute;
+  bottom: 14px;
+  left: 16px;
+  right: 12px;
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--coral, #ff4d36);
+  text-shadow: 0 0 8px rgba(255, 77, 54, 0.65);
+}
+
+.hero-device__cursor-blink {
+  animation: hero-device-blink 1.06s steps(1, end) infinite;
+}
+
+@keyframes hero-device-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-device__cursor-blink {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+.hero-device__vents {
+  position: absolute;
+  top: 206px;
+  left: 36px;
+  display: flex;
+  gap: 4px;
+}
+
+.hero-device__vents span {
+  width: 3px;
+  height: 20px;
+  border-radius: 1px;
+  background: #3a362c;
+  opacity: 0.85;
+  box-shadow:
+    inset 0 1px 1px rgba(0, 0, 0, 0.6),
+    1px 0 0 rgba(255, 255, 255, 0.06);
+}
+
+.hero-device__monitor-dots {
+  position: absolute;
+  top: 214px;
+  right: 34px;
+  display: flex;
+  gap: 8px;
+}
+
+.hero-device__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3a362c;
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.6),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.hero-device__dot--light {
+  background: #e9e4d4;
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.35),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* -------- neck -------- */
+.hero-device__neck {
+  position: absolute;
+  top: 248px;
+  left: 116px;
+  width: 68px;
+  height: 20px;
+  overflow: hidden;
+  background:
+    radial-gradient(140% 160% at 30% 0%, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0) 60%),
+    linear-gradient(180deg, #b0aa96, #8a8471);
+  clip-path: polygon(14% 0, 86% 0, 100% 100%, 0% 100%);
+  box-shadow:
+    inset 2px 0 0 rgba(255, 255, 255, 0.2),
+    inset -2px 0 0 rgba(0, 0, 0, 0.25),
+    inset 0 -4px 6px rgba(0, 0, 0, 0.25);
+}
+
+.hero-device__neck-highlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+}
+
+.hero-device__neck-seam {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 50%;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.18);
+  box-shadow: 1px 0 0 rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+.hero-device__neck-shadow {
+  position: absolute;
+  top: 257px;
+  left: 105px;
+  width: 90px;
+  height: 12px;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0) 70%);
+  filter: blur(2px);
+}
+
+/* -------- tower -------- */
+.hero-device__tower {
+  position: absolute;
+  top: 260px;
+  left: 0;
+  width: 300px;
+  height: 90px;
+  border-radius: 14px;
+  background:
+    radial-gradient(120% 160% at 24% 10%, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0) 50%),
+    linear-gradient(160deg, #d8d3c2, #a49e89);
+  overflow: hidden;
+  box-shadow:
+    inset 0 3px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -7px 14px rgba(0, 0, 0, 0.2),
+    inset 6px 0 10px rgba(0, 0, 0, 0.05),
+    inset -6px 0 10px rgba(0, 0, 0, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    0 18px 36px rgba(0, 0, 0, 0.5);
+}
+
+.hero-device__shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.42) 50%,
+    transparent 62%
+  );
+  pointer-events: none;
+}
+
+.hero-device__button {
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  width: 26px;
+  height: 14px;
+  border-radius: 2px;
+  background: #efe9da;
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.25),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.hero-device__slot {
+  position: absolute;
+  top: 16px;
+  right: 24px;
+  width: 100px;
+  height: 10px;
+  border-radius: 2px;
+  background: #2c2a24;
+  box-shadow:
+    inset 0 2px 3px rgba(0, 0, 0, 0.85),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.hero-device__badge {
+  position: absolute;
+  bottom: 18px;
+  left: 22px;
+  width: 52px;
+  height: 20px;
+  border-radius: 3px;
+  background: #2c2a24;
+  color: #c9c4b0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.75),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.hero-device__led {
+  position: absolute;
+  top: 44px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3a362c;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.6);
+}
+
+.hero-device__led--one {
+  left: 26px;
+}
+
+.hero-device__led--two {
+  left: 40px;
+}
+
+.hero-device__bay {
+  position: absolute;
+  bottom: 16px;
+  right: 24px;
+  width: 80px;
+  height: 24px;
+  border-radius: 3px;
+  background: #c7c2b0;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.45);
+}
+
+/* -------- grounding -------- */
+.hero-device__ground-shadow {
+  position: absolute;
+  bottom: -18px;
+  left: 20px;
+  width: 260px;
+  height: 30px;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 72%);
+  filter: blur(6px);
+}
+
+@media (max-width: 900px) {
+  .hero-device {
+    transform: scale(0.85);
+    transform-origin: top right;
+  }
+}
