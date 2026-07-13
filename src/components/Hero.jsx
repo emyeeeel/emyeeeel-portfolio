@@ -49,6 +49,9 @@ function Hero() {
         <div className="hero__device-slot">
           <HeroDevice />
         </div>
+        <p className="hero__hint">
+          ↳ try <b>work</b> · <b>about</b> · <b>contact</b> · <b>help</b>
+        </p>
       </div>
       <div className="wrap">
         <ul className="hero__stats">
