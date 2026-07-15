@@ -94,7 +94,8 @@
 
 .hero-device__log {
   flex: 1;
-  overflow: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -102,14 +103,27 @@
   font-size: 10.5px;
   line-height: 1.5;
   color: var(--lilac, #8a8fb0);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(138, 143, 176, 0.4) transparent;
+}
+
+.hero-device__log::-webkit-scrollbar {
+  width: 4px;
+}
+
+.hero-device__log::-webkit-scrollbar-thumb {
+  background: rgba(138, 143, 176, 0.4);
+  border-radius: 2px;
 }
 
 .hero-device__line--ok {
   color: #8fe3a3;
 }
 
-.hero-device__line--err {
+.hero-device__line--down {
   color: var(--coral, #ff4d36);
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .hero-device__line--pending {

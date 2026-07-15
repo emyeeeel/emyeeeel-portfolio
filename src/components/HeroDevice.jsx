@@ -1,37 +1,48 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./HeroDevice.css";
 
-const SMART_REPLIES = [
-  {
-    test: (s) => /^(hi|hello|hey|yo|sup)!?$/.test(s),
-    reply: "hey — I'm just a portfolio terminal, not sentient. try \"help\".",
-  },
-  {
-    test: (s) => /^who are you\??$/.test(s),
-    reply: "emyeeeel's portfolio terminal. type \"help\" to see what I actually do.",
-  },
-  {
-    test: (s) => /^(thanks|thank you|ty)!?$/.test(s),
-    reply: "anytime.",
-  },
-  {
-    test: (s) => /^how('s| is)? it going\??$/.test(s) || /^how are you\??$/.test(s),
-    reply: "running smooth, thanks for asking.",
-  },
-];
+const SESSION_KEY = "emyeeeel-terminal-session";
 
-function findSmartReply(input) {
-  const match = SMART_REPLIES.find((entry) => entry.test(input));
-  return match ? match.reply : null;
+// One id per browser session, so n8n's Session Memory node can key
+// conversation history — without it, that node errors on an empty key.
+function getSessionId() {
+  let id = sessionStorage.getItem(SESSION_KEY);
+  if (!id) {
+    id =
+      typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    sessionStorage.setItem(SESSION_KEY, id);
+  }
+  return id;
 }
 
-// Placeholder for genuinely-unmatched input. This is the exact spot a real
-// API call replaces once there's a secure server-side endpoint to call —
-// swap the body for `await fetch("/api/chat", ...)` and return its reply.
-async function getFallbackReply(input) {
-  await new Promise((resolve) => setTimeout(resolve, 650));
-  return `not sure how to respond to "${input}" yet — real AI wiring is next. try "help" for commands that work today.`;
+// Shown whenever the n8n agent is unreachable, errors, or comes back with
+// nothing usable — the CRT's own "signal lost" moment.
+const DOWN_MESSAGE = [
+  { text: "     NO SIGNAL — brain's offline", down: true },
+  { text: "— try: work · about · contact · help", ok: true },
+];
+
+// Handles genuinely-unmatched input by asking the /api/chat serverless
+// function (api/chat.js), which proxies to the n8n webhook server-side —
+// the browser never talks to n8n directly.
+async function getFallbackReply(input, sessionId) {
+  try {
+    const response = await fetch(
+      `/api/chat?message=${encodeURIComponent(input)}&sessionId=${encodeURIComponent(sessionId)}`,
+    );
+    if (!response.ok) return DOWN_MESSAGE;
+
+    const data = await response.json();
+    const text = typeof data.reply === "string" ? data.reply.trim() : "";
+    if (!text || text === "...") return DOWN_MESSAGE;
+
+    return [{ text, ok: true }];
+  } catch {
+    return DOWN_MESSAGE;
+  }
 }
 
 function HeroDevice() {
@@ -39,6 +50,13 @@ function HeroDevice() {
   const [value, setValue] = useState("");
   const [log, setLog] = useState([]);
   const [loading, setLoading] = useState(false);
+  const sessionId = useMemo(() => getSessionId(), []);
+  const logRef = useRef(null);
+
+  useEffect(() => {
+    const el = logRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [log, loading]);
 
   const commands = useMemo(
     () => ({
@@ -78,12 +96,12 @@ function HeroDevice() {
     }
 
     setValue("");
-    setLog((prev) => [...prev, { text: `> ${raw}` }].slice(-4));
+    setLog((prev) => [...prev, { text: `> ${raw}` }].slice(-50));
 
     const command = commands[key];
     if (command) {
       setLog((prev) =>
-        [...prev, { text: command.respond, ok: true }].slice(-4),
+        [...prev, { text: command.respond, ok: true }].slice(-50),
       );
       if (command.action) {
         window.setTimeout(command.action, 500);
@@ -91,16 +109,10 @@ function HeroDevice() {
       return;
     }
 
-    const smartReply = findSmartReply(key);
-    if (smartReply) {
-      setLog((prev) => [...prev, { text: smartReply, ok: true }].slice(-4));
-      return;
-    }
-
     setLoading(true);
-    const reply = await getFallbackReply(raw);
+    const replyLines = await getFallbackReply(raw, sessionId);
     setLoading(false);
-    setLog((prev) => [...prev, { text: reply }].slice(-4));
+    setLog((prev) => [...prev, ...replyLines].slice(-50));
   }
 
   return (
@@ -111,15 +123,15 @@ function HeroDevice() {
           <span className="hero-device__glow" />
           <span className="hero-device__screen-shine" />
           <div className="hero-device__terminal">
-            <div className="hero-device__log" aria-live="polite">
+            <div className="hero-device__log" ref={logRef} aria-live="polite">
               {log.map((line, i) => (
                 <div
                   key={i}
                   className={
                     line.ok === true
                       ? "hero-device__line--ok"
-                      : line.ok === false
-                        ? "hero-device__line--err"
+                      : line.down
+                        ? "hero-device__line--down"
                         : undefined
                   }
                 >
