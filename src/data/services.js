@@ -1,6 +1,7 @@
 const services = [
   {
     index: "01",
+    slug: "ai-ml",
     title: "AI / ML Systems",
     value:
       "Computer vision, recommendation engines, and RAG pipelines — built and shipped, not just prototyped.",
@@ -11,9 +12,11 @@ const services = [
       "Model-to-production deployment",
     ],
     tools: ["YOLOv11", "Qdrant", "CatBoost", "Django"],
+    projectTags: ["ai / ml"],
   },
   {
     index: "02",
+    slug: "fullstack",
     title: "Fullstack Development",
     value:
       "End-to-end business platforms — from database schema to the UI people actually touch.",
@@ -24,9 +27,11 @@ const services = [
       "Admin dashboards & reporting",
     ],
     tools: ["React", "Vite", "Supabase", "PostgreSQL"],
+    projectTags: ["fullstack"],
   },
   {
     index: "03",
+    slug: "technical-va",
     title: "Technical VA & Ops Support",
     value:
       "Hands-on technical support for founders who need someone who can actually read the stack trace.",
@@ -37,6 +42,7 @@ const services = [
       "Light dev support & QA",
     ],
     tools: ["Automation", "QA", "Docs"],
+    projectTags: [],
   },
 ];
 

@@ -2,12 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Layout from "./components/Layout.jsx";
 import PageWipe from "./components/PageWipe.jsx";
+import BootLoader from "./components/BootLoader.jsx";
 import Cursor from "./components/Cursor.jsx";
 import useReducedMotion from "./hooks/useReducedMotion.js";
 import Home from "./pages/Home.jsx";
 import WorkIndexPage from "./pages/WorkIndex.jsx";
 import CaseStudy from "./pages/CaseStudy.jsx";
 import AboutPage from "./pages/About.jsx";
+import ServiceDetail from "./pages/ServiceDetail.jsx";
 import NotFound from "./pages/NotFound.jsx";
 
 const COVER_MS = 190;
@@ -21,6 +23,7 @@ function App() {
   const displayLocationRef = useRef(location);
   const [stage, setStage] = useState("idle");
   const timers = useRef([]);
+  const [booting, setBooting] = useState(true);
 
   function updateDisplayLocation(loc) {
     displayLocationRef.current = loc;
@@ -70,6 +73,7 @@ function App() {
 
   return (
     <>
+      {booting && <BootLoader onDone={() => setBooting(false)} />}
       <Cursor />
       {!reducedMotion && <PageWipe stage={stage} />}
       <Routes location={displayLocation}>
@@ -77,6 +81,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/work" element={<WorkIndexPage />} />
           <Route path="/work/:slug" element={<CaseStudy />} />
+          <Route path="/services/:slug" element={<ServiceDetail />} />
           <Route path="/about" element={<AboutPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />

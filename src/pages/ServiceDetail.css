@@ -1,0 +1,116 @@
+.service-detail {
+  background: var(--ink);
+  padding: 56px 0 96px;
+}
+
+.service-detail__back {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--coral);
+  margin-bottom: 32px;
+  transition: opacity var(--transition-fast);
+}
+
+@media (hover: hover) {
+  .service-detail__back:hover {
+    opacity: 0.75;
+  }
+}
+
+.service-detail__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(40px, 7vw, 72px);
+  line-height: 1.05;
+  color: var(--bone);
+  margin: 0 0 16px;
+}
+
+.service-detail__subtitle {
+  font-family: var(--font-body);
+  color: var(--lilac);
+  font-size: 16px;
+  max-width: 60ch;
+  margin: 0 0 40px;
+}
+
+.service-detail__bullets {
+  list-style: none;
+  margin: 0 0 32px;
+  padding: 0;
+  border-top: 1px solid var(--ink-border);
+}
+
+.service-detail__bullets li {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--bone);
+  padding: 16px 0 16px 20px;
+  position: relative;
+  border-bottom: 1px solid var(--ink-border);
+}
+
+.service-detail__bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 24px;
+  width: 6px;
+  height: 6px;
+  background: var(--coral);
+}
+
+.service-detail__tools {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 56px;
+}
+
+.service-detail__tool {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--lilac);
+  border: 1px solid var(--ink-border);
+  border-radius: 5px;
+  padding: 5px 11px;
+}
+
+.service-detail__section-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--coral);
+  margin: 0 0 16px;
+  text-transform: uppercase;
+}
+
+.service-detail__work-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--ink-border);
+}
+
+.service-detail__todo {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--lilac);
+  border: 1px dashed var(--ink-dashed);
+  border-radius: 8px;
+  padding: 20px 24px;
+  max-width: 60ch;
+  line-height: 1.6;
+}
+
+.service-detail__todo a {
+  color: var(--coral);
+}
+
+@media (max-width: 768px) {
+  .service-detail {
+    padding: 40px 0 64px;
+  }
+}

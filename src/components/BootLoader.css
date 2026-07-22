@@ -1,0 +1,91 @@
+.boot-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--ink);
+  display: grid;
+  place-items: center;
+  padding: 0 24px;
+  opacity: 1;
+  transition: opacity 300ms ease;
+}
+
+.boot-loader--fading {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.boot-loader__terminal {
+  max-width: 100%;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 2;
+  color: var(--lilac);
+}
+
+.boot-loader__line {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+}
+
+.boot-loader__line--1 {
+  animation: boot-type 0.9s steps(20, end) 0.1s forwards;
+}
+
+.boot-loader__line--2 {
+  animation: boot-type 0.9s steps(16, end) 1s forwards;
+}
+
+.boot-loader__prompt {
+  color: var(--coral);
+  font-weight: 700;
+}
+
+@keyframes boot-type {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.boot-loader__fill-row {
+  margin-top: 8px;
+  font-size: 15px;
+  color: var(--ink-dashed);
+}
+
+.boot-loader__fill-track {
+  position: relative;
+  display: inline-block;
+  width: 10ch;
+  color: var(--ink-dashed);
+}
+
+.boot-loader__fill-track::before {
+  content: "░░░░░░░░░░";
+  white-space: pre;
+}
+
+.boot-loader__fill-bar {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  width: 0;
+  color: var(--coral);
+  animation: boot-fill 0.7s steps(10, end) 1.9s forwards;
+}
+
+.boot-loader__fill-bar::before {
+  content: "▓▓▓▓▓▓▓▓▓▓";
+  white-space: pre;
+}
+
+@keyframes boot-fill {
+  to {
+    width: 10ch;
+  }
+}

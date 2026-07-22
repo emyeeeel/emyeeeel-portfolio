@@ -13,7 +13,7 @@ function WorkIndex() {
     <section id="work" className="work">
       <div className="wrap">
         <Reveal as="p" className="section-label work__label">
-          01 / selected work
+          02 / selected work
         </Reveal>
         <ul className="work__list">
           {projects.map((project) => (

@@ -1,17 +1,18 @@
 .hero-device {
+  --s: 1;
   position: relative;
-  width: 300px;
-  height: 400px;
+  width: calc(300px * var(--s));
+  height: calc(400px * var(--s));
 }
 
 /* -------- monitor -------- */
 .hero-device__monitor {
   position: absolute;
   top: 0;
-  left: 15px;
-  width: 270px;
-  height: 250px;
-  border-radius: 16px;
+  left: calc(15px * var(--s));
+  width: calc(270px * var(--s));
+  height: calc(250px * var(--s));
+  border-radius: calc(16px * var(--s));
   background:
     radial-gradient(120% 130% at 28% 14%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 48%),
     linear-gradient(160deg, #d8d3c2, #a49e89);
@@ -30,18 +31,18 @@
   left: 0;
   right: 0;
   height: 46%;
-  border-radius: 16px 16px 0 0;
+  border-radius: calc(16px * var(--s)) calc(16px * var(--s)) 0 0;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 100%);
   pointer-events: none;
 }
 
 .hero-device__screen {
   position: absolute;
-  top: 22px;
-  left: 22px;
-  width: 226px;
-  height: 172px;
-  border-radius: 8px;
+  top: calc(22px * var(--s));
+  left: calc(22px * var(--s));
+  width: calc(226px * var(--s));
+  height: calc(172px * var(--s));
+  border-radius: calc(8px * var(--s));
   background: linear-gradient(160deg, #232c40, #0f1420);
   overflow: hidden;
   box-shadow:
@@ -69,10 +70,10 @@
 
 .hero-device__glow {
   position: absolute;
-  top: 14px;
-  left: 20px;
-  width: 70px;
-  height: 44px;
+  top: calc(14px * var(--s));
+  left: calc(20px * var(--s));
+  width: calc(70px * var(--s));
+  height: calc(44px * var(--s));
   border-radius: 50%;
   background: radial-gradient(
     circle,
@@ -86,10 +87,10 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  padding: 10px 12px;
+  padding: calc(10px * var(--s)) calc(12px * var(--s));
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: calc(3px * var(--s));
 }
 
 .hero-device__log {
@@ -100,7 +101,7 @@
   flex-direction: column;
   justify-content: flex-end;
   font-family: var(--font-mono, monospace);
-  font-size: 10.5px;
+  font-size: calc(10.5px * var(--s));
   line-height: 1.5;
   color: var(--lilac, #8a8fb0);
   scrollbar-width: thin;
@@ -136,13 +137,13 @@
   align-items: center;
   flex-shrink: 0;
   font-family: var(--font-mono, monospace);
-  font-size: 12px;
+  font-size: calc(12px * var(--s));
   font-weight: 700;
   color: var(--coral, #ff4d36);
 }
 
 .hero-device__prompt-glyph {
-  margin-right: 5px;
+  margin-right: calc(5px * var(--s));
 }
 
 .hero-device__input {
@@ -174,16 +175,16 @@
 
 .hero-device__vents {
   position: absolute;
-  top: 206px;
-  left: 36px;
+  top: calc(206px * var(--s));
+  left: calc(36px * var(--s));
   display: flex;
-  gap: 4px;
+  gap: calc(4px * var(--s));
 }
 
 .hero-device__vents span {
-  width: 3px;
-  height: 20px;
-  border-radius: 1px;
+  width: calc(3px * var(--s));
+  height: calc(20px * var(--s));
+  border-radius: calc(1px * var(--s));
   background: #3a362c;
   opacity: 0.85;
   box-shadow:
@@ -193,15 +194,15 @@
 
 .hero-device__monitor-dots {
   position: absolute;
-  top: 214px;
-  right: 34px;
+  top: calc(214px * var(--s));
+  right: calc(34px * var(--s));
   display: flex;
-  gap: 8px;
+  gap: calc(8px * var(--s));
 }
 
 .hero-device__dot {
-  width: 8px;
-  height: 8px;
+  width: calc(8px * var(--s));
+  height: calc(8px * var(--s));
   border-radius: 50%;
   background: #3a362c;
   box-shadow:
@@ -219,10 +220,10 @@
 /* -------- neck -------- */
 .hero-device__neck {
   position: absolute;
-  top: 248px;
-  left: 116px;
-  width: 68px;
-  height: 20px;
+  top: calc(248px * var(--s));
+  left: calc(116px * var(--s));
+  width: calc(68px * var(--s));
+  height: calc(20px * var(--s));
   overflow: hidden;
   background:
     radial-gradient(140% 160% at 30% 0%, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0) 60%),
@@ -246,10 +247,10 @@
 
 .hero-device__neck-seam {
   position: absolute;
-  top: 2px;
-  bottom: 2px;
+  top: calc(2px * var(--s));
+  bottom: calc(2px * var(--s));
   left: 50%;
-  width: 1px;
+  width: calc(1px * var(--s));
   background: rgba(0, 0, 0, 0.18);
   box-shadow: 1px 0 0 rgba(255, 255, 255, 0.12);
   pointer-events: none;
@@ -257,10 +258,10 @@
 
 .hero-device__neck-shadow {
   position: absolute;
-  top: 257px;
-  left: 105px;
-  width: 90px;
-  height: 12px;
+  top: calc(257px * var(--s));
+  left: calc(105px * var(--s));
+  width: calc(90px * var(--s));
+  height: calc(12px * var(--s));
   background: radial-gradient(ellipse, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0) 70%);
   filter: blur(2px);
 }
@@ -268,11 +269,11 @@
 /* -------- tower -------- */
 .hero-device__tower {
   position: absolute;
-  top: 260px;
+  top: calc(260px * var(--s));
   left: 0;
-  width: 300px;
-  height: 90px;
-  border-radius: 14px;
+  width: calc(300px * var(--s));
+  height: calc(90px * var(--s));
+  border-radius: calc(14px * var(--s));
   background:
     radial-gradient(120% 160% at 24% 10%, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0) 50%),
     linear-gradient(160deg, #d8d3c2, #a49e89);
@@ -300,11 +301,11 @@
 
 .hero-device__button {
   position: absolute;
-  top: 14px;
-  left: 20px;
-  width: 26px;
-  height: 14px;
-  border-radius: 2px;
+  top: calc(14px * var(--s));
+  left: calc(20px * var(--s));
+  width: calc(26px * var(--s));
+  height: calc(14px * var(--s));
+  border-radius: calc(2px * var(--s));
   background: #efe9da;
   box-shadow:
     inset 0 1px 2px rgba(0, 0, 0, 0.25),
@@ -313,11 +314,11 @@
 
 .hero-device__slot {
   position: absolute;
-  top: 16px;
-  right: 24px;
-  width: 100px;
-  height: 10px;
-  border-radius: 2px;
+  top: calc(16px * var(--s));
+  right: calc(24px * var(--s));
+  width: calc(100px * var(--s));
+  height: calc(10px * var(--s));
+  border-radius: calc(2px * var(--s));
   background: #2c2a24;
   box-shadow:
     inset 0 2px 3px rgba(0, 0, 0, 0.85),
@@ -326,15 +327,15 @@
 
 .hero-device__badge {
   position: absolute;
-  bottom: 18px;
-  left: 22px;
-  width: 52px;
-  height: 20px;
-  border-radius: 3px;
+  bottom: calc(18px * var(--s));
+  left: calc(22px * var(--s));
+  width: calc(52px * var(--s));
+  height: calc(20px * var(--s));
+  border-radius: calc(3px * var(--s));
   background: #2c2a24;
   color: #c9c4b0;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: calc(11px * var(--s));
   font-weight: 700;
   letter-spacing: 0.04em;
   display: flex;
@@ -348,29 +349,29 @@
 
 .hero-device__led {
   position: absolute;
-  top: 44px;
-  width: 6px;
-  height: 6px;
+  top: calc(44px * var(--s));
+  width: calc(6px * var(--s));
+  height: calc(6px * var(--s));
   border-radius: 50%;
   background: #3a362c;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.6);
 }
 
 .hero-device__led--one {
-  left: 26px;
+  left: calc(26px * var(--s));
 }
 
 .hero-device__led--two {
-  left: 40px;
+  left: calc(40px * var(--s));
 }
 
 .hero-device__bay {
   position: absolute;
-  bottom: 16px;
-  right: 24px;
-  width: 80px;
-  height: 24px;
-  border-radius: 3px;
+  bottom: calc(16px * var(--s));
+  right: calc(24px * var(--s));
+  width: calc(80px * var(--s));
+  height: calc(24px * var(--s));
+  border-radius: calc(3px * var(--s));
   background: #c7c2b0;
   box-shadow:
     inset 0 2px 4px rgba(0, 0, 0, 0.3),
@@ -380,17 +381,70 @@
 /* -------- grounding -------- */
 .hero-device__ground-shadow {
   position: absolute;
-  bottom: -18px;
-  left: 20px;
-  width: 260px;
-  height: 30px;
+  bottom: calc(-18px * var(--s));
+  left: calc(20px * var(--s));
+  width: calc(260px * var(--s));
+  height: calc(30px * var(--s));
   background: radial-gradient(ellipse, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 72%);
   filter: blur(6px);
 }
 
-@media (max-width: 900px) {
+/* -------- tablet / small laptop: same composition, smaller -------- */
+@media (max-width: 767px) {
   .hero-device {
-    transform: scale(0.85);
-    transform-origin: top right;
+    --s: 0.82;
+  }
+
+  .hero-device__input {
+    font-size: 16px; /* keeps iOS Safari from auto-zooming the page on focus */
+  }
+}
+
+/* -------- phone: chassis is unreadable at this size, drop it and
+   let the screen become the whole component -------- */
+@media (max-width: 479px) {
+  .hero-device {
+    --s: 1;
+    width: 100%;
+    height: auto;
+  }
+
+  .hero-device__monitor-highlight,
+  .hero-device__vents,
+  .hero-device__monitor-dots,
+  .hero-device__neck,
+  .hero-device__neck-shadow,
+  .hero-device__tower,
+  .hero-device__ground-shadow {
+    display: none;
+  }
+
+  .hero-device__monitor {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    padding: 14px;
+  }
+
+  .hero-device__screen {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 150px;
+  }
+
+  .hero-device__terminal {
+    padding: 12px 14px;
+  }
+
+  .hero-device__log {
+    font-size: 12px;
+  }
+
+  .hero-device__prompt {
+    font-size: 15px;
   }
 }
