@@ -9,9 +9,7 @@ function Process() {
         <Reveal as="p" className="section-label process__label">
           04 / process
         </Reveal>
-        <h2 className="max-w-7xl pl-4 mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
-          Get to know how it is done.
-        </h2>
+        <h2 className="process__heading">Get to know how it is done.</h2>
         <ul className="process__list">
           {processSteps.map((step) => (
             <li className="process__step" key={step.number}>
@@ -23,6 +21,22 @@ function Process() {
                 />
               ) : (
                 <div className="process__placeholder">
+                  <svg
+                    className="process__placeholder-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    width="28"
+                    height="28"
+                    aria-hidden="true"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <path d="m21 15-5-5L5 21" />
+                  </svg>
                   <span>{step.placeholderLabel}</span>
                 </div>
               )}
