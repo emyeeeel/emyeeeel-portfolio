@@ -24,7 +24,7 @@ const processSteps = [
   {
     number: "04",
     title: "Support",
-    description: "Documentation and handoff, or ongoing technical support if you need it.",
+    description: "Documentation or ongoing technical support if you need it.",
     image: "/assets/images/support-1.png",
     imageAlt: "Illustration of a README checklist with server status indicators",
     placeholderLabel: "photo needed — handoff / support",

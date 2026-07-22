@@ -21,7 +21,6 @@
   position: absolute;
   top: -60px;
   left: 50%;
-  transform: translateX(-50%);
   width: min(900px, 140%);
   height: 780px;
   background: radial-gradient(
@@ -33,12 +32,30 @@
   filter: blur(24px);
   z-index: -1;
   pointer-events: none;
+  transform: translateX(-50%) scale(1);
+  animation: hero-glow-drift 12s ease-in-out infinite;
+}
+
+@keyframes hero-glow-drift {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.05);
+  }
 }
 
 .hero__text {
   max-width: 900px;
   text-align: center;
   margin: 0 auto;
+}
+
+.hero__stats-wrap {
+  width: 100%;
 }
 
 .hero__eyebrow {

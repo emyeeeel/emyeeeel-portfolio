@@ -8,10 +8,13 @@ html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
+  width: 100%;
   background: var(--ink);
   color: var(--body-on-ink);
   font-family: var(--font-body);

@@ -1,5 +1,6 @@
 import PointerHighlight from "./PointerHighlight.jsx";
 import HeroDevice from "./HeroDevice.jsx";
+import useCountUp from "../hooks/useCountUp.js";
 import "./Hero.css";
 
 const resumeUrl = "/Amiel_Catado_Resume.pdf";
@@ -9,6 +10,17 @@ const HERO_STATS = [
   { number: "2", label: "competition wins" },
   { number: "5", label: "orgs shipped for" },
 ];
+
+function HeroStat({ number, label }) {
+  const { ref, value } = useCountUp(parseInt(number, 10));
+
+  return (
+    <li className="hero__stat" ref={ref}>
+      <span className="hero__stat-num">{value}</span>
+      <span className="hero__stat-label">{label}</span>
+    </li>
+  );
+}
 
 function Hero() {
   return (
@@ -53,13 +65,10 @@ function Hero() {
           ↳ try <b>work</b> · <b>about</b> · <b>contact</b> · <b>help</b>
         </p>
       </div>
-      <div className="wrap">
+      <div className="wrap hero__stats-wrap">
         <ul className="hero__stats">
           {HERO_STATS.map((stat) => (
-            <li className="hero__stat" key={stat.label}>
-              <span className="hero__stat-num">{stat.number}</span>
-              <span className="hero__stat-label">{stat.label}</span>
-            </li>
+            <HeroStat key={stat.label} number={stat.number} label={stat.label} />
           ))}
         </ul>
       </div>
