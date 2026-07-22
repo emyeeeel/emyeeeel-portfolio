@@ -1,13 +1,14 @@
 import { Outlet } from "react-router-dom";
-import Nav from "./Nav.jsx";
+import NavNotch from "./NavNotch.jsx";
 import Contact from "./Contact.jsx";
 import Footer from "./Footer.jsx";
+import "./Layout.css";
 
 function Layout() {
   return (
     <>
-      <Nav />
-      <main>
+      <NavNotch />
+      <main className="layout-main">
         <Outlet />
       </main>
       <Contact />
