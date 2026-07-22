@@ -3,7 +3,7 @@ import Hero from "../components/Hero.jsx";
 import Marquee from "../components/Marquee.jsx";
 import Services from "../components/Services.jsx";
 import WorkIndex from "../components/WorkIndex.jsx";
-import About from "../components/About.jsx";
+import AboutInteractive from "../components/AboutInteractive.jsx";
 import Process from "../components/Process.jsx";
 
 function Home() {
@@ -17,7 +17,7 @@ function Home() {
       <Marquee />
       <Services />
       <WorkIndex />
-      <About />
+      <AboutInteractive />
       <Process />
     </>
   );
