@@ -9,6 +9,7 @@ import Home from "./pages/Home.jsx";
 import WorkIndexPage from "./pages/WorkIndex.jsx";
 import CaseStudy from "./pages/CaseStudy.jsx";
 import AboutPage from "./pages/About.jsx";
+import AboutCanvasPage from "./pages/AboutCanvas.jsx";
 import ServiceDetail from "./pages/ServiceDetail.jsx";
 import NotFound from "./pages/NotFound.jsx";
 
@@ -82,7 +83,8 @@ function App() {
           <Route path="/work" element={<WorkIndexPage />} />
           <Route path="/work/:slug" element={<CaseStudy />} />
           <Route path="/services/:slug" element={<ServiceDetail />} />
-          <Route path="/about" element={<AboutPage />} />
+          {/* <Route path="/about" element={<AboutPage />} /> */}
+          <Route path="/about" element={<AboutCanvasPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
