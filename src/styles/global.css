@@ -9,6 +9,11 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   width: 100%;
+  /* Prevents horizontal scrollbars from accidental overflow. Deliberately
+     not duplicated on body: setting overflow-x on only one axis forces
+     the other to compute as auto, which would turn body into a scroll
+     container and break position: sticky for any descendant (it becomes
+     "stuck" relative to a box that never actually scrolls). */
   overflow-x: hidden;
 }
 
@@ -21,7 +26,6 @@ body {
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
 }
 
 img {

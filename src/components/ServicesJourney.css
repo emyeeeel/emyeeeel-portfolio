@@ -1,0 +1,347 @@
+.services-journey {
+  --reveal-progress: 0;
+  /* Three sequential stages carved out of the single 0-1 scroll range,
+     each holding still outside its own slice: (A) rectangle zooms out
+     while the heading rises into place, (B) once the heading is settled
+     the cards pull apart left/right, (C) the cards flip to reveal their
+     real content. */
+  --stage-a: clamp(0, calc(var(--reveal-progress) / 0.35), 1);
+  --stage-b: clamp(0, calc((var(--reveal-progress) - 0.35) / 0.2), 1);
+  --stage-c: clamp(0, calc((var(--reveal-progress) - 0.55) / 0.45), 1);
+  position: relative;
+  background: var(--ink);
+}
+
+/* The section is 230vh tall on desktop — its inner content stays pinned
+   via position: sticky for that whole scroll distance, keeping it
+   perfectly centered in the viewport for the entire staged animation
+   instead of drifting off-screen as a normal (non-pinned) block would
+   over such a long scroll range. */
+@media (min-width: 901px) {
+  .services-journey {
+    height: 230vh;
+  }
+
+  .services-journey__sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+}
+
+.services-journey__sticky {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 96px 0;
+}
+
+.services-journey__sticky .wrap {
+  width: 100%;
+}
+
+.services-journey__label {
+  color: var(--lilac);
+  margin: 0 0 20px;
+  text-align: center;
+}
+
+.services-journey__heading {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(32px, 5vw, 56px);
+  line-height: 1.1;
+  color: var(--bone);
+  text-align: center;
+  margin: 0 0 64px;
+  text-wrap: balance;
+  /* Stage A: starts dim (still legible, tucked behind the oversized
+     rectangle) rather than fully invisible, then brightens and rises
+     into place as the rectangle zooms out. Holds still through B/C. */
+  opacity: calc(0.12 + (var(--stage-a) * 0.88));
+  transform: translateY(calc((1 - var(--stage-a)) * 100px));
+}
+
+.services-journey__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Stage A: the "rectangle" starts oversized and recedes to its resting
+     size as the heading rises out from behind it (heading paints
+     underneath since it comes first in DOM order and neither element
+     sets z-index). */
+  transform: scale(calc(1.25 - (var(--stage-a) * 0.25)));
+}
+
+.services-journey__card {
+  position: relative;
+  width: 260px;
+  flex-shrink: 0;
+  transition: box-shadow var(--transition-med);
+}
+
+/* Stage B: once the heading is settled, the three cards pull apart
+   left/right (no rotation yet) opening a gap between each. Stage C then
+   layers in a slight varied tilt/lift per card as they flip, so the
+   resting flipped state reads as a loosely fanned hand of cards rather
+   than three perfectly upright rectangles. */
+.services-journey__card:nth-child(1) {
+  transform:
+    translateX(calc(var(--stage-b) * -28px))
+    rotate(calc(var(--stage-c) * -6deg))
+    translateY(calc(var(--stage-c) * 10px));
+  z-index: 1;
+}
+
+.services-journey__card:nth-child(2) {
+  transform:
+    rotate(calc(var(--stage-c) * 2deg))
+    translateY(calc(var(--stage-c) * -6px));
+  z-index: 2;
+}
+
+.services-journey__card:nth-child(3) {
+  transform:
+    translateX(calc(var(--stage-b) * 28px))
+    rotate(calc(var(--stage-c) * 6deg))
+    translateY(calc(var(--stage-c) * 14px));
+  z-index: 1;
+}
+
+/* At stage-b 0 the three cards read as one seamless rectangle: only the
+   far-left and far-right outer corners are rounded, the two seams in
+   between are square. As the cards pull apart each regains its own
+   independent rounded corners. This targets the faces (not the flat,
+   non-rotating .card-link) so the radius/clip travels correctly with
+   the 3D flip instead of clipping it in flat screen space. */
+@media (min-width: 901px) {
+  .services-journey__card:nth-child(1) .services-journey__card-face {
+    border-top-right-radius: calc(var(--stage-b) * 18px);
+    border-bottom-right-radius: calc(var(--stage-b) * 18px);
+  }
+
+  .services-journey__card:nth-child(2) .services-journey__card-face {
+    border-top-left-radius: calc(var(--stage-b) * 18px);
+    border-bottom-left-radius: calc(var(--stage-b) * 18px);
+    border-top-right-radius: calc(var(--stage-b) * 18px);
+    border-bottom-right-radius: calc(var(--stage-b) * 18px);
+  }
+
+  .services-journey__card:nth-child(3) .services-journey__card-face {
+    border-top-left-radius: calc(var(--stage-b) * 18px);
+    border-bottom-left-radius: calc(var(--stage-b) * 18px);
+  }
+}
+
+@media (hover: hover) {
+  .services-journey__card:hover {
+    z-index: 4;
+  }
+
+  .services-journey__card:nth-child(1):hover {
+    transform:
+      translateX(calc(var(--stage-b) * -28px - 6px))
+      rotate(calc(var(--stage-c) * -6deg))
+      translateY(calc(var(--stage-c) * 10px - 10px))
+      scale(1.03);
+  }
+
+  .services-journey__card:nth-child(2):hover {
+    transform:
+      rotate(calc(var(--stage-c) * 2deg))
+      translateY(calc(var(--stage-c) * -6px - 10px))
+      scale(1.03);
+  }
+
+  .services-journey__card:nth-child(3):hover {
+    transform:
+      translateX(calc(var(--stage-b) * 28px + 6px))
+      rotate(calc(var(--stage-c) * 6deg))
+      translateY(calc(var(--stage-c) * 14px - 10px))
+      scale(1.03);
+  }
+}
+
+.services-journey__card-link {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 360px;
+  transition: box-shadow var(--transition-med);
+  perspective: 1400px;
+}
+
+@media (hover: hover) {
+  .services-journey__card:hover .services-journey__card-link {
+    box-shadow: 0 32px 64px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Stage C: the card starts showing its "back" (the shared image) and
+   flips horizontally, right edge leading, to reveal its real themed
+   content on the front face underneath. */
+.services-journey__card-flip {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  /* Negative rotation so the right edge leads the twist (sweeping
+     toward the viewer first) rather than the left. */
+  transform: rotateY(calc(var(--stage-c) * -180deg));
+}
+
+.services-journey__card-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  border-radius: 18px;
+  overflow: hidden;
+  backface-visibility: hidden;
+}
+
+/* the shared "one image" back face — same gradient across all three
+   cards, offset per card via --slice-x so it reads as continuous while
+   flush, until the card flips to reveal its real theme. */
+.services-journey__card-face--back {
+  background-image:
+    radial-gradient(120% 140% at 25% 20%, rgba(255, 138, 111, 0.5), transparent 55%),
+    linear-gradient(160deg, #ff8a6f 0%, var(--lilac) 55%, #101014 100%);
+  background-size: 780px 360px;
+  background-position: var(--slice-x, 0) 0;
+}
+
+.services-journey__card-face--front {
+  transform: rotateY(180deg);
+}
+
+.services-journey__icon {
+  display: inline-flex;
+  margin-bottom: auto;
+}
+
+.services-journey__tag {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.15;
+  margin: 0 0 16px;
+  text-wrap: balance;
+}
+
+.services-journey__subtitle {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* -------- themes (applied to the front face, revealed post-flip) -------- */
+.services-journey__card--light .services-journey__card-face--front {
+  background: linear-gradient(160deg, #ffffff, #e8e4d8);
+  color: var(--ink);
+}
+
+.services-journey__card--light .services-journey__icon {
+  color: var(--body-on-bone);
+}
+
+.services-journey__card--light .services-journey__subtitle {
+  color: var(--muted-on-bone);
+}
+
+.services-journey__card--accent .services-journey__card-face--front {
+  background: linear-gradient(160deg, var(--coral), #b8331f);
+  color: var(--bone);
+}
+
+.services-journey__card--accent .services-journey__icon {
+  color: rgba(242, 239, 233, 0.8);
+}
+
+.services-journey__card--accent .services-journey__subtitle {
+  color: rgba(242, 239, 233, 0.85);
+}
+
+.services-journey__card--dark .services-journey__card-face--front {
+  background: linear-gradient(160deg, #1c1c22, #0a0a0d);
+  color: var(--bone);
+  border-color: var(--ink-border);
+}
+
+.services-journey__card--dark .services-journey__icon {
+  color: var(--lilac);
+}
+
+.services-journey__card--dark .services-journey__subtitle {
+  color: var(--body-on-ink);
+}
+
+@media (max-width: 900px) {
+  /* The rectangle/pull-apart/flip illusion only makes sense with the
+     staged desktop animation; on narrow screens the cards just stack in
+     normal flow showing their real content directly. */
+  .services-journey__heading {
+    opacity: 1;
+    transform: none;
+  }
+
+  .services-journey__list {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    transform: none;
+  }
+
+  .services-journey__card {
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .services-journey__card:nth-child(1),
+  .services-journey__card:nth-child(2),
+  .services-journey__card:nth-child(3) {
+    margin: 0;
+    transform: none;
+    z-index: auto;
+  }
+
+  @media (hover: hover) {
+    .services-journey__card:hover {
+      transform: translateY(-8px) scale(1.01);
+    }
+  }
+
+  .services-journey__card-link {
+    height: auto;
+    min-height: 220px;
+    perspective: none;
+  }
+
+  .services-journey__card-flip {
+    transform: none;
+  }
+
+  .services-journey__card-face--back {
+    display: none;
+  }
+
+  .services-journey__card-face--front {
+    position: static;
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .services-journey__sticky {
+    padding: 64px 0;
+  }
+
+  .services-journey__heading {
+    margin-bottom: 40px;
+  }
+}

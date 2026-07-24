@@ -95,7 +95,7 @@ function CanvasImage({ src, alt }) {
 
 function AboutCanvasPage() {
   useEffect(() => {
-    document.title = "emyeeeel — canvas";
+    document.title = "emyeeeel — about";
   }, []);
 
   const [items, setItems] = useState(randomLayout);

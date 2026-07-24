@@ -11,7 +11,7 @@ function Layout() {
       <main className="layout-main">
         <Outlet />
       </main>
-      {/* <Contact /> */}
+      <Contact />
       <Footer />
     </>
   );
