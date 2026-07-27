@@ -1,0 +1,164 @@
+.work-preview-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #111214;
+}
+
+.work-preview-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.78) 0%,
+    rgba(0, 0, 0, 0.2) 42%,
+    transparent 68%
+  );
+  pointer-events: none;
+}
+
+/* Solid background plate, visible immediately underneath the preview. */
+.work-preview-card__logo {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, #1c1c22, #0a0a0d);
+}
+
+.work-preview-card__logo-img {
+  max-width: 40%;
+  max-height: 40%;
+  object-fit: contain;
+}
+
+/* A smaller "window" centered on the logo plate rather than filling it
+   edge to edge. On devices with real hover, it's hidden until hovered
+   (the trigger for that lives at the page level — see the
+   .work-showcase__preview-slot:hover rule in WorkShowcase.css — since
+   this reveal is driven by the outer slot, not this component itself);
+   touch devices (no hover) just show it always. */
+.work-preview-card__preview {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  height: 60%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  transition: opacity 400ms var(--ease);
+}
+
+@media (hover: hover) {
+  .work-preview-card__preview {
+    opacity: 0;
+  }
+}
+
+.work-preview-card__media,
+.work-preview-card__placeholder {
+  width: 100%;
+  height: 100%;
+}
+
+.work-preview-card__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  color: var(--body-on-ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-align: center;
+}
+
+.work-preview-card__arrow {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bone);
+  transition:
+    transform var(--transition-fast),
+    color var(--transition-fast);
+}
+
+@media (hover: hover) {
+  .work-preview-card__arrow:hover {
+    transform: scale(1.2);
+    color: var(--coral);
+  }
+}
+
+.work-preview-card__footer {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.work-preview-card__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.work-preview-card__logo-mark {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--bone);
+}
+
+.work-preview-card__logo-mark-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bone);
+}
+
+.work-preview-card__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(18px, 2vw, 24px);
+  color: var(--bone);
+}
+
+.work-preview-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.work-preview-card__tag {
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: var(--bone);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+  white-space: nowrap;
+}

@@ -1,8 +1,13 @@
 import { useState } from "react";
 import "./MediaWithFallback.css";
 
-function MediaWithFallback({ src, alt, label, className, placeholderClassName }) {
+function MediaWithFallback({ src, alt, label, className, placeholderClassName, onError }) {
   const [status, setStatus] = useState("loading");
+
+  function handleError() {
+    setStatus("errored");
+    onError?.();
+  }
 
   if (status === "errored") {
     return (
@@ -24,7 +29,7 @@ function MediaWithFallback({ src, alt, label, className, placeholderClassName })
         className="media-with-fallback__img"
         style={{ opacity: status === "loaded" ? 1 : 0 }}
         onLoad={() => setStatus("loaded")}
-        onError={() => setStatus("errored")}
+        onError={handleError}
       />
       {status === "loading" && (
         <div className="media-with-fallback__loading" aria-hidden="true">

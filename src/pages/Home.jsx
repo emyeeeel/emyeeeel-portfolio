@@ -15,7 +15,7 @@ function Home() {
   return (
     <>
       <Hero />
-      <Marquee />
+      {/* <Marquee /> */}
       <WorkTransition />
       <WorkShowcase />
       <ProcessReveal />

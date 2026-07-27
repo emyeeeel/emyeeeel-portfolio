@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import projects from "../data/projects.js";
 import useReducedMotion from "../hooks/useReducedMotion.js";
-import MediaWithFallback from "./MediaWithFallback.jsx";
+import WorkPreviewCard from "./WorkPreviewCard.jsx";
 import "./WorkShowcase.css";
 
 function WorkShowcase() {
@@ -53,48 +53,33 @@ function WorkShowcase() {
     };
   }, [reducedMotion]);
 
+  const marqueeText = `${projects[activeIndex].title.toUpperCase()} `.repeat(6);
+
   return (
     <section id="work" className="work-showcase" ref={sectionRef}>
       <div className="work-showcase__sticky">
-        <div className="wrap work-showcase__inner">
-          <div className="work-showcase__names">
-            <p className="work-showcase__eyebrow">Selected work</p>
-
-            <div className="work-showcase__title-stack">
-              {projects.map((project, i) => (
-                <Link
-                  key={project.slug}
-                  to={`/work/${project.slug}`}
-                  className={`work-showcase__name${i === activeIndex ? " is-active" : ""}`}
-                >
-                  {project.title}
-                </Link>
-              ))}
-            </div>
-
-            <div className="work-showcase__box">
-              <Link to="/work" className="work-showcase__all-link">
-                see all works →
-              </Link>
-            </div>
+        {/* <div className="work-showcase__marquee" aria-hidden="true">
+          <div className="work-showcase__marquee-track">
+            <span className="work-showcase__marquee-item">{marqueeText}</span>
+            <span className="work-showcase__marquee-item">{marqueeText}</span>
           </div>
+        </div> */}
 
+        <div className="wrap work-showcase__inner">
           <div className="work-showcase__preview-stack">
             {projects.map((project, i) => (
               <div
                 key={project.slug}
                 className={`work-showcase__preview-slot${i === activeIndex ? " is-active" : ""}`}
               >
-                <MediaWithFallback
-                  src={project.mediaSrc}
-                  alt=""
-                  label={project.mediaLabel}
-                  className="work-showcase__preview"
-                  placeholderClassName="work-showcase__preview-placeholder"
-                />
+                <WorkPreviewCard project={project} />
               </div>
             ))}
           </div>
+
+          <Link to="/work" className="work-showcase__all-link">
+            see all works →
+          </Link>
         </div>
       </div>
     </section>
