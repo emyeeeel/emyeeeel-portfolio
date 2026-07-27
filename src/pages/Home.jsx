@@ -5,7 +5,7 @@ import WorkTransition from "../components/WorkTransition.jsx";
 import ServicesJourney from "../components/ServicesJourney.jsx";
 import WorkIndex from "../components/WorkIndex.jsx";
 import AboutInteractive from "../components/AboutInteractive.jsx";
-import Process from "../components/Process.jsx";
+import ProcessReveal from "../components/ProcessReveal.jsx";
 
 function Home() {
   useEffect(() => {
@@ -18,9 +18,9 @@ function Home() {
       <Marquee />
       <WorkTransition />
       <WorkIndex />
+      <ProcessReveal />
       <ServicesJourney />
       <AboutInteractive />
-      <Process />
     </>
   );
 }
