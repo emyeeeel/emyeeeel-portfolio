@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Hero from "../components/Hero.jsx";
 import Marquee from "../components/Marquee.jsx";
+import WorkTransition from "../components/WorkTransition.jsx";
 import ServicesJourney from "../components/ServicesJourney.jsx";
 import WorkIndex from "../components/WorkIndex.jsx";
 import AboutInteractive from "../components/AboutInteractive.jsx";
@@ -15,6 +16,7 @@ function Home() {
     <>
       <Hero />
       <Marquee />
+      <WorkTransition />
       <WorkIndex />
       <ServicesJourney />
       <AboutInteractive />

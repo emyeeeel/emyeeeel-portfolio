@@ -1,0 +1,65 @@
+.work-transition {
+  background: var(--bone);
+  padding: 96px 0;
+  min-height: 650px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.work-transition .wrap {
+  width: 100%;
+  max-width: 780px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.work-transition__frame {
+  position: relative;
+  overflow: hidden;
+}
+
+.work-transition__text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(30px, 4.5vw, 46px);
+  line-height: 1.35;
+  color: var(--ink);
+  text-align: center;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.work-transition__accent {
+  color: var(--coral);
+}
+
+/* One blind per detected visual line (top/left/width/height are set
+   inline from the measured word positions in JS). Each sits over its
+   line, fully hidden at rest by the opaque blind; the blind then slides
+   off so every line reads as "opening" to reveal what was already
+   there, alternating direction per line via --reverse. */
+.work-transition__blind {
+  position: absolute;
+  background: var(--coral);
+  transform: translateX(0);
+  transition: transform 1000ms var(--ease);
+}
+
+/* A fixed, generous distance rather than a percentage of the blind's
+   own (measured, occasionally slightly-off) width, so every blind is
+   guaranteed to clear fully off to the side instead of leaving a
+   sliver behind if one line's measured width was a little too narrow. */
+.work-transition__blind--open {
+  transform: translateX(100vw);
+}
+
+.work-transition__blind--reverse.work-transition__blind--open {
+  transform: translateX(-100vw);
+}
+
+@media (max-width: 768px) {
+  .work-transition {
+    padding: 64px 0;
+  }
+}
