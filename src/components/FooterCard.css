@@ -1,0 +1,225 @@
+.footer-card {
+  background: var(--ink);
+  padding: 96px 0 48px;
+}
+
+.footer-card__panel {
+  position: relative;
+  background: #1c1c22;
+  border-radius: 40px;
+  padding: 64px 64px 64px;
+  overflow: hidden;
+}
+
+/* Starts covering the whole panel; top/left/width/height/border-radius/
+   opacity are then driven directly from JS as the section scrolls into
+   view (see FooterCard.jsx), shrinking it down onto .footer-card__actions
+   before it fades out. */
+.footer-card__panel-duplicate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bone);
+  border-radius: 40px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.footer-card__top {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  gap: 48px;
+  padding-bottom: 56px;
+}
+
+.footer-card__blurb {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(19px, 1.8vw, 24px);
+  line-height: 1.35;
+  color: var(--bone);
+  margin: 0;
+  max-width: 320px;
+}
+
+.footer-card__col-title {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--body-on-ink);
+  margin: 0 0 16px;
+}
+
+.footer-card__col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-card__col a {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--bone);
+  transition: opacity var(--transition-fast);
+}
+
+@media (hover: hover) {
+  .footer-card__col a:hover {
+    opacity: 0.7;
+  }
+}
+
+.footer-card__socials {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-card__social-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--bone);
+  transition: opacity var(--transition-fast);
+}
+
+.footer-card__social-link svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+@media (hover: hover) {
+  .footer-card__social-link:hover {
+    opacity: 0.7;
+  }
+}
+
+.footer-card__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.footer-card__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 12px 12px 22px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--bone);
+  transition: transform var(--transition-fast);
+  white-space: nowrap;
+}
+
+.footer-card__pill--ghost {
+  background: transparent;
+  border: 1px solid var(--ink-border);
+  color: var(--bone);
+  padding-right: 12px;
+}
+
+.footer-card__pill-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--coral);
+  color: var(--bone);
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+@media (hover: hover) {
+  .footer-card__pill:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.footer-card__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32px 0 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--body-on-ink);
+}
+
+.footer-card__top-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--ink-border);
+  color: var(--bone);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity var(--transition-fast);
+}
+
+@media (hover: hover) {
+  .footer-card__top-btn:hover {
+    opacity: 0.7;
+  }
+}
+
+.footer-card__copyright {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-card__copyright-mark {
+  font-family: var(--font-mono);
+  color: var(--coral);
+}
+
+@media (max-width: 900px) {
+  .footer-card__panel {
+    padding: 48px 32px 0;
+    border-radius: 28px;
+  }
+
+  .footer-card__top {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    padding-bottom: 40px;
+  }
+
+  .footer-card__actions {
+    grid-column: 1 / -1;
+    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .footer-card__wordmark {
+    margin: 0 -32px;
+    font-size: clamp(56px, 20vw, 120px);
+  }
+}
+
+@media (max-width: 560px) {
+  .footer-card__top {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import NavNotch from "./NavNotch.jsx";
 import Contact from "./Contact.jsx";
-import Footer from "./Footer.jsx";
+import FooterCard from "./FooterCard.jsx";
 import "./Layout.css";
 
 function Layout() {
@@ -12,7 +12,7 @@ function Layout() {
         <Outlet />
       </main>
       <Contact />
-      <Footer />
+      <FooterCard />
     </>
   );
 }
