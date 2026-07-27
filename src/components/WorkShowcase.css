@@ -3,36 +3,16 @@
   background: var(--ink);
 }
 
+/* No more scroll-jack pin — which project is "active" now changes on
+   click (see WorkShowcase.jsx), so there's no reason to hold this
+   section pinned across a tall scroll track anymore. */
 .work-showcase__sticky {
   padding: 96px 0;
 }
 
-/* Desktop: the section is scrolled through over several viewport
-   heights while the sticky wrapper stays pinned in place; which project
-   is "active" advances one step at a time as that scroll progresses. */
-@media (min-width: 901px) {
-  .work-showcase {
-    height: 400vh;
-  }
-
-  .work-showcase__sticky {
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-  }
-
-  .work-showcase__sticky .wrap {
-    width: 100%;
-    height: 70vh;
-  }
-}
-
 /* Giant bleeding wordmark of the active project's name, looping behind
-   the card — spans the full sticky viewport (not just the .wrap column)
-   so it bleeds past both edges of the screen. */
+   the card — spans the full width (not just the .wrap column) so it
+   bleeds past both edges of the screen. */
 .work-showcase__marquee {
   position: absolute;
   inset: 0;
@@ -82,18 +62,58 @@
   align-items: center;
   justify-content: center;
   gap: 24px;
-  height: 100%;
+}
+
+/* Two-column layout: the active project's card on the left, a stack of
+   option boxes (the other featured works) on the right — clicking one
+   makes it the highlighted work. */
+.work-showcase__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.13fr);
+  gap: 20px;
+  width: 100%;
+  max-width: 820px;
 }
 
 /* The preview images stacked on top of one another — only the active
-   one visible, crossfading between projects. Sized like a moderate,
-   centered card (not edge-to-edge) so the marquee behind it has room
-   to bleed past both sides, matching the reference. */
+   one visible, crossfading between projects. */
 .work-showcase__preview-stack {
   position: relative;
   width: 100%;
-  max-width: 620px;
   aspect-ratio: 4 / 3;
+}
+
+.work-showcase__options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+}
+
+.work-showcase__option-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 1px solid var(--ink-border);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+/* @media (hover: hover) {
+  .work-showcase__option-box:hover {
+    border-color: var(--coral);
+  }
+} */
+
+.work-showcase__option-icon {
+  max-width: 40%;
+  max-height: 40%;
+  object-fit: contain;
 }
 
 .work-showcase__preview-slot {
@@ -138,7 +158,7 @@
   }
 }
 
-@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+@media (max-width: 900px) {
   .work-showcase__sticky {
     padding: 64px 0;
   }
@@ -147,17 +167,11 @@
     display: none;
   }
 
-  .work-showcase__preview-stack {
-    max-width: none;
+  .work-showcase__layout {
+    grid-template-columns: 1fr;
   }
 
-  .work-showcase__preview-slot {
-    position: static;
-    opacity: 1;
-    display: none;
-  }
-
-  .work-showcase__preview-slot.is-active {
-    display: block;
+  .work-showcase__options {
+    flex-direction: row;
   }
 }

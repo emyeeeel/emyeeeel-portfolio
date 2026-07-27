@@ -10,6 +10,7 @@ const projects = [
     logo: "/assets/spoonfull/spoonfull_logo.png",
     logoBg: "/assets/spoonfull/spoonfull_bg.png",
     project_logo_bg: "/assets/spoonfull/spoonfull_logo_bg.gif",
+    project_logo_icon: "/assets/spoonfull/spoonfull_logo_icon.png",
     pitch:
       "AI dietary monitoring for long-term care facilities in Taiwan — food recognition, volume estimation, and personalized recommendations. 2nd place, Taiwan MOE DSP contest.",
     meta: "computer vision · healthcare · django · 2025—26 · tainan, tw",
@@ -49,6 +50,7 @@ const projects = [
     logo: "/assets/rcl-egg-trading/rcl-egg-trading_logo.png",
     logoBg: "/assets/rcl-egg-trading/rcl-egg-trading_bg.png",
     project_logo_bg: "/assets/rcl-egg-trading/rcl-egg-trading_logo_bg.gif",
+    project_logo_icon: "/assets/rcl-egg-trading/rcl-egg-trading_logo_icon.png",
     pitch:
       "Six-module business platform for a Philippine egg supplier — inventory, BIR-compliant invoicing, logistics, HR/payroll with PH statutory deductions, and accounting.",
     meta: "react · vite · supabase · rbac · 2026",
@@ -89,6 +91,7 @@ const projects = [
     logo: "/assets/paagi/paagi_logo.png",
     logoBg: "/assets/paagi/paagi_bg.png",
     project_logo_bg: "/assets/paagi/paagi_logo_bg.gif",
+    project_logo_icon: "/assets/paagi/paagi_logo_icon.png",
     pitch:
       "Dynamic box-sizing algorithms to cut logistics packaging waste — pitched to Gothong Southern executives. 1st place of 38 teams.",
     meta: "optimization · python · 2024 · cebu, ph",
@@ -129,6 +132,7 @@ const projects = [
     logo: "/assets/gabai/gabai_logo.png",
     logoBg: "/assets/gabai/gabai_bg.png",
     project_logo_bg: "/assets/gabai/gabai_logo_bg.gif",
+    project_logo_icon: "/assets/gabai/gabai_logo_icon.png",
     pitch:
       "Dynamic box-sizing algorithms to cut logistics packaging waste — pitched to Gothong Southern executives. 1st place of 38 teams.",
     meta: "optimization · python · 2024 · cebu, ph",
