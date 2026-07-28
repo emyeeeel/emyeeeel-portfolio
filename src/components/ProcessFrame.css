@@ -1,0 +1,71 @@
+/* Positioning/sizing of the frame itself (position, dimensions,
+   border-radius) is owned by whichever layout places it — see
+   ProcessReveal.css's .process-frame rule. This file only styles what's
+   inside: the media/placeholder, and the text overlay on top of it. */
+
+.process-frame__media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.process-frame__placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  border: 1px dashed var(--ink-dashed);
+  color: var(--body-on-ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-align: center;
+  background: var(--ink);
+}
+
+/* Scrim guarantees the heading/description stay legible no matter how
+   bright the underlying image is. */
+.process-frame__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(16, 16, 20, 0) 40%, rgba(16, 16, 20, 0.9) 92%);
+}
+
+.process-frame__content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 22px;
+}
+
+.process-frame__number {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--coral);
+  background: rgba(255, 77, 54, 0.12);
+  border-radius: 999px;
+  padding: 4px 10px;
+  margin: 0 0 12px;
+}
+
+.process-frame__heading {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--bone);
+  line-height: 1.1;
+  margin: 0 0 8px;
+}
+
+.process-frame__description {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--body-on-ink);
+  line-height: 1.5;
+  margin: 0;
+}

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import Reveal from "./Reveal.jsx";
+import ProcessFrame from "./ProcessFrame.jsx";
 import useReducedMotion from "../hooks/useReducedMotion.js";
 import processSteps from "../data/process.js";
 import "./ProcessReveal.css";
@@ -92,22 +93,14 @@ function ProcessReveal() {
 
           <div className="process-reveal__reel">
             {processSteps.map((step, i) => (
-              <div
+              <ProcessFrame
                 key={step.number}
-                className="process-reveal__frame"
+                step={step}
                 style={{ left: POSITIONS[i % POSITIONS.length] }}
                 ref={(node) => {
                   imageRefs.current[i] = node;
                 }}
-              >
-                {step.image ? (
-                  <img className="process-reveal__media" src={step.image} alt={step.imageAlt} />
-                ) : (
-                  <div className="process-reveal__placeholder">
-                    <span>{step.placeholderLabel ?? step.title}</span>
-                  </div>
-                )}
-              </div>
+              />
             ))}
           </div>
         </div>
