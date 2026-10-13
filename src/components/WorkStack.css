@@ -1,0 +1,95 @@
+.work-stack-section {
+  position: relative;
+  background: var(--ink);
+}
+
+.work-stack-sticky {
+  padding: 96px 0;
+}
+
+/* Desktop: the section is scrolled through over several viewport
+   heights while the sticky wrapper stays pinned in place — the tiles'
+   top/left/width/height (set inline by WorkStack.jsx, driven by scroll
+   progress) animate underneath from a single hidden stack into an even
+   grid, then into two stacked pairs (part 1), slide those pairs
+   together horizontally (part 2), close the last vertical gap so every
+   tile merges into one stack (part 3), then zoom that merged stack
+   back out to fill the section (part 4) as the pin releases into the
+   next section. */
+@media (min-width: 901px) {
+  .work-stack-section {
+    height: 580vh;
+  }
+
+  .work-stack-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+}
+
+/* Flex lives here, on .wrap's own box, rather than on .work-stack-sticky
+   with .wrap as its child — .wrap centers itself via `margin: 0 auto`,
+   and auto margins on a flex item's cross axis override
+   `align-items: stretch`, which would otherwise silently collapse it
+   back to shrink-to-fit width. */
+.work-stack-inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.work-stack {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+/* Same bg-image + centered-icon look as .work-showcase__option-box, but
+   borderless. Base rule matches the "stacked" geometry (full box) —
+   the scroll-driven inline styles take it from there. */
+.work-stack__layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  overflow: hidden;
+  /* box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3); */
+}
+
+.work-stack__icon {
+  max-width: 22%;
+  max-height: 22%;
+  object-fit: contain;
+}
+
+/* Below the desktop breakpoint, and under reduced motion, the pin and
+   scroll-driven geometry are dropped entirely: the tiles settle into a
+   plain static 2x2 grid — the fully "revealed" end state — since
+   there's no scroll track to scrub through. */
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+  .work-stack-sticky {
+    padding: 64px 0;
+  }
+
+  .work-stack-inner {
+    height: auto;
+  }
+
+  .work-stack {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 12px;
+    aspect-ratio: 4 / 3;
+  }
+
+  .work-stack__layer {
+    position: static;
+    /* border-radius: 12px; */
+  }
+}
