@@ -5,6 +5,7 @@ import PageWipe from "./components/PageWipe.jsx";
 import BootLoader from "./components/BootLoader.jsx";
 import Cursor from "./components/Cursor.jsx";
 import useReducedMotion from "./hooks/useReducedMotion.js";
+import scrollToSection from "./hooks/scrollToSection.js";
 import Home from "./pages/Home.jsx";
 import WorkIndexPage from "./pages/WorkIndex.jsx";
 import CaseStudy from "./pages/CaseStudy.jsx";
@@ -103,10 +104,12 @@ function App() {
     scrolledPathRef.current = displayLocation.pathname;
 
     if (displayLocation.hash) {
-      const target = document.getElementById(displayLocation.hash.slice(1));
-      if (target) {
-        target.scrollIntoView();
-        return;
+      const id = displayLocation.hash.slice(1);
+      if (document.getElementById(id)) {
+        // A beat later, so the page has laid out (and the browser's own
+        // jump to the anchor on a direct load is done) before scrolling.
+        const timer = setTimeout(() => scrollToSection(id), 120);
+        return () => clearTimeout(timer);
       }
     }
     // Only reset scroll for a new page — not when a filter changes the

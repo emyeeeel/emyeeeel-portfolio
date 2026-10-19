@@ -1,217 +1,261 @@
-/* Footer: the same terminal window as the skills, approach and contact
-   cards — #141419 on --ink-border, a "> prompt" line, mono labels in
-   lilac — with a status bar along the bottom. */
-.footer-card {
-  background: var(--ink);
-  padding: 24px 0 48px;
-}
-
-.footer-card__panel {
+/* The footer: a bone sheet whose rounded top corners lift it off the dark
+   contact section, so it reads as the end of the page. Ink text, with
+   coral kept to small accents (the logotype's chevron and cursor, link
+   hovers), like the rest of the site. */
+.footer {
+  position: relative;
   overflow: hidden;
-  border-radius: 20px;
-  border: 1px solid var(--ink-border);
-  background: #141419;
+  background: var(--ink);
 }
 
-.footer-card__prompt {
-  margin: 0;
-  padding: 12px 28px;
-  border-bottom: 1px solid var(--ink-border);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--lilac);
+.footer > .wrap {
+  position: relative;
 }
 
-.footer-card__mark {
-  color: var(--coral);
+/* the sheet itself, full width with rounded top corners */
+.footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 40px 40px 0 0;
+  background:
+    radial-gradient(rgba(16, 16, 20, 0.07) 1px, transparent 1.4px) 0 0 / 28px 28px,
+    var(--bone);
 }
 
-.footer-card__top {
+.footer .wrap {
+  padding-top: 72px;
+  color: var(--ink);
+}
+
+/* -------- top: who and where, then the link columns -------- */
+.footer__top {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 180px 180px;
-  gap: 40px 48px;
-  padding: 36px 28px 40px;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.6fr) minmax(0, 0.6fr);
+  gap: 40px 56px;
+  padding-bottom: 56px;
 }
 
-/* -------- identity -------- */
-.footer-card__brand {
+.footer__lead {
+  max-width: 380px;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(19px, 1.8vw, 23px);
+  line-height: 1.35;
+  color: var(--ink);
+  margin: 0 0 22px;
+}
+
+.footer__lead-accent {
+  color: var(--coral-on-bone);
+}
+
+.footer__status {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-}
-
-.footer-card__logo {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
-.footer-card__name {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 26px;
-  line-height: 1;
+  gap: 10px;
+  margin: 0;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
   color: var(--bone);
 }
 
-.footer-card__role {
-  font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--body-on-ink);
-  max-width: 38ch;
-  margin: 16px 0 0;
+.footer__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lime);
+  box-shadow: 0 0 0 3px rgba(216, 255, 62, 0.2);
 }
 
-.footer-card__status {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  line-height: 1.7;
-  color: var(--lilac);
-  margin: 14px 0 0;
-}
-
-.footer-card__status-tag {
-  color: var(--lime);
-}
-
-.footer-card__time {
-  margin-top: 2px;
-  color: #6f7186;
-}
-
-/* -------- link columns -------- */
-.footer-card__col-title {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  color: var(--lilac);
+/* column titles lead their lists: bold display type in ink, with a
+   hairline under them; the links below are smaller and softer */
+.footer__col-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--ink);
   margin: 4px 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--placeholder-border-on-bone);
 }
 
-.footer-card__col ul {
+.footer__col-title::before {
+  content: "#";
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--coral-on-bone);
+}
+
+.footer__col ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  gap: 11px;
 }
 
-.footer-card__col a {
+.footer__link {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   font-family: var(--font-body);
-  font-size: 15px;
-  color: var(--bone);
-  transition: color var(--transition-fast);
+  font-weight: 400;
+  font-size: 14.5px;
+  color: var(--body-on-bone);
+  background-image: linear-gradient(var(--coral-on-bone), var(--coral-on-bone));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1.5px;
+  transition: background-size var(--transition-med);
 }
 
-.footer-card__social-link svg {
-  width: 15px;
-  height: 15px;
+.footer__link svg {
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
-  color: var(--lilac);
-  transition: color var(--transition-fast);
+}
+
+.footer__ext {
+  font-size: 12px;
+  color: var(--muted-on-bone);
 }
 
 @media (hover: hover) {
-  .footer-card__col a:hover,
-  .footer-card__col a:hover svg {
-    color: var(--coral);
+  .footer__link:hover {
+    color: var(--ink);
+    background-size: 100% 1.5px;
   }
 }
 
-/* -------- status bar -------- */
-.footer-card__bottom {
+/* -------- the wordmark -------- */
+.footer__wordmark {
   display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin: 0 -0.04em;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: clamp(52px, 13.5vw, 204px);
+  line-height: 0.82;
+  letter-spacing: -0.05em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.footer__wordmark-chevron {
+  color: var(--coral-on-bone);
+  margin-right: 0.08em;
+}
+
+.footer__wordmark-cursor {
+  display: inline-block;
+  width: 0.5ch;
+  height: 0.72em;
+  margin-left: 0.08em;
+  background: var(--coral-on-bone);
+  animation: footer-blink 1.1s step-end infinite;
+}
+
+@keyframes footer-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* -------- bottom bar -------- */
+.footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 12px 12px 12px 28px;
-  border-top: 1px solid var(--ink-border);
+  gap: 12px 28px;
+  margin-top: 36px;
+  padding: 18px 0 24px;
+  border-top: 1px solid var(--placeholder-border-on-bone);
   font-family: var(--font-mono);
   font-size: 12px;
-  color: var(--body-on-ink);
+  color: var(--muted-on-bone);
 }
 
-.footer-card__copyright {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.footer__time {
+  color: var(--body-on-bone);
 }
 
-.footer-card__top-btn {
+.footer__top-btn {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  height: 36px;
-  padding: 0 5px 0 14px;
-  border-radius: 999px;
-  border: 1px solid var(--ink-border);
+  margin-left: auto;
   font-family: var(--font-mono);
-  font-size: 11.5px;
-  color: var(--lilac);
-  transition:
-    border-color var(--transition-fast),
-    color var(--transition-fast);
+  font-size: 12px;
+  color: var(--ink);
 }
 
-.footer-card__top-icon {
+.footer__top-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background: #1f1f26;
-  font-family: var(--font-body);
-  font-size: 13px;
+  background: var(--ink);
   color: var(--bone);
+  font-family: var(--font-body);
   transition: transform var(--transition-fast);
 }
 
 @media (hover: hover) {
-  .footer-card__top-btn:hover {
-    border-color: var(--bone);
-    color: var(--bone);
-  }
-
-  .footer-card__top-btn:hover .footer-card__top-icon {
+  .footer__top-btn:hover .footer__top-icon {
     transform: translateY(-2px);
   }
 }
 
 /* -------- responsive -------- */
-@media (max-width: 860px) {
-  .footer-card__top {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+@media (max-width: 900px) {
+  .footer::before {
+    border-radius: 28px 28px 0 0;
   }
 
-  .footer-card__id {
+  .footer .wrap {
+    padding-top: 56px;
+  }
+
+  .footer__top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    padding-bottom: 44px;
+  }
+
+  .footer__id {
     grid-column: 1 / -1;
   }
 }
 
-@media (max-width: 600px) {
-  .footer-card__prompt {
-    padding: 11px 20px;
+@media (max-width: 520px) {
+  .footer__bottom {
+    gap: 10px 16px;
   }
 
-  .footer-card__top {
-    gap: 32px 24px;
-    padding: 28px 20px 32px;
+  .footer__time {
+    order: 2;
+    width: 100%;
   }
 
-  .footer-card__bottom {
-    padding-left: 20px;
+  .footer__top-btn {
+    order: 3;
+    margin-left: 0;
   }
+}
 
-  /* icon-only on phones, so the status bar stays on one line */
-  .footer-card__top-label {
-    display: none;
-  }
-
-  .footer-card__top-btn {
-    padding: 0 4px;
+@media (prefers-reduced-motion: reduce) {
+  .footer__wordmark-cursor {
+    animation: none;
   }
 }

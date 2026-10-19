@@ -118,11 +118,6 @@ function Hero() {
 
         <div className="hero__device-slot">
           <HeroDevice />
-          <p className="hero__hint">
-            <span className="hero__hint-mark" aria-hidden="true">&gt;</span> or type
-            what&rsquo;s next — try <b>work</b>, <b>services</b>, <b>contact</b> or{" "}
-            <b>help</b>
-          </p>
         </div>
       </div>
     </section>

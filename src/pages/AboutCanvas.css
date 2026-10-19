@@ -319,6 +319,21 @@
   margin: 0;
 }
 
+.about-canvas__modal-link {
+  align-self: flex-start;
+  margin-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--coral);
+  transition: color var(--transition-fast);
+}
+
+@media (hover: hover) {
+  .about-canvas__modal-link:hover {
+    color: var(--bone);
+  }
+}
+
 .about-canvas__modal-nav {
   display: flex;
   align-items: center;
@@ -363,26 +378,38 @@
     padding: 16px;
   }
 
+  /* a fixed height on phones, so the photo has a definite space to shrink in */
   .about-canvas__modal {
-    max-height: calc(100vh - 32px);
-    max-height: calc(100dvh - 32px);
+    height: calc(100vh - 32px);
+    height: calc(100dvh - 32px);
+    max-height: none;
   }
 
+  /* Photo on top, story below. The text always gets the room it needs
+     and the photo shrinks to fill what's left, so nothing is cut off. */
   .about-canvas__modal-content {
-    grid-template-columns: minmax(0, 1fr);
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
   }
 
   .about-canvas__modal-photo {
-    padding: 20px;
+    flex: 1 1 0;
+    min-height: 120px;
+    padding: 16px;
     border-right: none;
     border-bottom: 1px solid var(--ink-border);
   }
 
   .about-canvas__modal-photo .about-canvas__img,
   .about-canvas__modal-photo .about-canvas__placeholder {
-    max-height: calc(100vh - 380px);
-    max-height: calc(100dvh - 380px);
+    max-height: 100%;
     padding: 8px 8px 26px;
+  }
+
+  .about-canvas__modal-body {
+    flex: 0 0 auto;
   }
 
   .about-canvas__modal-body {
@@ -421,13 +448,16 @@
 }
 
 @media (max-width: 640px) {
+  /* Tall enough, with small enough polaroids, that every photo fits on
+     the first screen around the heading. */
   .about-canvas {
-    height: 72vh;
-    height: 72svh;
+    height: 88vh;
+    height: 88svh;
   }
 
   .about-canvas__card {
-    width: clamp(100px, 30vw, 130px);
+    width: clamp(78px, 23vw, 112px);
+    padding: 7px 7px 22px;
   }
 
   .about-canvas__heading {

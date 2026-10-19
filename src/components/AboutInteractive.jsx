@@ -1,172 +1,76 @@
-import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import aboutFacets from "../data/aboutFacets.js";
-import useReducedMotion from "../hooks/useReducedMotion.js";
+import highlights from "../data/highlights.js";
+import Reveal from "./Reveal.jsx";
 import "./AboutInteractive.css";
 
-const FINE_HOVER_QUERY = "(hover: hover) and (pointer: fine)";
-const ADVANCE_DISTANCE = 90;
-const OFFSET_X = -20;
-const OFFSET_Y = 120;
-const HOLD_MS = 450;
-const FADE_MS = 650;
-const MAX_TRAIL = 5;
+// Portrait for the card. "/assets/about/portrait-smile.jpg" is the other
+// option from the same shoot.
+const PORTRAIT = "/assets/about/portrait-thinking.jpg";
 
-let trailIdCounter = 0;
+// The yearly-savings figure from the hero strip, so the two always match.
+const savings = highlights.find(
+  (item) => item.label.endsWith("saved per year") && !item.label.includes("hours"),
+);
 
-function AboutTrailImage({ facet }) {
-  const [status, setStatus] = useState("loading");
-
-  return (
-    <>
-      {status !== "errored" && (
-        <img
-          src={facet.mediaSrc}
-          alt={facet.mediaLabel}
-          className="about-interactive__trail-img"
-          style={{ opacity: status === "loaded" ? 1 : 0 }}
-          onLoad={() => setStatus("loaded")}
-          onError={() => setStatus("errored")}
-        />
-      )}
-      {status === "errored" && (
-        <div className="about-interactive__trail-placeholder">
-          <span>{facet.mediaLabel}</span>
-        </div>
-      )}
-    </>
-  );
-}
-
+// Home "about me": a portrait card beside a short intro with the key
+// phrases highlighted, and the way to the full board.
 function AboutInteractive() {
-  const reducedMotion = useReducedMotion();
-  const [fineHover, setFineHover] = useState(
-    () => typeof window !== "undefined" && window.matchMedia(FINE_HOVER_QUERY).matches,
-  );
-  const [trail, setTrail] = useState([]);
-  const [visibleIds, setVisibleIds] = useState(() => new Set());
-  const fieldRef = useRef(null);
-  const indexRef = useRef(0);
-  const lastAdvanceRef = useRef({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const mql = window.matchMedia(FINE_HOVER_QUERY);
-    const handler = (e) => setFineHover(e.matches);
-    mql.addEventListener("change", handler);
-    return () => mql.removeEventListener("change", handler);
-  }, []);
-
-  const enabled = fineHover && !reducedMotion;
-
-  useEffect(() => {
-    if (!enabled) return;
-    const field = fieldRef.current;
-    if (!field) return;
-    const timeouts = new Map();
-
-    function spawn(x, y) {
-      const id = ++trailIdCounter;
-      const facet = aboutFacets[indexRef.current % aboutFacets.length];
-      indexRef.current += 1;
-
-      setTrail((prev) => {
-        const next = [...prev, { id, facet, x, y }];
-        return next.length > MAX_TRAIL ? next.slice(next.length - MAX_TRAIL) : next;
-      });
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setVisibleIds((prev) => new Set(prev).add(id));
-        });
-      });
-
-      timeouts.set(
-        `fade-${id}`,
-        setTimeout(() => {
-          setVisibleIds((prev) => {
-            const next = new Set(prev);
-            next.delete(id);
-            return next;
-          });
-        }, HOLD_MS),
-      );
-
-      timeouts.set(
-        `remove-${id}`,
-        setTimeout(() => {
-          setTrail((prev) => prev.filter((item) => item.id !== id));
-          timeouts.delete(`fade-${id}`);
-          timeouts.delete(`remove-${id}`);
-        }, HOLD_MS + FADE_MS),
-      );
-    }
-
-    function onMove(e) {
-      const rect = field.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      const dx = x - lastAdvanceRef.current.x;
-      const dy = y - lastAdvanceRef.current.y;
-      if (Math.hypot(dx, dy) > ADVANCE_DISTANCE) {
-        lastAdvanceRef.current = { x, y };
-        spawn(x, y);
-      }
-    }
-
-    function onEnter(e) {
-      const rect = field.getBoundingClientRect();
-      const point = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-      lastAdvanceRef.current = point;
-      spawn(point.x, point.y);
-    }
-
-    field.addEventListener("mousemove", onMove);
-    field.addEventListener("mouseenter", onEnter);
-    return () => {
-      field.removeEventListener("mousemove", onMove);
-      field.removeEventListener("mouseenter", onEnter);
-      timeouts.forEach((t) => clearTimeout(t));
-    };
-  }, [enabled]);
-
   return (
     <section id="about" className="about-interactive" aria-labelledby="about-heading">
       <div className="wrap about-interactive__inner">
-        <div className="about-interactive__field" ref={fieldRef}>
-          <div className="about-interactive__copy">
-            <p className="section-label about-interactive__label">04 / about</p>
-            <h2 className="about-interactive__headline" id="about-heading">
-              about <span className="about-interactive__emphasis">me</span>.
-            </h2>
-            <p className="about-interactive__text">
-              I enjoy understanding what people are trying to achieve,
-              contributing ideas, and working through the details that make a
-              solution practical. What motivates me is seeing that work become
-              useful to someone: a task becomes easier, a process becomes
-              clearer, or an idea finally takes shape.
-            </p>
-            <Link to="/about" className="about-interactive__cta">
-              more about me →
-            </Link>
+        <figure className="about-card">
+          <div className="about-card__frame">
+            <img
+              src={PORTRAIT}
+              alt="Amiel, thinking it over"
+              className="about-card__photo"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption className="about-card__caption">
+              <span className="about-card__name">Amiel</span>
+              <span className="about-card__role">Software development &amp; business automation</span>
+            </figcaption>
           </div>
+          <span className="about-card__chip about-card__chip--role" aria-hidden="true">
+            <span className="about-card__chip-mark">&gt;</span> automation builder
+          </span>
+          {savings && !savings.placeholder && (
+            <span className="about-card__chip about-card__chip--stat">
+              <span className="about-card__chip-value">{savings.value}</span> {savings.label}
+            </span>
+          )}
+        </figure>
 
-          {enabled &&
-            trail.map((item) => {
-              const rotate = ((item.id * 47) % 12) - 6;
-              return (
-                <div
-                  key={item.id}
-                  className={`about-interactive__trail${visibleIds.has(item.id) ? " is-visible" : ""}`}
-                  style={{
-                    transform: `translate(${item.x + OFFSET_X}px, ${item.y - OFFSET_Y}px) rotate(${rotate}deg)`,
-                  }}
-                  aria-hidden="true"
-                >
-                  <AboutTrailImage facet={item.facet} />
-                </div>
-              );
-            })}
+        <div className="about-interactive__copy">
+          <p className="section-label about-interactive__label">04 / about</p>
+          <Reveal as="h2" className="about-interactive__headline" id="about-heading">
+            about <span className="about-interactive__emphasis">me</span>.
+          </Reveal>
+          {/* A short, punchy promise in the display font, then one plain
+              sentence that puts Amiel's name to it. */}
+          <p className="about-interactive__punch">
+            <span>
+              Less <mark>busywork</mark>.
+            </span>{" "}
+            <span>
+              Fewer <mark>manual steps</mark>.
+            </span>{" "}
+            <span>
+              More <mark>hours back</mark>.
+            </span>
+          </p>
+          <p className="about-interactive__text">
+            I&rsquo;m Amiel, a developer who builds apps, automations and reports around how
+            your team actually works, then shows you exactly what they saved.
+          </p>
+
+          <Link to="/about" className="about-interactive__cta">
+            more about me
+            <span className="about-interactive__cta-icon" aria-hidden="true">
+              →
+            </span>
+          </Link>
         </div>
       </div>
     </section>

@@ -76,41 +76,48 @@
   }
 }
 
+/* Curved-glass reflection: a faint diagonal sheen across the upper
+   corner. Kept low enough that light text on top of it stays readable. */
 .hero-device__screen-shine {
   position: absolute;
   top: -10%;
   left: -15%;
   width: 150%;
-  height: 65%;
+  height: 60%;
   background: linear-gradient(
     120deg,
-    rgba(255, 255, 255, 0.14) 28%,
-    rgba(255, 255, 255, 0) 55%
+    rgba(255, 255, 255, 0.055) 18%,
+    rgba(255, 255, 255, 0.02) 34%,
+    rgba(255, 255, 255, 0) 50%
   );
   transform: rotate(-6deg);
   pointer-events: none;
 }
 
+/* The tube's warm hotspot: a wide, soft bloom tucked into the top-left
+   corner rather than a bright blob behind the first lines of text. */
 .hero-device__glow {
   position: absolute;
-  top: calc(14px * var(--s));
-  left: calc(20px * var(--s));
-  width: calc(70px * var(--s));
-  height: calc(44px * var(--s));
+  top: calc(-30px * var(--s));
+  left: calc(-30px * var(--s));
+  width: calc(150px * var(--s));
+  height: calc(100px * var(--s));
   border-radius: 50%;
   background: radial-gradient(
-    circle,
-    rgba(255, 244, 214, 0.9) 0%,
-    rgba(255, 244, 214, 0) 72%
+    closest-side,
+    rgba(255, 244, 214, 0.16) 0%,
+    rgba(255, 244, 214, 0.05) 55%,
+    rgba(255, 244, 214, 0) 100%
   );
-  filter: blur(4px);
+  filter: blur(6px);
+  pointer-events: none;
 }
 
 .hero-device__terminal {
   position: absolute;
   inset: 0;
   z-index: 1;
-  padding: calc(10px * var(--s)) calc(12px * var(--s));
+  padding: calc(10px * var(--s)) calc(24px * var(--s)) calc(10px * var(--s)) calc(12px * var(--s));
   display: flex;
   flex-direction: column;
   gap: calc(3px * var(--s));
@@ -122,13 +129,55 @@
   overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  /* pinned to the bottom while short; once it overflows it scrolls from
+     the top (justify-content: flex-end would hide the overflow above) */
   font-family: var(--font-mono, monospace);
   font-size: calc(10.5px * var(--s));
   line-height: 1.5;
   color: var(--lilac, #8a8fb0);
+  /* a faint dark halo keeps the text crisp over the glass sheen */
+  text-shadow: 0 0 3px rgba(6, 9, 16, 0.85);
   scrollbar-width: thin;
   scrollbar-color: rgba(138, 143, 176, 0.4) transparent;
+}
+
+.hero-device__log > :first-child {
+  margin-top: auto;
+}
+
+/* up / down buttons on the screen's right edge */
+.hero-device__scroll {
+  position: absolute;
+  z-index: 2;
+  right: calc(4px * var(--s));
+  top: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: calc(4px * var(--s));
+  transform: translateY(-60%);
+}
+
+.hero-device__scroll button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(16px * var(--s));
+  height: calc(16px * var(--s));
+  border-radius: calc(4px * var(--s));
+  background: rgba(138, 143, 176, 0.14);
+  color: rgba(242, 239, 233, 0.6);
+  font-size: calc(7px * var(--s));
+  line-height: 1;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+@media (hover: hover) {
+  .hero-device__scroll button:hover {
+    background: rgba(138, 143, 176, 0.3);
+    color: #fff;
+  }
 }
 
 .hero-device__log::-webkit-scrollbar {
@@ -148,6 +197,10 @@
   color: var(--coral, #ff4d36);
   font-weight: 700;
   letter-spacing: 0.02em;
+}
+
+.hero-device__line--dim {
+  color: var(--lilac, #8a8fb0);
 }
 
 .hero-device__line--pending {
@@ -467,7 +520,13 @@
   }
 
   .hero-device__terminal {
-    padding: 12px 14px;
+    padding: 12px 32px 12px 14px;
+  }
+
+  .hero-device__scroll button {
+    width: 20px;
+    height: 20px;
+    font-size: 9px;
   }
 
   .hero-device__log {

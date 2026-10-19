@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import scrollToSection from "../hooks/scrollToSection.js";
+import runCommand from "./terminalCommands.js";
 import "./HeroDevice.css";
 
 const SESSION_KEY = "emyeeeel-terminal-session";
@@ -21,14 +23,14 @@ function getSessionId() {
 // Shown on load so the screen never starts blank.
 const GREETING = [
   { text: "emyeeeel terminal — ready." },
-  { text: "type help, or ask me anything.", ok: true },
+  { text: "ask me anything, or type help.", ok: true },
 ];
 
 // Shown whenever the n8n agent is unreachable, errors, or comes back with
 // nothing usable — the CRT's own "signal lost" moment.
 const DOWN_MESSAGE = [
   { text: "     NO SIGNAL — brain's offline", down: true },
-  { text: "— try: work · about · contact · help", ok: true },
+  { text: "— the built-in answers still work: try help", ok: true },
 ];
 
 // Handles genuinely-unmatched input by asking the /api/chat serverless
@@ -58,56 +60,55 @@ function HeroDevice() {
   const [loading, setLoading] = useState(false);
   const sessionId = useMemo(() => getSessionId(), []);
   const logRef = useRef(null);
+  // Past inputs, for ↑/↓ recall in the prompt.
+  const history = useRef([]);
+  const historyPos = useRef(-1);
 
+  // New output scrolls into view at the top of its answer, so a long reply
+  // is read from its first line (scroll down for the rest).
+  const answerStart = useRef(0);
   useEffect(() => {
     const el = logRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
+    if (!el) return;
+    const first = el.children[answerStart.current];
+    // offsetTop is measured from the terminal (its offset parent), so take
+    // off the log's own offset to get the line's position inside the log.
+    const top = first ? first.offsetTop - el.offsetTop : 0;
+    if (first && top + el.clientHeight < el.scrollHeight) {
+      el.scrollTop = Math.max(0, top - 2);
+    } else {
+      el.scrollTop = el.scrollHeight;
+    }
   }, [log, loading]);
 
-  const commands = useMemo(
-    () => ({
-      work: {
-        respond: "→ opening /work ...",
-        action: () => navigate("/work"),
-      },
-      about: {
-        respond: "→ opening /about ...",
-        action: () => navigate("/about"),
-      },
-      contact: {
-        respond: "→ jumping to #contact ...",
-        action: () => {
-          document
-            .getElementById("contact")
-            ?.scrollIntoView({ behavior: "smooth" });
-        },
-      },
-      services: {
-        respond: "→ jumping to #services ...",
-        action: () => {
-          document
-            .getElementById("services")
-            ?.scrollIntoView({ behavior: "smooth" });
-        },
-      },
-      resume: {
-        respond: "→ opening résumé (PDF) ...",
-        // Opened synchronously inside the submit handler so popup
-        // blockers still treat it as user-initiated.
-        immediate: true,
-        action: () => window.open("/Amiel_Catado_Resume.pdf", "_blank", "noopener"),
-      },
-      help: {
-        respond: "available: work, services, about, contact, resume, clear, help — or just ask a question",
-      },
-    }),
-    [navigate],
-  );
+  function scrollLog(direction) {
+    const el = logRef.current;
+    if (el) el.scrollBy({ top: direction * el.clientHeight * 0.8, behavior: "smooth" });
+  }
+
+  function onInputKeyDown(event) {
+    if (event.key === "PageUp" || event.key === "PageDown") {
+      event.preventDefault();
+      scrollLog(event.key === "PageUp" ? -1 : 1);
+      return;
+    }
+    if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
+    const list = history.current;
+    if (!list.length) return;
+    event.preventDefault();
+    let pos = historyPos.current;
+    pos = event.key === "ArrowUp" ? Math.min(list.length - 1, pos + 1) : Math.max(-1, pos - 1);
+    historyPos.current = pos;
+    setValue(pos === -1 ? "" : list[list.length - 1 - pos]);
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
     const raw = value.trim();
     if (!raw || loading) return;
+
+    history.current = [...history.current, raw].slice(-30);
+    historyPos.current = -1;
 
     const key = raw.toLowerCase();
     if (key === "clear" || key === "cls") {
@@ -117,13 +118,16 @@ function HeroDevice() {
     }
 
     setValue("");
-    setLog((prev) => [...prev, { text: `> ${raw}` }].slice(-50));
+    setLog((prev) => {
+      const next = [...prev, { text: `> ${raw}` }].slice(-80);
+      // the echoed input line is where this answer starts
+      answerStart.current = next.length - 1;
+      return next;
+    });
 
-    const command = commands[key];
+    const command = runCommand(raw, { navigate, scrollToSection });
     if (command) {
-      setLog((prev) =>
-        [...prev, { text: command.respond, ok: true }].slice(-50),
-      );
+      setLog((prev) => [...prev, ...command.lines].slice(-80));
       if (command.action && command.immediate) {
         command.action();
       } else if (command.action) {
@@ -135,7 +139,7 @@ function HeroDevice() {
     setLoading(true);
     const replyLines = await getFallbackReply(raw, sessionId);
     setLoading(false);
-    setLog((prev) => [...prev, ...replyLines].slice(-50));
+    setLog((prev) => [...prev, ...replyLines].slice(-80));
   }
 
   return (
@@ -155,7 +159,9 @@ function HeroDevice() {
                       ? "hero-device__line--ok"
                       : line.down
                         ? "hero-device__line--down"
-                        : undefined
+                        : line.dim
+                          ? "hero-device__line--dim"
+                          : undefined
                   }
                 >
                   {line.text}
@@ -174,13 +180,23 @@ function HeroDevice() {
                 type="text"
                 value={value}
                 onChange={(event) => setValue(event.target.value)}
+                onKeyDown={onInputKeyDown}
                 autoComplete="off"
                 spellCheck="false"
                 placeholder="type what's next..."
-                aria-label="Terminal: type work, services, about, contact, resume or help, or ask a question"
+                aria-label="Terminal: type help to see the commands, or ask a question"
                 disabled={loading}
               />
             </form>
+          </div>
+          {/* scroll the answers up and down (also: mouse wheel, PgUp/PgDn) */}
+          <div className="hero-device__scroll">
+            <button type="button" onClick={() => scrollLog(-1)} aria-label="Scroll terminal up">
+              ▲
+            </button>
+            <button type="button" onClick={() => scrollLog(1)} aria-label="Scroll terminal down">
+              ▼
+            </button>
           </div>
         </div>
         <div className="hero-device__vents" aria-hidden="true">

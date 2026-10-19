@@ -177,7 +177,7 @@ const projects = [
     sector: "Agriculture & food trading",
     // Made for a real organization: a prospective client, RCL Egg Trading.
     realWorld: true,
-    featured: true,
+    featured: false,
     stage: "Business application prototype",
     stageKind: "prototype",
     highlights: [
@@ -316,7 +316,7 @@ const projects = [
       },
     ],
     overview:
-      "SpoonFull came out of my TEEP research internship at K Lab, Southern Taiwan University of Science and Technology. With two teammates, I worked on a system that estimates how much a long-term care resident ate. It records intake and compares it with Taiwan Health Promotion Administration (HPA) dietary guidelines. SpoonFull is in daily use at a long-term care facility in Chiayi: staff capture and record each meal with a desktop app on the measurement station, and track and monitor residents' intake on a live website.",
+      "SpoonFull came out of my TEEP research internship at Wise Laboratory, Southern Taiwan University of Science and Technology. With two teammates, I worked on a system that estimates how much a long-term care resident ate. It records intake and compares it with Taiwan Health Promotion Administration (HPA) dietary guidelines. SpoonFull is in daily use at a long-term care facility in Chiayi: staff capture and record each meal with a desktop app on the measurement station, and track and monitor residents' intake on a live website.",
     problem:
       "In long-term care facilities, caregivers usually record food intake by estimating portions by eye. It takes time, it's subjective, and portion estimates are known to be biased: large portions tend to be underestimated and small ones overestimated. Undetected under-eating is a real risk for older residents.",
     users:
@@ -398,11 +398,19 @@ const projects = [
       },
       {
         kind: "recognition",
-        text: "Second Place, International Category, 21st DSP Creative Design Contest (Taiwan Ministry of Education).",
+        text: "Second Place, International Category, 21st DSP Creative Design Contest (Taiwan Ministry of Education): 2nd of 25 international finalists, in a contest of 193 teams from seven countries.",
       },
       {
         kind: "recognition",
-        text: "Showcased at healthcare events in Taiwan, and accepted to ICBET 2026.",
+        text: "Second Place, SCS App Expo 2026, at SCS Days 2026 of USJ-R's School of Computer Studies.",
+      },
+      {
+        kind: "recognition",
+        text: "Paper accepted for publication and presentation at the 16th International Conference on Biomedical Engineering and Technology (ICBET 2026) in Bali, Indonesia; presented by Prof. Qian-Bei Hong.",
+      },
+      {
+        kind: "recognition",
+        text: "Showcased at healthcare events in Taiwan, including STUST's AI for Healthcare Conference and the CHUNGHWA Healthcare Conference.",
       },
     ],
     evidenceNote:
@@ -422,7 +430,7 @@ const projects = [
     tags: ["Angular", "Django", "Roboflow", "Computer vision", "Decision logic"],
     // Feeds the hero figures strip (highlights.js).
     sector: "Logistics",
-    featured: true,
+    featured: false,
     stage: "Hackathon prototype",
     stageKind: "prototype",
     highlights: [
@@ -453,7 +461,7 @@ const projects = [
       stage: "Hackathon prototype",
     },
     overview:
-      "Paagi recognizes an item from a photo, retrieves its details and recommends how to pack and move it. During the SCS Days 2025 Hackathon (Jaguar's Lair) I built the working demo: an Angular front end and a Django API that sends the photo to an object detection model, matches the result to a product record, and walks through packaging and transport options. The project won the hackathon, and Gothong Southern invited us to present it.",
+      "Paagi recognizes an item from a photo, retrieves its details and recommends how to pack and move it. During the SCS Days 2025 Hackathon (Jaguars' Lair) I built the working demo: an Angular front end and a Django API that sends the photo to an object detection model, matches the result to a product record, and walks through packaging and transport options. The project won the hackathon, and Gothong Southern's CTO invited me to present it to the company's IT and R&D teams.",
     problem:
       "Packaging and vehicle choices are often made by habit or rough estimate. Boxes end up oversized, filler gets wasted, and vehicle space goes unused. Better choices need the item's real dimensions and constraints, and those aren't usually in front of the person packing.",
     users:
@@ -486,7 +494,7 @@ const projects = [
         {
           src: "/assets/about/gothong.jpg",
           alt: "Amiel presenting the Paagi pitch in a meeting room",
-          caption: "Presenting Paagi at Gothong Southern.",
+          caption: "Presenting Paagi to Gothong Southern's IT and R&D teams.",
         },
         {
           src: "/assets/paagi/paagi_pitch_2.png",
@@ -498,11 +506,11 @@ const projects = [
     evidence: [
       {
         kind: "recognition",
-        text: "Champion, SCS Days 2025 Hackathon (Jaguar's Lair).",
+        text: "Champion, SCS Days 2025 Hackathon (Jaguars' Lair).",
       },
       {
         kind: "milestone",
-        text: "Invited by Gothong Southern to showcase the project.",
+        text: "Invited by Gothong Southern's CTO to present Paagi to the company's IT and R&D teams; the only team member invited.",
       },
       {
         kind: "implemented",
@@ -802,7 +810,7 @@ const projects = [
     sector: "Real estate finance",
     // Made for a real organization: a client's finance team (kept confidential).
     realWorld: true,
-    featured: false,
+    featured: true,
     stage: "Built · Tested in manual runs",
     stageKind: "prototype",
     // Hours saved per month — feeds the hero total. ESTIMATE, from an
@@ -923,7 +931,7 @@ const projects = [
     sector: "Medical diagnostics",
     // Made for a real organization: a US diagnostic company (kept confidential).
     realWorld: true,
-    featured: false,
+    featured: true,
     stage: "Live · client CRM",
     stageKind: "live",
     // MEASURED from the client's exports: 324 of 597 leads had no source;
@@ -1039,13 +1047,17 @@ const projects = [
     featured: false,
     stage: "Built into this portfolio · being improved",
     stageKind: "live",
-    // "7" counts the built-in commands (work, services, about, contact,
-    // resume, clear, help). The reply time is a DRAFT until it's measured.
+    // Counted from src/components/terminalCommands.js. "20" is the question
+    // topics in ANSWERS that need no agent (years, projects, services,
+    // skills, rates, location, ...; "help" not counted). "14" is the slash
+    // commands (/home /work /skills /experience /about /process /services
+    // /contact /projects /aboutme /resume /github /linkedin /open), aliases
+    // not counted. Update both if those lists change.
     highlights: [
-      { value: "7", label: "Commands answered instantly" },
-      { value: "~Xs", label: "Typical agent reply", placeholder: true },
+      { value: "20", label: "Question topics answered instantly" },
+      { value: "14", label: "Slash commands to move around" },
     ],
-    // 16:7 artwork for the /work card: the real terminal after `help`.
+    // 16:7 artwork for the /work card: the real terminal answering "how many projects?".
     cardArt: "/assets/portfolio-terminal-agent/card.webp",
     tagline: "A retro terminal on this site that answers questions about my work.",
     summary:
@@ -1054,7 +1066,7 @@ const projects = [
     glance: {
       problem: "Visitors had to dig through pages to find out if I'd done what they need.",
       built: "A terminal on the home page, backed by an n8n RAG agent.",
-      result: "Commands answer instantly; anything else goes to the agent.",
+      result: "Common questions answer instantly; anything else goes to the agent.",
     },
     subtitle:
       "An AI agent built into this portfolio's retro terminal, so visitors can simply ask about my work.",
@@ -1064,14 +1076,15 @@ const projects = [
       timeline: "2026",
     },
     overview:
-      "The computer on this portfolio's home page is a working terminal. Visitors can type a command to jump around the site, or ask a question in plain words, and an AI agent I built in n8n answers from what it knows about my work. I'm still improving the agent's workflow; the parts below describe how the pieces fit together today.",
+      "The computer on this portfolio's home page is a working terminal. Visitors can ask a question in plain words or type a slash command like /work to jump around the site. Common questions are answered on the page straight away, and anything else goes to an AI agent I built in n8n, which answers from what it knows about my work. I'm still improving the agent's workflow; the parts below describe how the pieces fit together today.",
     problem:
       "A recruiter or client usually has one question: has she done the thing I need? Answering it means reading several case studies and the résumé. A terminal they can just ask turns that search into a sentence, and fits the site's terminal style.",
     users: "Recruiters and potential clients visiting the portfolio.",
     contribution: {
       text: "I built the whole chain, from the terminal on the page to the agent that answers.",
       items: [
-        "Built the terminal in React, with built-in commands for moving around the site",
+        "Built the terminal in React, with slash commands for moving around the site",
+        "Wrote built-in answers to common questions, matched by pattern and built from the site's own data",
         "Wrote a Vercel serverless function that checks each question and passes it on",
         "Connected it to an n8n webhook that runs the RAG agent, with the webhook's address and auth kept server-side",
         "Gave each browser session an ID, so the agent can remember the conversation",
@@ -1080,8 +1093,12 @@ const projects = [
     },
     decisions: [
       {
-        title: "Commands stay in the browser",
-        body: "work, services, about, contact, resume, clear and help are answered on the page straight away. Only questions that don't match a command go to the agent, so common actions are instant and cost nothing to run.",
+        title: "Common questions stay in the browser",
+        body: "Questions like \"how many years of experience does she have?\" or \"does she know Python?\" are matched by pattern and answered on the page from the same data the site shows, so the answers stay current and cost nothing to run. Only questions that match nothing go to the agent.",
+      },
+      {
+        title: "Only slash commands move the page",
+        body: "Typing \"about\" answers the question; typing /about jumps to the section. Visitors asking a question never get scrolled away from the answer.",
       },
       {
         title: "The browser never talks to n8n",
@@ -1097,7 +1114,7 @@ const projects = [
       },
       {
         title: "A graceful \"no signal\"",
-        body: "If the agent is unreachable or returns nothing, the screen shows a CRT-style \"NO SIGNAL\" message and points to the built-in commands, instead of an error.",
+        body: "If the agent is unreachable or rate-limited, the screen shows a CRT-style \"NO SIGNAL\" message instead of an error, and the built-in answers keep working.",
       },
     ],
     demo: {
@@ -1106,15 +1123,15 @@ const projects = [
       items: [
         {
           src: "/assets/portfolio-terminal-agent/card.webp",
-          alt: "The retro computer on the home page, its terminal listing the built-in commands after typing help",
-          caption: "The terminal after typing help. Anything that isn't a command goes to the agent.",
+          alt: "The retro computer on the home page, its terminal answering “how many projects?” with the project count by category and the list of projects",
+          caption: "Asked “how many projects?”, the terminal answers on the page from the site's own data. Questions it can't answer go to the agent.",
         },
       ],
     },
     evidence: [
       {
         kind: "implemented",
-        text: "Terminal with seven built-in commands, answered in the browser without calling the agent.",
+        text: "Built-in answers for 20 question topics and 14 slash commands, handled in the browser without calling the agent.",
       },
       {
         kind: "implemented",

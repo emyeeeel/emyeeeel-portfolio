@@ -18,16 +18,16 @@ const testimonials = [
   },
   {
     experience: "klab",
-    placeholder: true,
+    // placeholder: true,
     quote:
       "Give her a problem and she'll own it from start to finish. She picked things up quickly, kept the team informed, and left her work documented well enough for others to continue.",
     name: "Yu-Sheng Lin",
     role: "Supervisor",
-    company: "K Lab, STUST",
+    company: "Wise Laboratory, STUST",
   },
   {
     experience: "raykan",
-    placeholder: true,
+    // placeholder: true,
     quote:
       "Our releases felt safer with her on the team. She paid attention to the details others missed, worked well with little supervision, and always asked the right questions.",
     name: "Eric Magto",
@@ -36,7 +36,7 @@ const testimonials = [
   },
   {
     experience: "cylix",
-    placeholder: true,
+    // placeholder: true,
     quote:
       "Working with her made a demanding project easier. She took initiative without being asked, and her patience in explaining things helped city staff feel at ease with the new system.",
     name: "Ash Raganas",

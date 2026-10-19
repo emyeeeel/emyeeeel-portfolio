@@ -1,7 +1,9 @@
-/* Experience: a "git log" style timeline. Dates and a dotted rail on
-   the left, a #141419 card per role on the right (the same card as the
-   skills, approach and contact sections), coral for what's current, lime
-   for recognition, and each recommendation sitting on the role it's for. */
+/* Experience: a "git log" with three stops on a dotted rail: the current
+   roles together in one "now" card, the earlier roles as a compact list
+   that opens to the full cards, then the degree. Cards are #141419 (the
+   same card as the skills, approach and contact sections), organisations
+   get a monogram tile like the tool tiles in Skills, coral marks what's
+   current, lime marks recognition. */
 .experience {
   background: var(--ink);
   padding: 112px 0;
@@ -9,10 +11,6 @@
 
 /* -------- header -------- */
 .experience__header {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 380px);
-  align-items: end;
-  gap: 24px 64px;
   margin-bottom: 40px;
 }
 
@@ -30,14 +28,6 @@
   margin: 0;
 }
 
-.experience__intro {
-  font-family: var(--font-body);
-  font-size: 15.5px;
-  line-height: 1.6;
-  color: var(--body-on-ink);
-  margin: 0;
-}
-
 .experience__cmd {
   font-family: var(--font-mono);
   font-size: 12.5px;
@@ -49,14 +39,14 @@
   color: var(--coral);
 }
 
-/* -------- timeline -------- */
+/* -------- the rail and its three stops -------- */
 .experience__list {
   position: relative;
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 16px;
+  gap: 20px;
 }
 
 /* the rail, running through the dots */
@@ -69,26 +59,22 @@
   border-left: 1px dashed var(--ink-dashed);
 }
 
-.experience__item {
+.experience__stop {
   display: grid;
-  grid-template-columns: 200px minmax(0, 1fr);
-  gap: 24px;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 20px;
   align-items: start;
 }
 
 .experience__when {
   position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px 10px;
-  padding: 20px 0 0 28px;
+  padding: 18px 0 0 26px;
 }
 
 .experience__dot {
   position: absolute;
   left: 0;
-  top: 23px;
+  top: 24px;
   width: 11px;
   height: 11px;
   border-radius: 50%;
@@ -96,62 +82,161 @@
   border: 2px solid var(--ink-dashed);
 }
 
-.experience__item.is-current .experience__dot {
+.experience__stop.is-current .experience__dot {
   background: var(--coral);
   border-color: var(--coral);
   box-shadow: 0 0 0 5px rgba(255, 77, 54, 0.18);
 }
 
-.experience__dates {
+.experience__stop-label {
   font-family: var(--font-mono);
-  font-size: 12.5px;
+  font-size: 12px;
   color: var(--lilac);
 }
 
-.experience__item.is-current .experience__dates {
-  color: var(--bone);
-}
-
-.experience__type {
-  flex-basis: 100%;
-  font-family: var(--font-mono);
+.experience__stop.is-current .experience__stop-label {
+  display: inline-block;
   font-size: 11px;
-  color: var(--lilac);
-}
-
-.experience__now {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
   letter-spacing: 0.06em;
   color: var(--coral);
   background: rgba(255, 77, 54, 0.12);
   border-radius: 999px;
-  padding: 3px 9px;
+  padding: 3px 10px;
+  margin-top: -3px;
 }
 
-/* -------- role card -------- */
+/* -------- cards -------- */
 .experience__card {
   min-width: 0;
-  padding: 22px 24px 24px;
   border-radius: 16px;
   border: 1px solid var(--ink-border);
   background: #141419;
-  transition: border-color var(--transition-med);
 }
 
-@media (hover: hover) {
-  .experience__card:hover {
-    border-color: #3a3a44;
-  }
+.experience__card--now {
+  padding: 4px 24px;
+  border-color: rgba(255, 77, 54, 0.3);
+}
+
+.experience__card--edu {
+  padding: 2px 24px;
+}
+
+.experience__card-note {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--lilac);
+  margin: 0;
+}
+
+.experience__card--now > .experience__card-note {
+  padding: 14px 0 0;
+}
+
+/* organisation tile: a monogram (or logo), like the Skills tool tiles */
+.experience__mono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  background: #24242b;
+  border: 1px solid #2f2f38;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  color: var(--bone);
+}
+
+.experience__mono--long {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.experience__card--now .experience__mono {
+  color: var(--coral);
+  background: rgba(255, 77, 54, 0.1);
+  border-color: rgba(255, 77, 54, 0.28);
+}
+
+/* a company logo: a single-colour mask (public/assets/experience), painted
+   in the tile's colour, so it reads bone here and coral on current roles */
+.experience__logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: currentColor;
+  -webkit-mask: var(--logo) center / contain no-repeat;
+  mask: var(--logo) center / contain no-repeat;
+}
+
+/* a logo kept in its own colours: the image fills the tile */
+.experience__mono.experience__mono--color {
+  overflow: hidden;
+  background: #24242b;
+  border-color: rgba(242, 239, 233, 0.1);
+}
+
+.experience__mono--color img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* self-employed: the site's own mark, like the favicon (coral > on ink) */
+.experience__mono.experience__mono--brand {
+  color: var(--coral);
+  background: #0e0e11;
+  border-color: #2f2f38;
+}
+
+/* a role with its tile: used for the current roles and the degree */
+.experience__rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.experience__row {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 18px;
+  padding: 20px 0;
+}
+
+.experience__row + .experience__row {
+  border-top: 1px solid var(--ink-border);
+}
+
+.experience__row-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
 }
 
 .experience__role {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 21px;
-  line-height: 1.2;
+  font-size: 19px;
+  line-height: 1.25;
   color: var(--bone);
-  margin: 0 0 4px;
+  margin: 0;
+}
+
+.experience__dates {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--lilac);
+  white-space: nowrap;
+}
+
+.experience__card--now .experience__dates {
+  color: var(--bone);
 }
 
 .experience__org {
@@ -159,7 +244,7 @@
   font-size: 12px;
   line-height: 1.5;
   color: var(--lilac);
-  margin: 0 0 12px;
+  margin: 3px 0 8px;
 }
 
 .experience__summary {
@@ -168,19 +253,231 @@
   line-height: 1.6;
   color: var(--body-on-ink);
   margin: 0;
-  max-width: 64ch;
+  max-width: 66ch;
 }
 
+/* -------- earlier roles: compact lines that open -------- */
+.experience__card--past {
+  overflow: hidden;
+}
+
+.experience__card-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--ink-border);
+  background: #101014;
+}
+
+.experience__all {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--lilac);
+  background: none;
+  border: 1px solid var(--ink-dashed);
+  border-radius: 999px;
+  padding: 5px 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.experience__past-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.experience__past {
+  transition: background var(--transition-fast);
+}
+
+.experience__past + .experience__past {
+  border-top: 1px solid var(--ink-border);
+}
+
+/* an open role reads as one block, row and card together */
+.experience__past.is-open {
+  background: #17171c;
+}
+
+.experience__past-heading {
+  margin: 0;
+  font: inherit;
+}
+
+.experience__past-toggle {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto 22px;
+  grid-template-areas: "mono main side plus";
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 14px 20px;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.experience__past-toggle:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: -2px;
+}
+
+.experience__past-toggle .experience__mono {
+  grid-area: mono;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  font-size: 13px;
+}
+
+.experience__past-main {
+  grid-area: main;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.experience__past-role {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16.5px;
+  line-height: 1.25;
+  color: var(--bone);
+}
+
+.experience__past-org {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--lilac);
+}
+
+.experience__past-side {
+  grid-area: side;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.experience__past-side .experience__dates {
+  min-width: 132px;
+  text-align: right;
+}
+
+/* + that turns into − when the role is open */
+.experience__plus {
+  grid-area: plus;
+  position: relative;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--ink-dashed);
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.experience__plus::before,
+.experience__plus::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 9px;
+  height: 1.5px;
+  border-radius: 1px;
+  background: var(--bone);
+  transform: translate(-50%, -50%);
+  transition: transform 260ms var(--ease);
+}
+
+.experience__plus::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.experience__past.is-open .experience__plus {
+  border-color: var(--coral);
+  background: var(--coral);
+}
+
+.experience__past.is-open .experience__plus::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+/* the full card, revealed by animating the row height from 0 */
+.experience__past-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 320ms var(--ease);
+}
+
+.experience__past.is-open .experience__past-body {
+  grid-template-rows: 1fr;
+}
+
+.experience__past-inner {
+  min-height: 0;
+  overflow: hidden;
+  /* lines up with the role title, past the tile */
+  padding: 0 58px 0 72px;
+}
+
+.experience__past-inner > :first-child {
+  margin-top: 2px;
+}
+
+.experience__past-inner > :last-child {
+  margin-bottom: 20px;
+}
+
+@media (hover: hover) {
+  .experience__past-toggle:hover {
+    background: #18181e;
+  }
+
+  .experience__past-toggle:hover .experience__plus {
+    border-color: var(--bone);
+  }
+
+  .experience__past.is-open .experience__past-toggle:hover .experience__plus {
+    border-color: var(--coral);
+  }
+
+  .experience__all:hover {
+    color: var(--bone);
+    border-color: var(--bone);
+  }
+}
+
+/* -------- awards -------- */
 .experience__awards {
   list-style: none;
-  margin: 16px 0 0;
+  margin: 14px 0 0;
   padding: 0;
   display: grid;
   gap: 8px;
 }
 
-.experience__awards li,
-.experience__also-list li {
+.experience__awards--edu {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 24px;
+}
+
+.experience__awards li {
   display: flex;
   align-items: baseline;
   gap: 10px;
@@ -190,50 +487,20 @@
   color: var(--bone);
 }
 
-.experience__award-star,
-.experience__also-star {
+.experience__award-star {
   color: var(--lime);
   flex-shrink: 0;
 }
 
-.experience__award-event {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 11.5px;
+.experience__role-mark {
   color: var(--lilac);
-  margin-top: 2px;
-}
-
-.experience__award-year {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  color: var(--lilac);
-}
-
-.experience__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  list-style: none;
-  margin: 18px 0 0;
-  padding: 16px 0 0;
-  border-top: 1px solid var(--ink-border);
-}
-
-.experience__tags li {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  color: var(--bone);
-  background: #1c1c22;
-  border: 1px solid #25252c;
-  border-radius: 8px;
-  padding: 5px 10px;
+  flex-shrink: 0;
 }
 
 /* -------- recommendation, on the role it's for -------- */
 .experience__quote {
   position: relative;
-  margin: 18px 0 0;
+  margin: 16px 0 0;
   padding: 20px 22px 18px 54px;
   border-radius: 12px;
   background: var(--ink);
@@ -284,38 +551,8 @@
   border-color: var(--ink-dashed);
 }
 
-.experience__quote--draft .experience__quote-mark {
-  color: var(--ink-dashed);
-}
-
 .experience__quote--draft .experience__quote-text {
   color: var(--body-on-ink);
-}
-
-/* -------- awards outside a role -------- */
-.experience__also {
-  display: grid;
-  grid-template-columns: 200px minmax(0, 1fr);
-  gap: 24px;
-  margin-top: 28px;
-  padding-top: 20px;
-  border-top: 1px solid var(--ink-border);
-}
-
-.experience__also-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--lilac);
-  margin: 0;
-  padding-left: 28px;
-}
-
-.experience__also-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 10px;
 }
 
 /* -------- responsive -------- */
@@ -325,13 +562,11 @@
   }
 
   .experience__header {
-    grid-template-columns: minmax(0, 1fr);
     margin-bottom: 28px;
   }
 
-  /* dates move above each card, still on the rail */
-  .experience__item,
-  .experience__also {
+  /* the stop's label moves above its card, still on the rail */
+  .experience__stop {
     grid-template-columns: minmax(0, 1fr);
     gap: 10px;
   }
@@ -344,22 +579,66 @@
     top: 3px;
   }
 
+  .experience__stop.is-current .experience__dot {
+    top: 4px;
+  }
+
   .experience__card {
-    margin-left: 28px;
-  }
-
-  .experience__type {
-    flex-basis: auto;
-  }
-
-  .experience__also-list {
-    padding-left: 28px;
+    margin-left: 26px;
   }
 }
 
 @media (max-width: 600px) {
-  .experience__card {
-    padding: 18px 16px 20px;
+  .experience__card--now,
+  .experience__card--edu {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .experience__row {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .experience__row .experience__mono {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    font-size: 13px;
+  }
+
+  .experience__row .experience__mono--long {
+    font-size: 9.5px;
+  }
+
+  /* dates drop under the org; the + stays on the right */
+  .experience__past-toggle {
+    grid-template-columns: 36px minmax(0, 1fr) 22px;
+    grid-template-areas:
+      "mono main plus"
+      "mono side plus";
+    gap: 4px 14px;
+    padding: 14px 16px;
+  }
+
+  .experience__past-toggle .experience__mono {
+    align-self: start;
+  }
+
+  .experience__past-org {
+    white-space: normal;
+  }
+
+  .experience__past-inner {
+    padding: 0 16px;
+  }
+
+  .experience__card-bar {
+    padding: 10px 16px;
+  }
+
+  .experience__awards--edu {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .experience__quote {
@@ -370,8 +649,12 @@
     left: 12px;
     font-size: 40px;
   }
+}
 
-  .experience__also-list li {
-    flex-wrap: wrap;
+@media (prefers-reduced-motion: reduce) {
+  .experience__past-body,
+  .experience__plus::before,
+  .experience__plus::after {
+    transition: none;
   }
 }

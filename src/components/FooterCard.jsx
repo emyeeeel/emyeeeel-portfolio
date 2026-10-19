@@ -21,10 +21,10 @@ function useCebuTime() {
   return time;
 }
 
-// Footer: a terminal-style panel like the site's other windows. Who and
-// where on the left, the sitemap and links on the right, and a status
-// bar with the copyright and back-to-top. The contact form sits right
-// above it, so there's no second "contact me" call to action here.
+// Footer: a coral sheet with rounded top corners, so it reads as the end of
+// the page rather than another dark section. Who and where on the left,
+// links on the right, a huge "emyeeeel" wordmark, then a thin bottom bar.
+// The contact form sits right above, so there's no second call to action.
 function FooterCard() {
   const location = useLocation();
   const isHome = location.pathname === "/";
@@ -44,112 +44,98 @@ function FooterCard() {
     { label: "Contact", hash: "#contact", to: "#contact" },
   ];
 
+  const connect = [
+    { label: "Email", href: `mailto:${CONTACT_EMAIL}`, icon: <MailIcon /> },
+    { label: "GitHub", href: "https://github.com/emyeeeel", icon: <GitHubIcon />, external: true },
+    { label: "LinkedIn", href: "https://linkedin.com/in/emyeeeel", icon: <LinkedInIcon />, external: true },
+    { label: "Résumé", href: "/Amiel_Catado_Resume.pdf", icon: <DocIcon />, external: true },
+  ];
+
   return (
-    <footer className="footer-card">
+    <footer className="footer">
       <div className="wrap">
-        <div className="footer-card__panel">
-          <p className="footer-card__prompt" aria-hidden="true">
-            <span className="footer-card__mark">&gt;</span> whoami
-          </p>
+        <div className="footer__top">
+          <div className="footer__id">
+            {/* Bookends the hero's "there has to be a better way". */}
+            <p className="footer__lead">
+              There&rsquo;s always a <span className="footer__lead-accent">better way</span>.
+              <br />
+              Let&rsquo;s build yours.
+            </p>
+            <p className="footer__status">
+              <span className="footer__dot" aria-hidden="true" />
+              open for freelance and remote work
+            </p>
+          </div>
 
-          <div className="footer-card__top">
-            <div className="footer-card__id">
-              <Link to="/" className="footer-card__brand" aria-label="emyeeeel, home">
-                <img src="/assets/logo/logo-circle.png" alt="" className="footer-card__logo" />
-                <span className="footer-card__name">emyeeeel</span>
-              </Link>
-              <p className="footer-card__role">
-                Software development &amp; business automation, from Cebu, Philippines.
-              </p>
-              <p className="footer-card__status">
-                <span className="footer-card__status-tag">[online]</span> open for freelance
-                and remote work
-              </p>
-              <p className="footer-card__status footer-card__time">
-                local time · {cebuTime} in Cebu (GMT+8)
-              </p>
-            </div>
+          <nav className="footer__col" aria-label="Sitemap">
+            <p className="footer__col-title">explore</p>
+            <ul>
+              {explore.map((item) => (
+                <li key={item.label}>
+                  {isHome || item.to.startsWith("#") ? (
+                    <a href={item.hash} className="footer__link">
+                      {item.label}
+                    </a>
+                  ) : (
+                    <Link to={item.to} className="footer__link">
+                      {item.label}
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </nav>
 
-            <nav className="footer-card__col" aria-label="Sitemap">
-              <p className="footer-card__col-title">explore</p>
-              <ul>
-                {explore.map((item) => (
-                  <li key={item.label}>
-                    {isHome || item.to.startsWith("#") ? (
-                      <a href={item.hash}>{item.label}</a>
-                    ) : (
-                      <Link to={item.to}>{item.label}</Link>
+          <div className="footer__col">
+            <p className="footer__col-title">connect</p>
+            <ul>
+              {connect.map((item) => (
+                <li key={item.label}>
+                  <a
+                    href={item.href}
+                    className="footer__link footer__link--icon"
+                    {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  >
+                    {item.icon}
+                    {item.label}
+                    {item.external && (
+                      <span className="footer__ext" aria-hidden="true">
+                        ↗
+                      </span>
                     )}
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
-            <div className="footer-card__col">
-              <p className="footer-card__col-title">connect</p>
-              <ul>
-                <li>
-                  <a href={`mailto:${CONTACT_EMAIL}`} className="footer-card__social-link">
-                    <MailIcon />
-                    Email
                   </a>
                 </li>
-                <li>
-                  <a
-                    href="https://github.com/emyeeeel"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="footer-card__social-link"
-                  >
-                    <GitHubIcon />
-                    GitHub
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://linkedin.com/in/emyeeeel"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="footer-card__social-link"
-                  >
-                    <LinkedInIcon />
-                    LinkedIn
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="/Amiel_Catado_Resume.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="footer-card__social-link"
-                  >
-                    <DocIcon />
-                    Résumé
-                  </a>
-                </li>
-              </ul>
-            </div>
+              ))}
+            </ul>
           </div>
+        </div>
 
-          <div className="footer-card__bottom">
-            <span className="footer-card__copyright">
-              <span className="footer-card__mark" aria-hidden="true">
-                &gt;
-              </span>
-              © {year} emyeeeel. All rights reserved.
+        {/* The wordmark: the site's logotype, footer-sized. */}
+        <Link to="/" className="footer__wordmark" aria-label="emyeeeel, back to home">
+          <span className="footer__wordmark-chevron" aria-hidden="true">
+            &gt;
+          </span>
+          <span aria-hidden="true">emyeeeel</span>
+          <span className="footer__wordmark-cursor" aria-hidden="true" />
+        </Link>
+
+        <div className="footer__bottom">
+          <span>© {year} emyeeeel. All rights reserved.</span>
+          <span className="footer__time">
+            {cebuTime} in Cebu · GMT+8
+          </span>
+          <button
+            type="button"
+            className="footer__top-btn"
+            onClick={scrollToTop}
+            aria-label="Back to top"
+          >
+            back to top
+            <span className="footer__top-icon" aria-hidden="true">
+              ↑
             </span>
-            <button
-              type="button"
-              className="footer-card__top-btn"
-              onClick={scrollToTop}
-              aria-label="Back to top"
-            >
-              <span className="footer-card__top-label">back to top</span>
-              <span className="footer-card__top-icon" aria-hidden="true">
-                ↑
-              </span>
-            </button>
-          </div>
+          </button>
         </div>
       </div>
     </footer>

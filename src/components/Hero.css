@@ -291,27 +291,6 @@
   min-width: 0;
 }
 
-.hero__hint {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  line-height: 1.6;
-  color: var(--lilac);
-  letter-spacing: 0.02em;
-  margin: 32px 0 0;
-  max-width: 300px;
-  text-align: center;
-  text-wrap: balance;
-}
-
-.hero__hint-mark {
-  color: var(--coral);
-}
-
-.hero__hint b {
-  color: var(--bone);
-  font-weight: 500;
-}
-
 /* -------- tablet: stack, text first -------- */
 @media (max-width: 960px) {
   .hero {

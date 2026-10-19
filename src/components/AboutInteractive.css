@@ -1,27 +1,122 @@
+/* Home "about me": portrait card on the left, short intro on the right,
+   on the light bone background that sets this section apart. */
 .about-interactive {
   background: var(--bone);
-  padding: 96px 0;
+  padding: 112px 0;
   overflow: hidden;
 }
 
-.about-interactive__field {
-  position: relative;
-  min-height: 560px;
-  display: flex;
-  align-items: center;
+/* Card and copy sized to their content and centred as one group, so
+   the section is balanced rather than packed to the left. */
+.about-interactive__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 420px) minmax(0, 560px);
   justify-content: center;
-  cursor: default;
+  align-items: center;
+  gap: clamp(48px, 6vw, 96px);
 }
 
-.about-interactive__copy {
+/* -------- portrait card -------- */
+.about-card {
   position: relative;
-  z-index: 1;
+  margin: 0;
+  padding: 18px 18px 0;
+}
+
+.about-card__frame {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  border-radius: 24px;
+  background: #5f5a5b;
+  box-shadow: 0 30px 60px rgba(16, 16, 20, 0.22);
+  transform: rotate(-1.5deg);
+}
+
+.about-card__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* name and role over a soft dark fade at the bottom of the photo */
+.about-card__caption {
+  position: absolute;
+  inset: auto 0 0;
   display: flex;
   flex-direction: column;
+  gap: 4px;
+  padding: 64px 24px 22px;
+  background: linear-gradient(180deg, transparent, rgba(16, 16, 20, 0.82));
+}
+
+.about-card__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--bone);
+}
+
+.about-card__role {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+  color: rgba(242, 239, 233, 0.78);
+}
+
+/* floating chips, like stickers on the card */
+.about-card__chip {
+  position: absolute;
+  display: inline-flex;
   align-items: center;
-  text-align: center;
-  max-width: 640px;
-  pointer-events: none;
+  gap: 6px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  white-space: nowrap;
+  box-shadow: 0 10px 24px rgba(16, 16, 20, 0.18);
+}
+
+.about-card__chip--role {
+  top: 0;
+  left: 0;
+  background: var(--ink);
+  color: var(--bone);
+  transform: rotate(-4deg);
+}
+
+.about-card__chip-mark {
+  color: var(--lime);
+}
+
+/* the same coral as the hero's "see selected work" button: a slight
+   top-to-bottom shade and soft coral glow, with dark text */
+.about-card__chip--stat {
+  right: -6px;
+  bottom: 96px;
+  background: linear-gradient(180deg, #ff5d45, #f23c25);
+  box-shadow:
+    0 8px 24px -8px rgba(255, 77, 54, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  color: var(--ink);
+  transform: rotate(3deg);
+}
+
+.about-card__chip-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+}
+
+/* -------- intro -------- */
+.about-interactive__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 560px;
 }
 
 .about-interactive__label {
@@ -29,114 +124,123 @@
   margin: 0 0 16px;
 }
 
-.about-interactive__text {
-  font-family: var(--font-body);
-  font-size: 17px;
-  line-height: 1.65;
-  color: var(--body-on-bone);
-  margin: 28px 0 28px;
-  background: rgba(242, 239, 233, 0.82);
-  border-radius: 8px;
-}
-
-.about-interactive__cta {
-  pointer-events: auto;
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--bone);
-  background: var(--ink);
-  border-radius: 999px;
-  padding: 13px 22px;
-  transition: background var(--transition-fast);
-}
-
-@media (hover: hover) {
-  .about-interactive__cta:hover {
-    background: var(--coral-on-bone);
-  }
-}
-
 .about-interactive__headline {
-  position: relative;
-  z-index: 1;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(48px, 9vw, 96px);
+  font-size: clamp(48px, 7vw, 88px);
   line-height: 1;
   color: var(--ink);
   margin: 0;
-  pointer-events: none;
 }
 
 .about-interactive__emphasis {
   color: var(--coral-on-bone);
 }
 
-.about-interactive__trail {
-  position: absolute;
-  top: 0;
-  left: 0;
-  max-width: clamp(140px, 16vw, 220px);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  opacity: 0;
-  scale: 0.9;
-  pointer-events: none;
-  transition:
-    opacity 650ms ease,
-    scale 650ms ease;
+/* A step below the heading: lighter weight and smaller, so it supports
+   "about me." instead of competing with it. The key words stand out
+   by the highlighter and darker ink alone, not extra weight. */
+.about-interactive__punch {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(22px, 2.4vw, 28px);
+  line-height: 1.35;
+  color: var(--body-on-bone);
+  margin: 24px 0 18px;
+  padding-left: 18px;
+  border-left: 3px solid var(--coral-on-bone);
 }
 
-.about-interactive__trail.is-visible {
-  opacity: 1;
-  scale: 1;
-}
-
-.about-interactive__trail-img {
+/* one short sentence per line, for rhythm */
+.about-interactive__punch span {
   display: block;
-  width: 100%;
-  height: auto;
-  border-radius: inherit;
-  transition: opacity 250ms ease;
 }
 
-.about-interactive__trail-placeholder {
-  width: clamp(140px, 16vw, 220px);
-  aspect-ratio: 3 / 4;
+/* the coral highlighter on the key words */
+.about-interactive__punch mark {
+  background: linear-gradient(transparent 60%, rgba(255, 77, 54, 0.32) 60%);
+  color: var(--ink);
+  padding: 0 0.04em;
+}
+
+.about-interactive__text {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--body-on-bone);
+  max-width: 46ch;
+  margin: 0 0 32px;
+}
+
+/* the hero's pill button, dark on the light background */
+.about-interactive__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  height: 50px;
+  padding: 0 7px 0 22px;
+  border-radius: 999px;
   background: var(--ink);
-  border: 1px dashed var(--ink-dashed);
-  display: flex;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--bone);
+  transition: transform var(--transition-fast);
+}
+
+.about-interactive__cta-icon {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  padding: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--coral);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 16px;
+  transition: transform var(--transition-fast);
 }
 
-.about-interactive__trail-placeholder span {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.05em;
-  color: var(--lilac);
-}
-
-@media (max-width: 768px) {
-  .about-interactive {
-    padding: 64px 0;
+@media (hover: hover) {
+  .about-interactive__cta:hover {
+    transform: translateY(-2px);
   }
 
-  .about-interactive__field {
-    min-height: 420px;
+  .about-interactive__cta:hover .about-interactive__cta-icon {
+    transform: translateX(2px);
+  }
+}
+
+/* -------- responsive -------- */
+@media (max-width: 900px) {
+  .about-interactive {
+    padding: 80px 0;
+  }
+
+  .about-interactive__inner {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: 48px;
+  }
+
+  .about-interactive__copy {
+    width: 100%;
+  }
+
+  .about-card {
+    width: min(100%, 340px);
+    margin: 0 auto;
   }
 }
 
 @media (max-width: 480px) {
-  .about-interactive__headline {
-    font-size: clamp(38px, 13vw, 56px);
+  .about-interactive__cta {
+    width: 100%;
+    justify-content: space-between;
   }
 
-  .about-interactive__field {
-    min-height: 360px;
+  .about-card__chip--stat {
+    right: 0;
   }
 }

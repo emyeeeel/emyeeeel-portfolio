@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import useReducedMotion from "../hooks/useReducedMotion.js";
 import services from "../data/services.js";
+import scrollToSection from "../hooks/scrollToSection.js";
 import "./ServicesJourney.css";
 
 const THEMES = ["light", "accent", "dark"];
@@ -42,6 +43,25 @@ const ICONS = [SparkIcon, LayersIcon, PulseIcon];
 function ServicesJourney() {
   const reducedMotion = useReducedMotion();
   const sectionRef = useRef(null);
+
+  // Same-page links to #services (nav, footer) jump to the finished cards
+  // instead of the top of the pinned animation.
+  useEffect(() => {
+    function onClick(event) {
+      const link = event.target.closest?.("a[href]");
+      if (!link || event.defaultPrevented || event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const url = new URL(link.href, window.location.href);
+      if (url.hash !== "#services" || url.pathname !== window.location.pathname) return;
+      event.preventDefault();
+      if (window.location.hash !== "#services") {
+        window.history.pushState(window.history.state, "", "#services");
+      }
+      scrollToSection("services");
+    }
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, []);
 
   useEffect(() => {
     const section = sectionRef.current;

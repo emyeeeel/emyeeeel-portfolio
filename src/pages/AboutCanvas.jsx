@@ -34,8 +34,9 @@ function initialPan(viewW, viewH) {
 //   card  — one polaroid, { w, h }
 //   intro — the heading block, { w, h }
 // Each photo gets its own direction around the heading (so the ring is
-// even), then takes the nearest free spot that's on screen. Photos that
-// can't fit on a small screen go just beyond the edge, still nearby.
+// even), then takes the nearest free spot that's on screen. When the
+// screen runs out of free spots, photos overlap each other (as little as
+// possible) rather than leaving the screen. They never cover the heading.
 function layoutAround(view, card, intro) {
   const count = aboutFacets.length;
   const pan = initialPan(view.w, view.h);
@@ -78,12 +79,11 @@ function layoutAround(view, card, intro) {
     top: -pan.y + NAV_BAND,
     bottom: -pan.y + view.h - EDGE,
   });
-  // A wider band around the screen, for photos that don't fit on it.
-  const nearby = candidates({
-    left: Math.max(0, -pan.x - view.w * 0.6),
-    right: Math.min(CANVAS_WIDTH, -pan.x + view.w * 1.6),
-    top: Math.max(0, -pan.y - view.h * 0.4),
-    bottom: Math.min(CANVAS_HEIGHT, -pan.y + view.h * 1.4),
+  const belowScreen = candidates({
+    left: -pan.x + EDGE,
+    right: -pan.x + view.w - EDGE,
+    top: -pan.y + NAV_BAND,
+    bottom: Math.min(CANVAS_HEIGHT, -pan.y + view.h * 1.6),
   });
 
   const placed = [];
@@ -93,12 +93,26 @@ function layoutAround(view, card, intro) {
     return d > Math.PI ? Math.PI * 2 - d : d;
   };
 
-  function pick(list, target) {
+  // How much of `box` is covered by photos already placed (0 = none).
+  function covered(box) {
+    let area = 0;
+    for (const p of placed) {
+      const w = Math.min(box.x + box.w, p.x + p.w) - Math.max(box.x, p.x);
+      const h = Math.min(box.y + box.h, p.y + p.h) - Math.max(box.y, p.y);
+      if (w > 0 && h > 0) area += w * h;
+    }
+    return area / (box.w * box.h);
+  }
+
+  // Nearest on-screen spot in the photo's direction; with `allowOverlap`,
+  // spots on other photos are allowed but cost more the more they cover.
+  function pick(list, target, allowOverlap) {
     let best = null;
     let bestScore = Infinity;
     for (const c of list) {
-      if (placed.some((p) => hits(c.box, p, CARD_GAP))) continue;
-      const score = c.dist + angleGap(c.angle, target) * 0.6;
+      let score = c.dist + angleGap(c.angle, target) * 0.6;
+      if (allowOverlap) score += covered(c.box) * 4;
+      else if (placed.some((p) => hits(c.box, p, CARD_GAP))) continue;
       if (score < bestScore) {
         bestScore = score;
         best = c;
@@ -109,7 +123,10 @@ function layoutAround(view, card, intro) {
 
   return aboutFacets.map((facet, index) => {
     const target = start + (index * Math.PI * 2) / count;
-    const spot = pick(onScreen, target) ?? pick(nearby, target);
+    // On a screen too short for any spot, fall back to the nearest spot
+    // just below it rather than stacking every photo in one place.
+    const spot =
+      pick(onScreen, target, false) ?? pick(onScreen, target, true) ?? pick(belowScreen, target, true);
     const box = spot ? spot.box : { x: CENTER_X + 600, y: CENTER_Y, w: cw, h: ch };
     placed.push(box);
     return {
@@ -121,6 +138,13 @@ function layoutAround(view, card, intro) {
       z: index + 1,
     };
   });
+}
+
+// The photo before/after `current` in `list`, wrapping around the ends.
+function neighbour(list, current, direction) {
+  if (!current) return current;
+  const next = (current.id + direction + list.length) % list.length;
+  return list.find((item) => item.id === next) ?? current;
 }
 
 function CanvasImage({ src, alt }) {
@@ -418,6 +442,16 @@ function AboutCanvasPage() {
                 </h2>
                 {activeItem.story && (
                   <p className="about-canvas__modal-desc">{activeItem.story}</p>
+                )}
+                {activeItem.link && (
+                  <a
+                    href={activeItem.link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="about-canvas__modal-link"
+                  >
+                    {activeItem.link.label} <span aria-hidden="true">↗</span>
+                  </a>
                 )}
 
                 <div className="about-canvas__modal-nav">

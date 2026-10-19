@@ -1,182 +1,201 @@
-import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import skillGroups, { SKILL_ACCENTS } from "../data/skills.js";
-import projects from "../data/projects.js";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import skillGroups from "../data/skills.js";
+import stackIcons from "../data/stackIcons.js";
 import useReducedMotion from "../hooks/useReducedMotion.js";
 import Reveal from "./Reveal.jsx";
 import "./Skills.css";
 
-// How many projects carry each tag — a tool with at least one project
-// links to /work filtered to it; the rest are plain text. (Used only to
-// decide linking; the count itself isn't shown.)
-const tagCounts = projects.reduce((counts, project) => {
-  project.tags?.forEach((tag) => {
-    counts[tag] = (counts[tag] ?? 0) + 1;
-  });
-  return counts;
-}, {});
-
-// Line icons in the same 1.5px-stroke style as the services cards.
-const ICON_PATHS = {
-  code: <path d="m8 7-5 5 5 5M16 7l5 5-5 5M13.5 4l-3 16" />,
-  layers: (
-    <>
-      <path d="m12 3 9 5-9 5-9-5 9-5Z" />
-      <path d="m3 13 9 5 9-5" />
-    </>
-  ),
-  flow: (
-    <>
-      <rect x="3" y="4" width="6" height="5" rx="1.5" />
-      <rect x="15" y="15" width="6" height="5" rx="1.5" />
-      <path d="M6 9v3a3 3 0 0 0 3 3h6" />
-    </>
-  ),
-  spark: <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.5 6.5l2.5 2.5M15 15l2.5 2.5M17.5 6.5 15 9M9 15l-2.5 2.5" />,
-  database: (
-    <>
-      <ellipse cx="12" cy="6" rx="7" ry="3" />
-      <path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6" />
-    </>
-  ),
-  plug: <path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0V8ZM12 17v4" />,
-  check: (
-    <>
-      <path d="M12 3 4 6v6c0 4.4 3.4 7.8 8 9 4.6-1.2 8-4.6 8-9V6l-8-3Z" />
-      <path d="m8.5 12 2.5 2.5 4.5-5" />
-    </>
-  ),
-  compass: (
-    <>
-      <circle cx="12" cy="12" r="9" />
-      <path d="m15.5 8.5-2 5-5 2 2-5 5-2Z" />
-    </>
-  ),
+// Tools that get their logo in the chip (keys in stackIcons.js); the rest
+// get a monogram of their first letter.
+const ITEM_ICONS = {
+  Python: "python",
+  "Python scripting": "python",
+  React: "react",
+  Django: "django",
+  n8n: "n8n",
+  "Make.com": "make",
+  "HubSpot workflows": "hubspot",
+  "HubSpot CRM": "hubspot",
+  Supabase: "supabase",
+  PostgreSQL: "postgresql",
 };
 
-function GroupIcon({ name }) {
+function ChipMark({ name }) {
+  const mark = stackIcons[ITEM_ICONS[name]];
+  if (!mark) {
+    return (
+      <span className="skills__chip-mono" aria-hidden="true">
+        {name.replace(/[^A-Za-z]/g, "").charAt(0)}
+      </span>
+    );
+  }
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      width="18"
-      height="18"
-      aria-hidden="true"
-    >
-      {ICON_PATHS[name] ?? ICON_PATHS.code}
-    </svg>
+    <span className="skills__chip-logo" style={{ "--brand": mark.color }} aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+        <path d={mark.path} />
+      </svg>
+    </span>
   );
 }
 
-function Skills() {
-  const reducedMotion = useReducedMotion();
-  const gridRef = useRef(null);
-  const [visible, setVisible] = useState(() => new Set());
-
-  // Each card rises in once, when it scrolls into view — the same "reveal
-  // once" behaviour as the section headings. Cards are watched one by one,
-  // so cards still off-screen don't animate early.
+// Types `text` out a character at a time whenever it changes.
+function useTyped(text, enabled) {
+  const [count, setCount] = useState(text.length);
   useEffect(() => {
-    const cards = gridRef.current ? [...gridRef.current.children] : [];
-    if (reducedMotion) {
-      setVisible(new Set(cards.map((_, i) => i)));
+    if (!enabled) {
+      setCount(text.length);
       return;
     }
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const shown = entries.filter((e) => e.isIntersecting);
-        if (!shown.length) return;
-        setVisible((prev) => {
-          const next = new Set(prev);
-          shown.forEach((e) => {
-            next.add(cards.indexOf(e.target));
-            observer.unobserve(e.target);
-          });
-          return next;
-        });
-      },
-      { rootMargin: "0px 0px -8% 0px" },
-    );
-    cards.forEach((card) => observer.observe(card));
-    return () => observer.disconnect();
-  }, [reducedMotion]);
+    setCount(0);
+    let i = 0;
+    const id = setInterval(() => {
+      i += 1;
+      setCount(i);
+      if (i >= text.length) clearInterval(id);
+    }, 26);
+    return () => clearInterval(id);
+  }, [text, enabled]);
+  return text.slice(0, count);
+}
+
+// Every skill in one terminal window, one tab per category. Switching tabs
+// slides the lime indicator across, types the `ls` command out and pops
+// the tools in as chips.
+function Skills() {
+  const reducedMotion = useReducedMotion();
+  const [active, setActive] = useState(0);
+  const tabRefs = useRef([]);
+  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
+  const group = skillGroups[active];
+  const command = `ls ~/stack/${group.key}`;
+  const typed = useTyped(command, !reducedMotion);
+
+  // Keep the indicator under the active tab, and the tab in view inside the
+  // (sideways-scrolling) tab strip on small screens. Only the strip
+  // scrolls, never the page.
+  useLayoutEffect(() => {
+    function place() {
+      const tab = tabRefs.current[active];
+      if (!tab) return;
+      setIndicator({ left: tab.offsetLeft, width: tab.offsetWidth });
+    }
+    place();
+    const tab = tabRefs.current[active];
+    const strip = tab?.parentElement;
+    if (tab && strip) {
+      const left = tab.offsetLeft;
+      const right = left + tab.offsetWidth;
+      if (left < strip.scrollLeft) strip.scrollLeft = left - 8;
+      else if (right > strip.scrollLeft + strip.clientWidth) {
+        strip.scrollLeft = right - strip.clientWidth + 8;
+      }
+    }
+    window.addEventListener("resize", place);
+    document.fonts?.ready?.then(place);
+    return () => window.removeEventListener("resize", place);
+  }, [active]);
+
+  // Arrow keys move between tabs, as in a standard tab list.
+  function onTabKeyDown(event) {
+    const last = skillGroups.length - 1;
+    let next = null;
+    if (event.key === "ArrowRight") next = active === last ? 0 : active + 1;
+    else if (event.key === "ArrowLeft") next = active === 0 ? last : active - 1;
+    else if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = last;
+    if (next === null) return;
+    event.preventDefault();
+    setActive(next);
+    tabRefs.current[next]?.focus();
+  }
 
   return (
     <section id="skills" className="skills" aria-labelledby="skills-heading">
       <div className="wrap">
         <div className="skills__header">
-          <div>
-            <p className="section-label skills__label">02 / skills &amp; tools</p>
-            <Reveal as="h2" className="skills__heading" id="skills-heading">
-              What I build with.
-            </Reveal>
-          </div>
-          <div className="skills__intro">
-            <p className="skills__intro-text">
-              The languages, frameworks and platforms behind the work, grouped
-              the way you&rsquo;d look for them.
-            </p>
-            <ul className="skills__legend" aria-label="Colour key">
-              {SKILL_ACCENTS.map((accent) => (
-                <li className={`skills__legend-item skills--${accent.key}`} key={accent.key}>
-                  {accent.label}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <p className="section-label skills__label">02 / skills &amp; tools</p>
+          <Reveal as="h2" className="skills__heading" id="skills-heading">
+            What I build <span className="skills__heading-accent">with</span>.
+          </Reveal>
         </div>
 
-        {/* A bento grid of small "terminal windows", one per category:
-            a prompt line, then the icon, title, caption and tools. Each
-            card's accent matches the /work filter colours. */}
-        <ol ref={gridRef} className="skills__grid">
-          {skillGroups.map((group, i) => (
-            <li
-              className={`skills__card skills--${group.accent}${visible.has(i) ? " is-visible" : ""}`}
-              style={{ "--span": group.span, "--delay": `${(i % 3) * 70}ms` }}
-              key={group.key}
-            >
-              <p className="skills__prompt" aria-hidden="true">
-                <span className="skills__prompt-mark">&gt;</span> ls ~/stack/
-                <span className="skills__prompt-dir">{group.key}</span>
-                <span className="skills__prompt-num">{String(i + 1).padStart(2, "0")}</span>
-              </p>
-              <div className="skills__card-head">
-                <span className="skills__card-icon" aria-hidden="true">
-                  <GroupIcon name={group.icon} />
-                </span>
-                <div>
-                  <h3 className="skills__card-title">{group.label}</h3>
-                  {group.caption && <p className="skills__card-caption">{group.caption}</p>}
-                </div>
+        <div className="skills__stage">
+          <div className="skills__term">
+            <div className="skills__term-bar">
+              <span className="skills__term-dots" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+              </span>
+              <div className="skills__tabs" role="tablist" aria-label="Skill categories">
+                <span
+                  className="skills__tab-indicator"
+                  style={{ transform: `translateX(${indicator.left}px)`, width: indicator.width }}
+                  aria-hidden="true"
+                />
+                {skillGroups.map((g, i) => (
+                  <button
+                    key={g.key}
+                    type="button"
+                    role="tab"
+                    id={`skills-tab-${g.key}`}
+                    aria-selected={i === active}
+                    aria-controls="skills-panel"
+                    tabIndex={i === active ? 0 : -1}
+                    className={`skills__tab${i === active ? " is-active" : ""}`}
+                    onClick={() => setActive(i)}
+                    onKeyDown={onTabKeyDown}
+                    ref={(node) => {
+                      tabRefs.current[i] = node;
+                    }}
+                  >
+                    {g.key}
+                  </button>
+                ))}
               </div>
-              <ul className="skills__items">
-                {group.items.map((item) => {
-                  const count = tagCounts[item];
-                  return (
-                    <li key={item}>
-                      {count ? (
-                        <Link
-                          to={`/work?tag=${encodeURIComponent(item)}`}
-                          className="skills__item"
-                          aria-label={`${item} — see projects using it`}
-                        >
-                          {item}
-                        </Link>
-                      ) : (
-                        <span className="skills__item">{item}</span>
-                      )}
-                    </li>
-                  );
-                })}
+            </div>
+
+            <div
+              className="skills__panel"
+              role="tabpanel"
+              id="skills-panel"
+              aria-labelledby={`skills-tab-${group.key}`}
+            >
+              <div className="skills__panel-head">
+                <p className="skills__cmd" aria-hidden="true">
+                  <span className="skills__cmd-mark">&gt;</span> {typed}
+                  <span className="skills__caret" />
+                </p>
+                <h3 className="skills__group-title" key={`t-${group.key}`}>
+                  {group.label}
+                </h3>
+                {group.caption && (
+                  <p className="skills__comment" key={`c-${group.key}`}>
+                    # {group.caption}
+                  </p>
+                )}
+              </div>
+
+              <ul className="skills__chips" key={group.key}>
+                {group.items.map((item, i) => (
+                  <li className="skills__chip" key={item} style={{ "--i": i }}>
+                    <ChipMark name={item} />
+                    {item}
+                  </li>
+                ))}
               </ul>
-            </li>
-          ))}
-        </ol>
+            </div>
+
+            {/* a status bar, like an editor's */}
+            <div className="skills__status" aria-hidden="true">
+              <span className="skills__status-item skills__status-item--live">
+                <i /> ready
+              </span>
+              <span className="skills__status-item">~/stack/{group.key}</span>
+              <span className="skills__status-item skills__status-hint">← → to switch tabs</span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

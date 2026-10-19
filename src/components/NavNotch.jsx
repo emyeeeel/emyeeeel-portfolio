@@ -120,11 +120,8 @@ function NavNotch() {
 
           <div className="nav-notch__side nav-notch__side--right" inert={!expanded}>
             <ul className="nav-notch__list">
-              <li>
-                <Link to="/about" onClick={closeMenu}>
-                  about
-                </Link>
-              </li>
+              {/* the home page's "about me" section, not the /about page */}
+              <li>{sectionLink("about", "about")}</li>
               <li>
                 {/* The contact section is part of every page's layout, so
                     this stays on the current page instead of going home. */}

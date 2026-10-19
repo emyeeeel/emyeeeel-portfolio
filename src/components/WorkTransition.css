@@ -1,65 +1,250 @@
+/* The same dotted board as the /about page, fading out towards the edges,
+   so the tagline sits on a surface instead of empty space. */
 .work-transition {
+  position: relative;
   background: var(--bone);
-  padding: 96px 0;
-  min-height: 520px;
+  padding: 104px 0;
+  min-height: 560px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+.work-transition::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--placeholder-border-on-bone) 1px, transparent 1.5px);
+  background-size: 28px 28px;
+  -webkit-mask-image: radial-gradient(60% 70% at 50% 50%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(60% 70% at 50% 50%, #000 30%, transparent 75%);
+  pointer-events: none;
+}
+
 .work-transition .wrap {
-  width: 100%;
-  max-width: 780px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.work-transition__frame {
   position: relative;
-  overflow: hidden;
-}
-
-.work-transition__text {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(30px, 4.5vw, 46px);
-  line-height: 1.35;
-  color: var(--ink);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  text-wrap: balance;
-  margin: 0;
 }
 
-.work-transition__accent {
+.work-transition__prompt {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--body-on-bone);
+  margin: 0 0 36px;
+}
+
+.work-transition__prompt-mark {
   color: var(--coral-on-bone);
 }
 
-/* One blind per detected visual line (top/left/width/height are set
-   inline from the measured word positions in JS). Each sits over its
-   line, fully hidden at rest by the opaque blind; the blind then slides
-   off so every line reads as "opening" to reveal what was already
-   there, alternating direction per line via --reverse. */
-.work-transition__blind {
+/* -------- the tagline: a small, crossed-out "before" over a big "after" -------- */
+.work-transition__line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  font-family: var(--font-display);
+}
+
+/* "From" / "to" sit on the baseline before their quote; on a narrow
+   screen "to" wraps above the big quote rather than squeezing it. */
+.work-transition__before,
+.work-transition__after {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  column-gap: 0.32em;
+  row-gap: 6px;
+}
+
+/* extra room around the struck quote, so "From" and "to" don't run into
+   its strike line */
+.work-transition__before {
+  column-gap: 0.6em;
+}
+
+.work-transition__joiner {
+  font-weight: 700;
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+/* before: smaller, lighter and grey, then struck through in coral */
+.work-transition__before .work-transition__quote {
+  position: relative;
+  font-weight: 500;
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1.2;
+  color: #9a968c;
+}
+
+.work-transition__before .work-transition__quote::after {
+  content: "";
   position: absolute;
-  background: var(--coral);
-  transform: translateX(0);
-  transition: transform 1000ms var(--ease);
+  left: 0;
+  right: 0;
+  top: 52%;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 450ms var(--ease) 450ms;
 }
 
-/* A fixed, generous distance rather than a percentage of the blind's
-   own (measured, occasionally slightly-off) width, so every blind is
-   guaranteed to clear fully off to the side instead of leaving a
-   sliver behind if one line's measured width was a little too narrow. */
-.work-transition__blind--open {
-  transform: translateX(100vw);
+/* after: the headline, bold and big, with the coral highlighter */
+.work-transition__after .work-transition__quote {
+  font-weight: 700;
+  font-size: clamp(32px, 8vw, 104px);
+  line-height: 1.02;
+  white-space: nowrap;
+  letter-spacing: -0.015em;
+  color: var(--ink);
 }
 
-.work-transition__blind--reverse.work-transition__blind--open {
-  transform: translateX(-100vw);
+/* The payoff sits on a solid coral band, like a sticker: the band sweeps
+   in from the left and the text turns light as it lands. The darker
+   coral keeps light text readable (about 4.9:1). */
+.work-transition__mark {
+  display: inline-block;
+  color: var(--ink);
+  padding: 0.04em 0.16em 0.1em;
+  border-radius: 0.1em;
+  background: linear-gradient(var(--coral-on-bone), var(--coral-on-bone)) no-repeat 0 0 / 0% 100%;
+  transform: rotate(-1.5deg);
+  transition:
+    background-size 600ms var(--ease) 1250ms,
+    color 250ms var(--ease) 1500ms;
 }
 
-@media (max-width: 768px) {
+/* -------- entrance, in story order -------- */
+.work-transition__prompt,
+.work-transition__before,
+.work-transition__after,
+.work-transition__cue {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 500ms var(--ease),
+    transform 500ms var(--ease);
+}
+
+.work-transition__after {
+  transition-delay: 900ms;
+}
+
+.work-transition__cue {
+  transition-delay: 1600ms;
+}
+
+.work-transition.is-visible .work-transition__prompt,
+.work-transition.is-visible .work-transition__before,
+.work-transition.is-visible .work-transition__after,
+.work-transition.is-visible .work-transition__cue {
+  opacity: 1;
+  transform: none;
+}
+
+.work-transition.is-visible .work-transition__before .work-transition__quote::after {
+  transform: scaleX(1);
+}
+
+.work-transition.is-visible .work-transition__mark {
+  background-size: 100% 100%;
+  color: var(--bone);
+}
+
+/* -------- cue to the work below -------- */
+.work-transition__cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 48px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--body-on-bone);
+}
+
+.work-transition__cue-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--placeholder-border-on-bone);
+  color: var(--coral-on-bone);
+  animation: work-cue-bob 1.8s ease-in-out infinite;
+}
+
+@keyframes work-cue-bob {
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+@media (hover: hover) {
+  .work-transition__cue:hover {
+    color: var(--ink);
+  }
+
+  .work-transition__cue:hover .work-transition__cue-arrow {
+    border-color: var(--coral-on-bone);
+  }
+}
+
+/* -------- smaller screens -------- */
+@media (max-width: 680px) {
   .work-transition {
-    padding: 64px 0;
+    padding: 72px 0;
+    min-height: 0;
+  }
+
+  .work-transition__line {
+    gap: 10px;
+  }
+
+  /* keep "From … to" on one line on phones */
+  .work-transition__before {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+
+  .work-transition__before .work-transition__quote,
+  .work-transition__joiner {
+    font-size: clamp(16px, 5.2vw, 24px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-transition__prompt,
+  .work-transition__before,
+  .work-transition__after,
+  .work-transition__cue {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .work-transition__before .work-transition__quote::after {
+    transform: scaleX(1);
+    transition: none;
+  }
+
+  .work-transition__mark {
+    background-size: 100% 100%;
+    color: var(--bone);
+    transition: none;
+  }
+
+  .work-transition__cue-arrow {
+    animation: none;
   }
 }

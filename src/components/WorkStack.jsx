@@ -1,231 +1,196 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import useReducedMotion from "../hooks/useReducedMotion.js";
 import allProjects from "../data/projects.js";
+import Reveal from "./Reveal.jsx";
 import "./WorkStack.css";
 
-// Percentage geometry (of the .work-stack box) for each tile. All tiles
-// start identical — full-size, exactly overlapping, with the first
-// project in front — and shrink directly into their own grid slot as the
-// section scrolls. Once in the grid they stay there for the rest of the
-// pinned scroll, so every project's name, stage and summary is readable
-// before the section releases.
-//
-// .work-stack keeps a fixed aspect ratio, so a tile's real shape only
-// stays constant if width% === height% scale together; the stacked
-// (100/100) and grid (50/50 minus half the gap) keyframes both satisfy
-// that, so linear interpolation keeps each tile rigid between them.
-const STACKED = { top: 0, left: 0, width: 100, height: 100 };
+const MAX_STACK = 4;
 
-// Percentage points opened up between tiles as they approach their grid
-// slots — eased in across the same scroll range as the resize.
-const GRID_GAP = 1.6;
-
-// Share of the pinned scroll spent moving from stacked to grid; the rest
-// holds the finished grid in place.
-const GRID_PHASE_END = 0.55;
-
-function gridRect(i, count, gap) {
-  const rows = Math.max(1, Math.ceil(count / 2));
-  const row = Math.floor(i / 2);
-  const col = i % 2;
-  const height = (100 - gap * (rows - 1)) / rows;
-  const width = 50 - gap / 2;
-  return {
-    top: row * (height + gap),
-    left: col === 0 ? 0 : 50 + gap / 2,
-    width,
-    height,
-  };
+// The project's headline figures, minus any drafts in production builds.
+function figuresFor(project) {
+  const items = project.highlights ?? [];
+  return (import.meta.env.DEV ? items : items.filter((item) => !item.placeholder)).slice(0, 2);
 }
 
-function lerp(a, b, t) {
-  return a + (b - a) * t;
+function TrendArrow({ trend }) {
+  return (
+    <>
+      <svg
+        className={`work-file__trend work-file__trend--${trend}`}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M12 4v15M5 12l7 7 7-7" />
+      </svg>
+      <span className="visually-hidden">{trend === "down" ? "Down " : "Up "}</span>
+    </>
+  );
 }
 
-function lerpRect(a, b, t) {
-  return {
-    top: lerp(a.top, b.top, t),
-    left: lerp(a.left, b.left, t),
-    width: lerp(a.width, b.width, t),
-    height: lerp(a.height, b.height, t),
-  };
-}
-
-// Stacking depth while the tiles still overlap: the first project sits in
-// front, the last one right behind it, then everyone else in order.
-function depthRank(i, count) {
-  if (count <= 2) return i;
-  if (i === 0) return 0;
-  if (i === count - 1) return 1;
-  return i + 1;
-}
-
-// Applied to the artwork panel only, so the image is never darkened by
-// the caption underneath.
-function tileBackground(project) {
-  if (!project.logoBg) return undefined;
-  return {
-    backgroundColor: project.iconBg,
-    backgroundImage: `url(${project.logoBg})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  };
-}
-
-function WorkStack({ projects }) {
-  const reducedMotion = useReducedMotion();
-  const sectionRef = useRef(null);
-  const layerRefs = useRef([]);
-  layerRefs.current = [];
-  const count = projects.length;
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    // Below the desktop breakpoint (and under reduced motion) the pin and
-    // scroll-driven geometry are disabled in CSS (see WorkStack.css),
-    // which falls back to a static grid.
-    if (reducedMotion || window.innerWidth <= 900) return;
-
-    function applyProgress(progress) {
-      const t = Math.min(1, progress / GRID_PHASE_END);
-      layerRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const rect = lerpRect(STACKED, gridRect(i, count, GRID_GAP * t), t);
-        el.style.top = `${rect.top}%`;
-        el.style.left = `${rect.left}%`;
-        el.style.width = `${rect.width}%`;
-        el.style.height = `${rect.height}%`;
-        el.style.setProperty("--tile-progress", t.toFixed(3));
-      });
-    }
-
-    let rafId = null;
-
-    function updateProgress() {
-      rafId = null;
-      const rect = section.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const scrollable = Math.max(rect.height - vh, 1);
-      const raw = -rect.top / scrollable;
-      applyProgress(Math.min(1, Math.max(0, raw)));
-    }
-
-    function onScroll() {
-      if (rafId == null) {
-        rafId = requestAnimationFrame(updateProgress);
-      }
-    }
-
-    updateProgress();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (rafId != null) cancelAnimationFrame(rafId);
-      // Clear inline geometry so the CSS fallback grid can take over.
-      layerRefs.current.forEach((el) => {
-        if (!el) return;
-        ["top", "left", "width", "height", "--tile-progress"].forEach((prop) =>
-          el.style.removeProperty(prop),
-        );
-      });
-    };
-  }, [reducedMotion, count]);
-
-  // Keyboard users can tab into tiles that are still stacked behind the
-  // front one; jump the pinned scroll to the finished grid so the focused
-  // tile (and its focus ring) is actually visible.
-  function revealGrid() {
-    const section = sectionRef.current;
-    if (!section || reducedMotion || window.innerWidth <= 900) return;
-    const rect = section.getBoundingClientRect();
-    const scrollable = Math.max(rect.height - window.innerHeight, 1);
-    const progress = -rect.top / scrollable;
-    if (progress >= GRID_PHASE_END) return;
-    const sectionTop = rect.top + window.scrollY;
-    window.scrollTo({ top: sectionTop + scrollable * GRID_PHASE_END, behavior: "auto" });
+// The artwork tile: the card image if there is one, otherwise the logo on
+// its brand background, otherwise a typed wordmark.
+function Artwork({ project }) {
+  if (project.cardArt) {
+    return (
+      <span className="work-file__art">
+        <img src={project.cardArt} alt="" className="work-file__cover" loading="lazy" />
+      </span>
+    );
   }
+  if (project.logoBg) {
+    return (
+      <span
+        className="work-file__art"
+        style={{
+          backgroundColor: project.iconBg,
+          backgroundImage: `url(${project.logoBg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        {project.icon && <img src={project.icon} alt="" className="work-file__icon" />}
+      </span>
+    );
+  }
+  return (
+    <span className="work-file__art work-file__art--type">
+      <span className="work-file__wordmark">
+        <span className="work-file__wordmark-mark">&gt;</span> {project.title.toLowerCase()}
+      </span>
+    </span>
+  );
+}
+
+// One featured project as a small terminal window: a title bar with its
+// path, the artwork as a cover with the title and summary over its lower
+// part, a readout of its two headline figures, and its stack as a
+// command line.
+function WorkFile({ project }) {
+  const figures = figuresFor(project);
+  const tags = project.tags ?? [];
+  const shown = tags.slice(0, MAX_STACK);
+  const more = tags.length - shown.length;
 
   return (
-    <section
-      id="work"
-      className="work-stack-section"
-      ref={sectionRef}
-      aria-labelledby="work-heading"
-    >
-      <div className="work-stack-sticky">
-        <div className="wrap work-stack-inner">
-          <div className="work-stack__header">
-            <h2 className="section-label work-stack__label" id="work-heading">
-              01 / selected work
-            </h2>
-          </div>
+    <li className="work-file">
+      <article className="work-file__card" aria-labelledby={`work-file-${project.slug}`}>
+        <div className="work-file__bar">
+          <span className="work-file__dots" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+          </span>
+          <span className="work-file__path" aria-hidden="true">
+            ~/work/{project.slug}
+          </span>
+        </div>
 
-          <ul className="work-stack">
-            {projects.map((project, i) => (
-              <li
-                key={project.slug}
-                className={`work-stack__layer${project.logoBg ? "" : " work-stack__layer--type"}`}
-                ref={(node) => {
-                  layerRefs.current[i] = node;
-                }}
-                style={{ zIndex: count - depthRank(i, count) }}
+        <div className="work-file__body">
+          <Artwork project={project} />
+          <div className="work-file__text">
+            <h3 className="work-file__title" id={`work-file-${project.slug}`}>
+              {project.title}
+            </h3>
+            <p className="work-file__summary">{project.summary}</p>
+          </div>
+        </div>
+
+        {figures.length > 0 && (
+          <div className="work-file__readout">
+            {figures.map((item) => (
+              <span
+                className={`work-file__figure${item.placeholder ? " work-file__figure--draft" : ""}`}
+                key={item.label}
               >
-                <Link
-                  to={`/work/${project.slug}`}
-                  className="work-stack__link"
-                  onFocus={revealGrid}
-                >
-                  <span className="work-stack__art" style={tileBackground(project)}>
-                    {project.icon ? (
-                      <img
-                        src={project.icon}
-                        alt=""
-                        className="work-stack__icon"
-                        onError={(e) => {
-                          e.currentTarget.style.display = "none";
-                        }}
-                      />
-                    ) : (
-                      <span className="work-stack__wordmark" aria-hidden="true">
-                        <span className="work-stack__wordmark-mark">&gt;</span>{" "}
-                        {project.title.toLowerCase()}
-                      </span>
-                    )}
-                  </span>
-
-                  <span className="work-stack__caption">
-                    <span className="work-stack__title">{project.title}</span>
-                    <span className="work-stack__tagline">{project.tagline}</span>
-                    <span className="work-stack__cta" aria-hidden="true">
-                      read case study →
-                    </span>
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          {/* How much of the work is on show, then the way to the rest —
-              the same outline pill as the hero's "let's connect". */}
-          <div className="work-stack__footer">
-            <p className="work-stack__count">
-              <span className="work-stack__count-mark" aria-hidden="true">
-                &gt;
-              </span>{" "}
-              showing {projects.length} of {allProjects.length} projects
-            </p>
-            <Link to="/work" className="work-stack__all">
-              view all projects
-              <span className="work-stack__all-icon" aria-hidden="true">
-                →
+                <span className="work-file__figure-value">
+                  {item.trend && <TrendArrow trend={item.trend} />}
+                  {item.value}
+                </span>
+                <span className="work-file__figure-label">{item.label}</span>
               </span>
-            </Link>
+            ))}
           </div>
+        )}
+
+        {tags.length > 0 && (
+          <p className="work-file__stack">
+            <span className="visually-hidden">Built with: {tags.join(", ")}</span>
+            <span aria-hidden="true">
+              <span className="work-file__stack-mark">$ stack</span> {shown.join(" · ")}
+              {more > 0 && <span className="work-file__stack-more"> +{more}</span>}
+            </span>
+          </p>
+        )}
+      </article>
+    </li>
+  );
+}
+
+// Home "selected work": the featured projects as terminal-window cards,
+// two per row. They rise in one after another the first time the grid
+// scrolls into view.
+function WorkStack({ projects }) {
+  const reducedMotion = useReducedMotion();
+  const gridRef = useRef(null);
+  const [shown, setShown] = useState(false);
+
+  useEffect(() => {
+    if (reducedMotion) {
+      setShown(true);
+      return;
+    }
+    const el = gridRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShown(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [reducedMotion]);
+
+  return (
+    <section id="work" className="work-home" aria-labelledby="work-heading">
+      <div className="wrap">
+        <div className="work-home__header">
+          <p className="section-label work-home__label">01 / selected work</p>
+          <Reveal as="h2" className="work-home__heading" id="work-heading">
+            Things that took hours, now take{" "}
+            <span className="work-home__heading-accent">minutes</span>.
+          </Reveal>
+        </div>
+
+        <ul ref={gridRef} className={`work-home__grid${shown ? " is-shown" : ""}`}>
+          {projects.map((project) => (
+            <WorkFile key={project.slug} project={project} />
+          ))}
+        </ul>
+
+        {/* How much of the work is on show, then the way to the rest. */}
+        <div className="work-home__footer">
+          <p className="work-home__count">
+            <span className="work-home__count-mark" aria-hidden="true">
+              &gt;
+            </span>{" "}
+            showing {projects.length} of {allProjects.length} projects
+          </p>
+          <Link to="/work" className="work-home__all">
+            view all projects
+            <span className="work-home__all-icon" aria-hidden="true">
+              →
+            </span>
+          </Link>
         </div>
       </div>
     </section>

@@ -40,11 +40,12 @@
   width: 100%;
 }
 
+/* The label and heading are readable from the first frame; they only
+   settle a little upwards as the cards shrink into place. */
 .services-journey__label {
   color: var(--lilac);
   margin: 0 0 16px;
   text-align: center;
-  opacity: calc(0.12 + (var(--stage-a) * 0.88));
 }
 
 .services-journey__heading {
@@ -56,11 +57,7 @@
   text-align: center;
   margin: 0 0 56px;
   text-wrap: balance;
-  /* Stage A: starts dim (still legible, tucked behind the oversized
-     rectangle) rather than fully invisible, then brightens and rises
-     into place as the rectangle zooms out. Holds still through B/C. */
-  opacity: calc(0.12 + (var(--stage-a) * 0.88));
-  transform: translateY(calc((1 - var(--stage-a)) * 100px));
+  transform: translateY(calc((1 - var(--stage-a)) * 24px));
 }
 
 .services-journey__list {
@@ -74,7 +71,7 @@
      size as the heading rises out from behind it (heading paints
      underneath since it comes first in DOM order and neither element
      sets z-index). */
-  transform: scale(calc(1.25 - (var(--stage-a) * 0.25)));
+  transform: scale(calc(1.12 - (var(--stage-a) * 0.12)));
 }
 
 .services-journey__card {
@@ -213,11 +210,14 @@
 /* the shared "one image" back face — same gradient across all three
    cards, offset per card via --slice-x so it reads as continuous while
    flush, until the card flips to reveal its real theme. */
+/* The back is one image across all three cards: a single coral ">"
+   prompt on a plain dark panel. Each card shows its own slice (via
+   --slice-x), so the chevron splits apart as the cards pull away. */
 .services-journey__card-face--back {
-  background-image:
-    radial-gradient(120% 140% at 25% 20%, rgba(255, 138, 111, 0.5), transparent 55%),
-    linear-gradient(160deg, #ff8a6f 0%, var(--lilac) 55%, #101014 100%);
+  background-color: #1b1b21;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 380'%3E%3Cpath d='M340 70 L600 190 L340 310' fill='none' stroke='%23ff4d36' stroke-width='54' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-size: 900px 380px;
+  background-repeat: no-repeat;
   background-position: var(--slice-x, 0) 0;
 }
 

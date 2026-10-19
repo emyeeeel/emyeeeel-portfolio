@@ -1,77 +1,296 @@
-.work-stack-section {
-  position: relative;
+/* Home "selected work": heading, a two-column grid of the /work project
+   cards (styled in WorkCard.css), then the count and "view all". */
+.work-home {
   background: var(--ink);
+  padding: 112px 0;
 }
 
-.work-stack-sticky {
-  padding: 96px 0;
+.work-home__header {
+  margin-bottom: 44px;
 }
 
-/* Desktop: the section scrolls through ~2.6 viewport heights while the
-   sticky wrapper stays pinned. The tiles' top/left/width/height (set
-   inline by WorkStack.jsx from scroll progress) open from one stack
-   into a grid, then hold so every project can be read before release. */
-@media (min-width: 901px) {
-  .work-stack-section {
-    height: 260vh;
-  }
-
-  .work-stack-sticky {
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    overflow: hidden;
-    padding: 72px 0 40px;
-  }
+.work-home__label {
+  color: var(--lilac);
+  margin: 0 0 16px;
 }
 
-/* Flex lives on .wrap's own box (not a parent) because .wrap centers
-   itself with auto margins, which would otherwise collapse it to
-   shrink-to-fit width as a flex item. */
-.work-stack-inner {
-  height: 100%;
+.work-home__heading {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(32px, 5vw, 56px);
+  line-height: 1.08;
+  color: var(--bone);
+  margin: 0;
+  max-width: 900px;
+  text-wrap: balance;
+}
+
+.work-home__heading-accent {
+  color: var(--coral);
+}
+
+/* -------- the grid: 2 x 2 terminal-window cards -------- */
+.work-home__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.work-file {
+  display: flex;
+  min-width: 0;
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 600ms var(--ease),
+    transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.work-home__grid.is-shown > .work-file {
+  opacity: 1;
+  transform: none;
+}
+
+.work-home__grid.is-shown > .work-file:nth-child(2) {
+  transition-delay: 90ms;
+}
+
+.work-home__grid.is-shown > .work-file:nth-child(3) {
+  transition-delay: 180ms;
+}
+
+.work-home__grid.is-shown > .work-file:nth-child(4) {
+  transition-delay: 270ms;
+}
+
+.work-file__card {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  background: #141419;
+  border: 1px solid var(--ink-border);
+  border-radius: 18px;
+}
+
+/* title bar: dots, the project's path, and its category in its colour */
+.work-file__bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 16px;
+  background: #101014;
+  border-bottom: 1px solid var(--ink-border);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+
+.work-file__dots {
+  display: inline-flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.work-file__dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2f2f38;
+}
+
+.work-file__path {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #7c7f96;
+}
+
+/* body: the artwork as a cover, with the title and summary over its
+   lower part on a dark fade so they always read */
+/* the cover keeps the 16:7 proportion of the /work card artwork, so card
+   images show whole and logos sit centred in the upper half */
+.work-file__body {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  aspect-ratio: 16 / 7;
+  overflow: hidden;
+}
+
+.work-file__art {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
   justify-content: center;
-  gap: 28px;
+  padding-top: 5%;
+  background: linear-gradient(160deg, #1f1f26, #0c0c10);
 }
 
-/* The header shares the grid's width (see .work-stack below), so its
-   left edge and the "all projects" link line up with the tiles. */
-.work-stack__header {
-  width: min(100%, calc((100vh - 260px) * 16 / 9));
-  margin: 0 auto;
+.work-file__cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* "all projects" sits under the grid, right-aligned to its edge. */
-.work-stack__footer {
-  width: min(100%, calc((100vh - 260px) * 16 / 9));
-  margin: 0 auto;
+.work-file__icon {
+  width: auto;
+  height: 40%;
+  max-width: 40%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
+}
+
+.work-file__art--type {
+  align-items: center;
+  padding-top: 0;
+  background:
+    radial-gradient(70% 90% at 80% 10%, rgba(255, 77, 54, 0.3), transparent 60%),
+    linear-gradient(160deg, #1f1f26, #0c0c10);
+}
+
+.work-file__wordmark {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--bone);
+}
+
+.work-file__wordmark-mark {
+  color: var(--coral);
+}
+
+.work-file__text {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 48px 22px 16px;
+  background: linear-gradient(
+    180deg,
+    rgba(16, 16, 20, 0) 0%,
+    rgba(16, 16, 20, 0.82) 42%,
+    rgba(16, 16, 20, 0.96) 100%
+  );
+}
+
+.work-file__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(20px, 1.8vw, 24px);
+  line-height: 1.15;
+  color: var(--bone);
+  margin: 0 0 6px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.work-file__summary {
+  max-width: 48ch;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: rgba(242, 239, 233, 0.82);
+}
+
+/* readout: the two headline figures, big, side by side */
+.work-file__readout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--ink-border);
+}
+
+.work-file__figure {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  padding: 16px 20px;
+}
+
+.work-file__figure + .work-file__figure {
+  border-left: 1px solid var(--ink-border);
+}
+
+.work-file__figure-value {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1.05;
+  color: var(--bone);
+  white-space: nowrap;
+}
+
+.work-file__trend {
+  width: 0.78em;
+  height: 0.78em;
+  margin-right: 0.12em;
+  color: var(--coral);
+}
+
+.work-file__trend--up {
+  transform: rotate(180deg);
+}
+
+.work-file__figure-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--lilac);
+}
+
+.work-file__figure--draft .work-file__figure-value {
+  color: var(--ink-dashed);
+}
+
+/* stack: a command line along the bottom */
+.work-file__stack {
+  margin: 0;
+  padding: 11px 20px;
+  background: #101014;
+  border-top: 1px solid var(--ink-border);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--body-on-ink);
+}
+
+.work-file__stack-mark {
+  color: var(--coral);
+}
+
+.work-file__stack-more {
+  color: var(--lilac);
+}
+
+/* -------- footer: count, then the way to the rest -------- */
+.work-home__footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  margin-top: 32px;
 }
 
-.work-stack__count {
+.work-home__count {
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--lilac);
   margin: 0;
 }
 
-.work-stack__count-mark {
+.work-home__count-mark {
   color: var(--coral);
 }
 
-.work-stack__label {
-  font-weight: 400;
-  color: var(--lilac);
-  margin: 0;
-}
-
-/* Outline pill with an icon circle, matching the hero's secondary button. */
-.work-stack__all {
+/* outline pill with an icon circle, like the hero's secondary button */
+.work-home__all {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
@@ -90,7 +309,7 @@
     transform var(--transition-fast);
 }
 
-.work-stack__all-icon {
+.work-home__all-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -107,229 +326,83 @@
 }
 
 @media (hover: hover) {
-  .work-stack__all:hover {
+  .work-home__all:hover {
     border-color: var(--bone);
     transform: translateY(-2px);
   }
 
-  .work-stack__all:hover .work-stack__all-icon {
+  .work-home__all:hover .work-home__all-icon {
     border-color: var(--bone);
     transform: translateX(2px);
   }
 }
 
-/* The box keeps its 16:9 shape but is capped by the viewport height, so
-   the header and the whole grid always fit inside the pinned screen. */
-.work-stack {
-  position: relative;
-  width: min(100%, calc((100vh - 260px) * 16 / 9));
-  margin: 0 auto;
-  aspect-ratio: 16 / 9;
-  list-style: none;
-  padding: 0;
-}
+/* -------- responsive -------- */
+@media (max-width: 860px) {
+  .work-home {
+    padding: 80px 0;
+  }
 
-.work-stack__layer {
-  position: absolute;
-  inset: 0;
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-/* Two panels: artwork on top (full colour, nothing laid over it) and a
-   solid caption underneath in normal flow, so the two never overlap
-   however short the tile gets, and the artwork never fades into a muddy
-   band. */
-.work-stack__link {
-  position: relative;
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
-  width: 100%;
-  height: 100%;
-  border-radius: inherit;
-  overflow: hidden;
-  background: #141419;
-  border: 1px solid var(--ink-border);
-  transition: border-color var(--transition-med);
-}
-
-.work-stack__link:focus-visible {
-  outline-offset: -4px;
-}
-
-@media (hover: hover) {
-  .work-stack__link:hover {
-    border-color: #3a3a44;
+  .work-home__header {
+    margin-bottom: 32px;
   }
 }
 
-.work-stack__art {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 0;
-  overflow: hidden;
-  background: linear-gradient(160deg, #1f1f26, #0c0c10);
-}
-
-/* soft vignette so the icon reads on any artwork, without darkening it */
-.work-stack__art::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(70% 80% at 50% 50%, transparent 60%, rgba(0, 0, 0, 0.08) 100%);
-  pointer-events: none;
-}
-
-/* Projects without brand artwork get a typographic tile in the site's
-   terminal language instead of an invented image. */
-.work-stack__layer--type .work-stack__art {
-  background:
-    radial-gradient(70% 90% at 80% 10%, rgba(255, 77, 54, 0.32), transparent 60%),
-    repeating-linear-gradient(0deg, rgba(242, 239, 233, 0.04) 0 1px, transparent 1px 28px),
-    repeating-linear-gradient(90deg, rgba(242, 239, 233, 0.04) 0 1px, transparent 1px 28px),
-    linear-gradient(160deg, #1f1f26, #0c0c10);
-}
-
-/* Sized from the panel's height, so it scales with the tile through the
-   whole stack-to-grid animation and is never cramped against an edge. */
-.work-stack__icon {
-  position: relative;
-  z-index: 1;
-  height: 46%;
-  max-height: 140px;
-  min-height: 40px;
-  width: auto;
-  max-width: 40%;
-  object-fit: contain;
-  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.3));
-}
-
-.work-stack__wordmark {
-  position: relative;
-  z-index: 1;
-  font-family: var(--font-mono);
-  font-size: clamp(16px, 2.2vw, 28px);
-  color: var(--bone);
-  white-space: nowrap;
-}
-
-.work-stack__wordmark-mark {
-  color: var(--coral);
-}
-
-/* Always-visible caption: name, one-line summary and the link cue, on a
-   solid panel — nothing depends on hover. */
-.work-stack__caption {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-  padding: 18px 20px 18px;
-  background: #141419;
-  border-top: 1px solid var(--ink-border);
-}
-
-.work-stack__title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(20px, 2vw, 28px);
-  line-height: 1.1;
-  color: var(--bone);
-}
-
-.work-stack__tagline {
-  font-family: var(--font-body);
-  font-size: 14px;
-  line-height: 1.45;
-  color: var(--body-on-ink);
-  max-width: 46ch;
-}
-
-.work-stack__cta {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--coral);
-  transition: transform var(--transition-fast);
-}
-
-@media (hover: hover) {
-  .work-stack__link:hover .work-stack__cta {
-    transform: translateX(4px);
+/* one card per row; the artwork moves above the text */
+@media (max-width: 760px) {
+  .work-home__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
   }
 }
 
-/* Below the desktop breakpoint, and under reduced motion, the pin and
-   scroll-driven geometry are dropped: the tiles sit in a plain static
-   grid — the finished state — since there's no scroll track to scrub. */
-@media (max-width: 900px), (prefers-reduced-motion: reduce) {
-  .work-stack-section {
-    height: auto;
-  }
-
-  .work-stack-sticky {
-    position: static;
-    height: auto;
-    padding: 64px 0;
-  }
-
-  .work-stack-inner {
-    height: auto;
-  }
-
-  .work-stack__header,
-  .work-stack__footer {
-    width: 100%;
-  }
-
-  .work-stack {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    width: 100%;
-    aspect-ratio: auto;
-  }
-
-  .work-stack__layer {
-    position: relative;
-    inset: auto;
-    top: auto !important;
-    left: auto !important;
-    width: auto !important;
-    height: auto !important;
-    aspect-ratio: 16 / 11;
-  }
-}
-
-@media (max-width: 640px) {
-  .work-stack {
-    grid-template-columns: 1fr;
-  }
-
-  .work-stack__layer {
-    aspect-ratio: auto;
-    min-height: 300px;
-  }
-
-  .work-stack__link {
-    min-height: 300px;
-  }
-
-  .work-stack__caption {
-    padding: 24px 16px 16px;
-  }
-}
-
-/* phones: the count sits on its own line above a full-width button */
-@media (max-width: 600px) {
-  .work-stack__footer {
+@media (max-width: 680px) {
+  .work-home__footer {
     flex-direction: column;
     align-items: stretch;
     gap: 12px;
   }
 
-  .work-stack__all {
+  .work-home__all {
     justify-content: space-between;
+  }
+}
+
+/* narrow cards: the cover is too short to hold the text, so the text
+   sits below it */
+@media (max-width: 560px) {
+  .work-file__body {
+    display: block;
+    aspect-ratio: auto;
+  }
+
+  .work-file__art {
+    position: relative;
+    aspect-ratio: 16 / 7;
+  }
+
+  .work-file__text {
+    padding: 16px 16px 14px;
+    background: #141419;
+  }
+
+  .work-file__title {
+    text-shadow: none;
+  }
+
+  .work-file__figure {
+    padding: 14px 16px;
+  }
+
+  .work-file__stack {
+    padding: 10px 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-file {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
