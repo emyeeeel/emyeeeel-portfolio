@@ -7,18 +7,13 @@
   padding: 96px 0;
 }
 
-/* Desktop: the section is scrolled through over several viewport
-   heights while the sticky wrapper stays pinned in place — the tiles'
-   top/left/width/height (set inline by WorkStack.jsx, driven by scroll
-   progress) animate underneath from a single hidden stack into an even
-   grid, then into two stacked pairs (part 1), slide those pairs
-   together horizontally (part 2), close the last vertical gap so every
-   tile merges into one stack (part 3), then zoom that merged stack
-   back out to fill the section (part 4) as the pin releases into the
-   next section. */
+/* Desktop: the section scrolls through ~2.6 viewport heights while the
+   sticky wrapper stays pinned. The tiles' top/left/width/height (set
+   inline by WorkStack.jsx from scroll progress) open from one stack
+   into a grid, then hold so every project can be read before release. */
 @media (min-width: 901px) {
   .work-stack-section {
-    height: 580vh;
+    height: 260vh;
   }
 
   .work-stack-sticky {
@@ -26,53 +21,256 @@
     top: 0;
     height: 100vh;
     overflow: hidden;
+    padding: 72px 0 40px;
   }
 }
 
-/* Flex lives here, on .wrap's own box, rather than on .work-stack-sticky
-   with .wrap as its child — .wrap centers itself via `margin: 0 auto`,
-   and auto margins on a flex item's cross axis override
-   `align-items: stretch`, which would otherwise silently collapse it
-   back to shrink-to-fit width. */
+/* Flex lives on .wrap's own box (not a parent) because .wrap centers
+   itself with auto margins, which would otherwise collapse it to
+   shrink-to-fit width as a flex item. */
 .work-stack-inner {
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 28px;
 }
 
+/* The header shares the grid's width (see .work-stack below), so its
+   left edge and the "all projects" link line up with the tiles. */
+.work-stack__header {
+  width: min(100%, calc((100vh - 260px) * 16 / 9));
+  margin: 0 auto;
+}
+
+/* "all projects" sits under the grid, right-aligned to its edge. */
+.work-stack__footer {
+  width: min(100%, calc((100vh - 260px) * 16 / 9));
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.work-stack__count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--lilac);
+  margin: 0;
+}
+
+.work-stack__count-mark {
+  color: var(--coral);
+}
+
+.work-stack__label {
+  font-weight: 400;
+  color: var(--lilac);
+  margin: 0;
+}
+
+/* Outline pill with an icon circle, matching the hero's secondary button. */
+.work-stack__all {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  height: 46px;
+  padding: 0 6px 0 20px;
+  border-radius: 999px;
+  border: 1px solid var(--ink-dashed);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 15px;
+  color: var(--bone);
+  white-space: nowrap;
+  transition:
+    border-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.work-stack__all-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--ink-dashed);
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--bone);
+  transition:
+    transform var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+@media (hover: hover) {
+  .work-stack__all:hover {
+    border-color: var(--bone);
+    transform: translateY(-2px);
+  }
+
+  .work-stack__all:hover .work-stack__all-icon {
+    border-color: var(--bone);
+    transform: translateX(2px);
+  }
+}
+
+/* The box keeps its 16:9 shape but is capped by the viewport height, so
+   the header and the whole grid always fit inside the pinned screen. */
 .work-stack {
   position: relative;
-  width: 100%;
+  width: min(100%, calc((100vh - 260px) * 16 / 9));
+  margin: 0 auto;
   aspect-ratio: 16 / 9;
+  list-style: none;
+  padding: 0;
 }
 
-/* Same bg-image + centered-icon look as .work-showcase__option-box, but
-   borderless. Base rule matches the "stacked" geometry (full box) —
-   the scroll-driven inline styles take it from there. */
 .work-stack__layer {
   position: absolute;
   inset: 0;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* Two panels: artwork on top (full colour, nothing laid over it) and a
+   solid caption underneath in normal flow, so the two never overlap
+   however short the tile gets, and the artwork never fades into a muddy
+   band. */
+.work-stack__link {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  overflow: hidden;
+  background: #141419;
+  border: 1px solid var(--ink-border);
+  transition: border-color var(--transition-med);
+}
+
+.work-stack__link:focus-visible {
+  outline-offset: -4px;
+}
+
+@media (hover: hover) {
+  .work-stack__link:hover {
+    border-color: #3a3a44;
+  }
+}
+
+.work-stack__art {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 16px;
+  min-height: 0;
   overflow: hidden;
-  /* box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3); */
+  background: linear-gradient(160deg, #1f1f26, #0c0c10);
 }
 
+/* soft vignette so the icon reads on any artwork, without darkening it */
+.work-stack__art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(70% 80% at 50% 50%, transparent 60%, rgba(0, 0, 0, 0.08) 100%);
+  pointer-events: none;
+}
+
+/* Projects without brand artwork get a typographic tile in the site's
+   terminal language instead of an invented image. */
+.work-stack__layer--type .work-stack__art {
+  background:
+    radial-gradient(70% 90% at 80% 10%, rgba(255, 77, 54, 0.32), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(242, 239, 233, 0.04) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(90deg, rgba(242, 239, 233, 0.04) 0 1px, transparent 1px 28px),
+    linear-gradient(160deg, #1f1f26, #0c0c10);
+}
+
+/* Sized from the panel's height, so it scales with the tile through the
+   whole stack-to-grid animation and is never cramped against an edge. */
 .work-stack__icon {
-  max-width: 22%;
-  max-height: 22%;
+  position: relative;
+  z-index: 1;
+  height: 46%;
+  max-height: 140px;
+  min-height: 40px;
+  width: auto;
+  max-width: 40%;
   object-fit: contain;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.3));
+}
+
+.work-stack__wordmark {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-mono);
+  font-size: clamp(16px, 2.2vw, 28px);
+  color: var(--bone);
+  white-space: nowrap;
+}
+
+.work-stack__wordmark-mark {
+  color: var(--coral);
+}
+
+/* Always-visible caption: name, one-line summary and the link cue, on a
+   solid panel — nothing depends on hover. */
+.work-stack__caption {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 18px 20px 18px;
+  background: #141419;
+  border-top: 1px solid var(--ink-border);
+}
+
+.work-stack__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.1;
+  color: var(--bone);
+}
+
+.work-stack__tagline {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--body-on-ink);
+  max-width: 46ch;
+}
+
+.work-stack__cta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--coral);
+  transition: transform var(--transition-fast);
+}
+
+@media (hover: hover) {
+  .work-stack__link:hover .work-stack__cta {
+    transform: translateX(4px);
+  }
 }
 
 /* Below the desktop breakpoint, and under reduced motion, the pin and
-   scroll-driven geometry are dropped entirely: the tiles settle into a
-   plain static 2x2 grid — the fully "revealed" end state — since
-   there's no scroll track to scrub through. */
+   scroll-driven geometry are dropped: the tiles sit in a plain static
+   grid — the finished state — since there's no scroll track to scrub. */
 @media (max-width: 900px), (prefers-reduced-motion: reduce) {
+  .work-stack-section {
+    height: auto;
+  }
+
   .work-stack-sticky {
+    position: static;
+    height: auto;
     padding: 64px 0;
   }
 
@@ -80,16 +278,58 @@
     height: auto;
   }
 
+  .work-stack__header,
+  .work-stack__footer {
+    width: 100%;
+  }
+
   .work-stack {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 12px;
-    aspect-ratio: 4 / 3;
+    gap: 16px;
+    width: 100%;
+    aspect-ratio: auto;
   }
 
   .work-stack__layer {
-    position: static;
-    /* border-radius: 12px; */
+    position: relative;
+    inset: auto;
+    top: auto !important;
+    left: auto !important;
+    width: auto !important;
+    height: auto !important;
+    aspect-ratio: 16 / 11;
+  }
+}
+
+@media (max-width: 640px) {
+  .work-stack {
+    grid-template-columns: 1fr;
+  }
+
+  .work-stack__layer {
+    aspect-ratio: auto;
+    min-height: 300px;
+  }
+
+  .work-stack__link {
+    min-height: 300px;
+  }
+
+  .work-stack__caption {
+    padding: 24px 16px 16px;
+  }
+}
+
+/* phones: the count sits on its own line above a full-width button */
+@media (max-width: 600px) {
+  .work-stack__footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .work-stack__all {
+    justify-content: space-between;
   }
 }

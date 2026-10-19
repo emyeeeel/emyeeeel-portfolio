@@ -6,30 +6,23 @@ import "./WorkTransition.css";
 // breaks mid-token). `accent` colors the word; `noSpace` skips the
 // leading space before it (for punctuation like the closing period).
 const TOKENS = [
-  "The",
-  "work",
-  "speaks",
-  "first.",
   "Every",
   "project",
-  "that",
-  "lands",
-  "on",
-  "my",
-  "desk",
-  "leaves",
-  { text: "bigger", accent: true },
-  "than",
+  "here",
+  "started",
+  "with",
+  "someone's",
+  { text: "workflow", accent: true },
+  { text: ",", noSpace: true },
+  "and",
+  "a",
+  "question",
+  "about",
+  "how",
   "it",
-  "arrived.",
-  "You",
-  "call",
-  "the",
-  "shot,",
-  "I",
-  "make",
-  "it",
-  { text: "real", accent: true },
+  "could",
+  "work",
+  { text: "better", accent: true },
   { text: ".", noSpace: true },
 ];
 
@@ -122,7 +115,7 @@ function WorkTransition() {
   }, [reducedMotion]);
 
   return (
-    <section className="work-transition" ref={sectionRef}>
+    <section className="work-transition" ref={sectionRef} aria-label="Selected work introduction">
       <div className="wrap">
         <div className="work-transition__frame" ref={frameRef}>
           <p className="work-transition__text">

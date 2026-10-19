@@ -59,14 +59,14 @@ function MediaPeek({ project }) {
   return (
     <div
       ref={boxRef}
-      className={project ? "media-peek media-peek--visible" : "media-peek"}
+      className={project?.cover ? "media-peek media-peek--visible" : "media-peek"}
       aria-hidden="true"
     >
-      {project && (
+      {project?.cover && (
         <MediaWithFallback
-          src={project.mediaSrc}
+          src={project.cover.src}
           alt=""
-          label={project.mediaLabel}
+          label={project.title}
           className="media-peek__img"
           placeholderClassName="media-peek__placeholder"
         />

@@ -184,6 +184,13 @@
   text-shadow: 0 0 8px rgba(255, 77, 54, 0.65);
 }
 
+/* The input itself draws no outline (it's a bare CRT prompt), so the
+   whole screen shows keyboard focus instead. */
+.hero-device__screen:has(.hero-device__input:focus-visible) {
+  outline: 2px solid var(--coral);
+  outline-offset: 3px;
+}
+
 .hero-device__input:disabled {
   opacity: 0.5;
 }

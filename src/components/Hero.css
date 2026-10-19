@@ -1,38 +1,50 @@
+/* Hero type and spacing follow one small system so nothing competes:
+   - display (Clash, upright only — it has no italic, so slanting it
+     gets a synthesized oblique that collides with punctuation)
+   - body (Inter) for the descriptor and every call to action
+   - mono (JetBrains) only for "system" text: status line, index, hint
+   Vertical rhythm is on an 8px grid: 28 / 28 / 40 / 64. */
+
 .hero {
-  min-height: calc(100vh - 84px);
-  min-height: calc(100svh - 84px);
+  min-height: calc(100vh - 25px);
+  min-height: calc(100svh - 25px);
   display: flex;
   align-items: center;
-  flex-direction: column;
-  padding: 80px 0;
+  padding: 120px 0 88px;
+  /* the decorative glow is wider than narrow viewports; keep it from
+     widening the page */
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .hero__inner {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
   align-items: center;
-  gap: 8px;
+  gap: 72px;
   width: 100%;
 }
 
+/* A single, softer glow sits behind the terminal — the hero's one
+   decorative light source — instead of washing over the copy. */
 .hero__inner::before {
   content: "";
   position: absolute;
-  top: -60px;
-  left: 50%;
-  width: min(900px, 140%);
-  height: 780px;
+  top: 50%;
+  right: 0;
+  width: min(620px, 90%);
+  height: 620px;
+  translate: 8% -50%;
   background: radial-gradient(
-    ellipse at center,
-    rgba(255, 77, 54, 0.34) 0%,
-    rgba(255, 77, 54, 0.14) 38%,
-    rgba(255, 77, 54, 0) 70%
+    closest-side,
+    rgba(255, 77, 54, 0.22),
+    rgba(255, 77, 54, 0.08) 55%,
+    rgba(255, 77, 54, 0) 100%
   );
-  filter: blur(24px);
+  filter: blur(20px);
   z-index: -1;
   pointer-events: none;
-  transform: translateX(-50%) scale(1);
   animation: hero-glow-drift 12s ease-in-out infinite;
 }
 
@@ -40,215 +52,297 @@
   0%,
   100% {
     opacity: 0.85;
-    transform: translateX(-50%) scale(1);
+    transform: scale(1);
   }
   50% {
     opacity: 1;
-    transform: translateX(-50%) scale(1.05);
+    transform: scale(1.05);
   }
 }
 
 .hero__text {
-  max-width: 900px;
-  text-align: center;
-  margin: 0 auto;
+  min-width: 0;
+  max-width: 700px;
 }
 
-.hero__stats-wrap {
-  width: 100%;
-}
-
-.hero__eyebrow {
+/* -------- status: a terminal log line, not a badge -------- */
+.hero__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
   font-family: var(--font-mono);
   font-size: 13px;
-  letter-spacing: 0.08em;
-  color: var(--lilac);
-  margin: 0 0 20px;
-}
-
-.hero__role {
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.4;
-  color: var(--body-on-ink);
-  margin: 0 0 20px;
-}
-
-.hero__headline {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(40px, 6.5vw, 76px);
-  line-height: 1.12;
-  color: var(--bone);
-  margin: 0 0 28px;
-}
-
-.hero__period {
-  color: var(--coral);
-}
-
-.hero__emphasis {
-  color: var(--coral);
-  font-style: italic;
-}
-
-.hero__subtitle {
-  font-family: var(--font-mono);
-  font-size: 14px;
   letter-spacing: 0.02em;
   color: var(--lilac);
   margin: 0 0 28px;
-  text-wrap: balance;
+}
+
+.hero__status-tag {
+  color: var(--lime);
+}
+
+/* -------- headline: name, then the typed role -------- */
+.hero__headline {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  margin: 0 0 28px;
+}
+
+.hero__headline-name {
+  font-size: clamp(48px, 6.4vw, 92px);
+  line-height: 0.98;
+  color: var(--bone);
+}
+
+/* Reserves its line even while empty mid-typing, so nothing below
+   jumps as roles are typed and deleted. */
+.hero__headline-role {
+  min-height: 1.1em;
+  font-size: clamp(26px, 3.1vw, 44px);
+  line-height: 1.1;
+  color: var(--coral);
+}
+
+.hero__cursor {
+  display: inline-block;
+  width: 0.08em;
+  height: 0.9em;
+  margin-left: 0.08em;
+  vertical-align: -0.08em;
+  background: var(--coral);
+  animation: hero-cursor-blink 1s step-end infinite;
+}
+
+@keyframes hero-cursor-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* -------- statement: the brand line and what it means in practice -------- */
+.hero__statement {
+  font-family: var(--font-body);
+  font-size: clamp(17px, 1.45vw, 19px);
+  line-height: 1.6;
+  color: var(--body-on-ink);
+  max-width: 48ch;
+  margin: 0 0 40px;
+  text-wrap: pretty;
+}
+
+.hero__statement strong {
+  font-weight: 500;
+  color: var(--bone);
+}
+
+/* -------- calls to action: filled primary + outlined secondary --------
+   Both are the footer's pill (so the page's main buttons match). The
+   outline variant keeps the same shape and size but steps back a level;
+   coral stays reserved for the typed role and the primary's arrow dot. */
+.hero__ctas {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.hero__primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  height: 52px;
+  padding: 0 8px 0 24px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 16px;
+  /* Coral with a slight top-to-bottom shade and a soft coral glow (the
+     same glow the hero uses), white text, and a white icon with a coral
+     arrow so the accent ties back to the fill. */
+  color: #fff;
+  background: linear-gradient(180deg, #ff5d45, #f23c25);
+  box-shadow:
+    0 8px 24px -8px rgba(255, 77, 54, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  white-space: nowrap;
+  transition: transform var(--transition-fast);
+}
+
+.hero__primary-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--coral);
+  font-family: var(--font-body);
+  font-size: 16px;
+  transition: transform var(--transition-fast);
+}
+
+.hero__primary--outline {
+  color: var(--bone);
+  background: transparent;
+  box-shadow: none;
+  border: 1px solid var(--ink-dashed);
+  transition:
+    transform var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.hero__primary--outline .hero__primary-icon {
+  background: transparent;
+  color: var(--bone);
+  border: 1px solid var(--ink-dashed);
+}
+
+@media (hover: hover) {
+  .hero__primary:hover {
+    transform: translateY(-2px);
+  }
+
+  .hero__primary:hover .hero__primary-icon {
+    transform: translateY(2px);
+  }
+
+  .hero__primary--outline:hover {
+    border-color: var(--bone);
+  }
+
+  .hero__primary--outline:hover .hero__primary-icon {
+    transform: translateX(2px);
+  }
+}
+
+/* -------- figures strip: value over label, hairline dividers -------- */
+.hero__stats {
+  display: grid;
+  grid-template-columns: repeat(var(--stat-count, 4), minmax(0, 1fr));
+  list-style: none;
+  margin: 56px 0 0;
+  padding-left: 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--ink-border);
+}
+
+.hero__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 20px;
+  border-left: 1px solid var(--ink-border);
+}
+
+.hero__stat:first-child {
+  padding-left: 0;
+  border-left: none;
+}
+
+.hero__stat-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(28px, 2.6vw, 40px);
+  line-height: 1;
+  color: var(--bone);
+  white-space: nowrap;
+}
+
+.hero__stat-label {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--lilac);
+}
+
+/* Dev-only draft look for figures that still need real numbers
+   (placeholders are filtered out of production builds). */
+.hero__stat--placeholder .hero__stat-value {
+  color: var(--ink-dashed);
+  text-decoration: underline dashed var(--coral);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+
+.hero__stat--placeholder .hero__stat-label::after {
+  content: "draft";
+  display: block;
+  margin-top: 2px;
+  color: var(--coral);
+}
+
+/* -------- terminal -------- */
+.hero__device-slot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
 }
 
 .hero__hint {
   font-family: var(--font-mono);
   font-size: 12px;
-  color: var(--ink-dashed);
-  letter-spacing: 0.03em;
-  margin: 20px 0 0;
+  line-height: 1.6;
+  color: var(--lilac);
+  letter-spacing: 0.02em;
+  margin: 32px 0 0;
+  max-width: 300px;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.hero__hint-mark {
+  color: var(--coral);
 }
 
 .hero__hint b {
-  color: var(--lilac);
-  font-weight: 600;
-}
-
-.hero__intro {
-  font-family: var(--font-body);
-  color: var(--lilac);
-  max-width: 620px;
-  font-size: 16px;
-  line-height: 1.6;
-  margin: 0;
-}
-
-.hero__name {
   color: var(--bone);
-}
-
-/* .hero__ctas {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin: 36px 0 0;
-} */
-
-.hero__cta {
-  font-family: var(--font-body);
-  font-size: 14px;
   font-weight: 500;
-  padding: 14px 24px;
-  border-radius: 999px;
-  transition:
-    background var(--transition-fast),
-    color var(--transition-fast),
-    border-color var(--transition-fast);
 }
 
-.hero__cta--primary {
-  background: var(--coral);
-  color: var(--ink);
-}
-
-.hero__cta--secondary {
-  background: transparent;
-  color: var(--bone);
-  border: 1px dashed var(--ink-dashed);
-}
-
-@media (hover: hover) {
-  .hero__cta--primary:hover {
-    background: var(--bone);
-  }
-
-  .hero__cta--secondary:hover {
-    color: var(--coral);
-    border-color: var(--coral);
-  }
-}
-
-.hero__stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid var(--ink-border);
-  margin: 56px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.hero__stat {
-  padding: 24px var(--gutter) 0 0;
-  border-right: 1px solid var(--ink-border);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.hero__stat:last-child {
-  border-right: none;
-}
-
-.hero__stat-num {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(26px, 3.4vw, 36px);
-  color: var(--bone);
-}
-
-.hero__stat-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  color: var(--lilac);
-  text-transform: uppercase;
-}
-
-.hero__device-slot {
-  position: relative;
-  flex-shrink: 0;
-  /* margin-top: 32px; */
-}
-
-@media (max-width: 768px) {
+/* -------- tablet: stack, text first -------- */
+@media (max-width: 960px) {
   .hero {
     min-height: auto;
-    padding: 56px 0 64px;
+    padding: 104px 0 72px;
   }
 
-  .hero__headline {
-    font-size: clamp(34px, 7vw, 48px);
+  .hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 64px;
   }
 
-  .hero__ctas {
-    flex-direction: column;
-    align-items: stretch;
-    max-width: 320px;
+  .hero__text {
+    max-width: 640px;
   }
 
-  .hero__cta {
-    text-align: center;
-  }
-
-  .hero__stats {
-    grid-template-columns: 1fr;
-    margin-top: 40px;
-  }
-
-  .hero__stat {
-    border-right: none;
-    border-top: 1px solid var(--ink-border);
-    padding: 20px 0 0;
-  }
-
-  .hero__stat:first-child {
-    border-top: none;
+  .hero__inner::before {
+    top: auto;
+    bottom: -40px;
+    right: 50%;
+    translate: 50% 0;
   }
 }
 
-@media (max-width: 480px) {
+/* -------- phone -------- */
+@media (max-width: 560px) {
+  .hero {
+    padding: 88px 0 56px;
+  }
+
   .hero__inner::before {
-    top: -30px;
     height: 420px;
   }
 
@@ -256,23 +350,42 @@
     width: 100%;
   }
 
-  .hero__eyebrow {
+  .hero__status {
     font-size: 12px;
-    margin-bottom: 16px;
+    margin-bottom: 24px;
   }
 
-  .hero__role {
-    font-size: 14px;
-    margin-bottom: 16px;
+  .hero__headline-name {
+    font-size: clamp(44px, 14vw, 56px);
   }
 
-  .hero__headline {
-    font-size: clamp(26px, 8vw, 34px);
-    margin-bottom: 20px;
+  /* sized so the longest role still fits on one line on a phone */
+  .hero__headline-role {
+    font-size: clamp(19px, 6vw, 26px);
   }
 
-  .hero__intro {
-    font-size: 15px;
-    max-width: none;
+  .hero__statement {
+    font-size: 16.5px;
+    margin-bottom: 32px;
+  }
+
+  .hero__ctas {
+    gap: 12px;
+  }
+
+  .hero__primary {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .hero__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 0;
+    margin-top: 44px;
+  }
+
+  .hero__stat:nth-child(odd) {
+    padding-left: 0;
+    border-left: none;
   }
 }

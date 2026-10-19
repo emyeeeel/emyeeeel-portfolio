@@ -49,16 +49,16 @@
 }
 
 .about-canvas__heading-emphasis {
-  color: var(--coral);
+  color: var(--coral-on-bone);
 }
 
 .about-canvas__subtitle {
   font-family: var(--font-mono);
   font-size: 13px;
   line-height: 1.6;
-  color: var(--muted-on-bone);
+  color: var(--body-on-bone);
   margin: 0;
-  max-width: 400px;
+  max-width: 420px;
 }
 
 .about-canvas__card {
@@ -79,6 +79,16 @@
 
 .about-canvas__card:active {
   cursor: grabbing;
+}
+
+/* hidden for the first frame, until the layout has measured and placed it */
+.about-canvas__card.is-unplaced {
+  visibility: hidden;
+}
+
+.about-canvas__card:focus-visible {
+  outline: 3px solid var(--coral-on-bone);
+  outline-offset: 4px;
 }
 
 @media (hover: hover) {
@@ -136,71 +146,286 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(10, 10, 12, 0.8);
+  background: rgba(10, 10, 12, 0.82);
   backdrop-filter: blur(6px);
 }
 
+/* A terminal window, like the skills and approach cards: a "> open"
+   title bar, then the photo and its story side by side. Everything is
+   sized to the screen, so the window never scrolls. */
 .about-canvas__modal {
-  position: relative;
-  max-width: 560px;
-  width: 100%;
-  max-height: 88vh;
-  overflow-y: auto;
-  background: #17171c;
+  display: flex;
+  flex-direction: column;
+  width: min(940px, 100%);
+  max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px);
+  overflow: hidden;
+  background: #141419;
   border: 1px solid var(--ink-border);
   border-radius: 16px;
-  padding: 24px;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+  animation: about-modal-in 220ms ease;
+}
+
+@keyframes about-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
+.about-canvas__modal-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 12px 10px 20px;
+  border-bottom: 1px solid var(--ink-border);
+  flex-shrink: 0;
+}
+
+.about-canvas__modal-path {
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--lilac);
+}
+
+.about-canvas__modal-mark {
+  color: var(--coral);
+}
+
+.about-canvas__modal-file {
+  color: var(--bone);
 }
 
 .about-canvas__modal-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
   height: 32px;
-  border-radius: 50%;
+  padding: 0 6px 0 12px;
+  border-radius: 999px;
   border: 1px solid var(--ink-border);
-  color: var(--bone);
-  font-size: 18px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--lilac);
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.about-canvas__modal-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #1f1f26;
+  font-family: var(--font-body);
+  font-size: 15px;
   line-height: 1;
+  color: var(--bone);
+}
+
+@media (hover: hover) {
+  .about-canvas__modal-close:hover {
+    border-color: var(--coral);
+    color: var(--bone);
+  }
+}
+
+.about-canvas__modal-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  min-height: 0;
+  animation: about-modal-swap 200ms ease;
+}
+
+@keyframes about-modal-swap {
+  from {
+    opacity: 0;
+  }
+}
+
+/* the photo, in a polaroid frame like the cards on the board */
+.about-canvas__modal-photo {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 0;
+  margin: 0;
+  padding: 28px;
+  background:
+    radial-gradient(rgba(242, 239, 233, 0.05) 1px, transparent 1.2px) 0 0 / 16px 16px,
+    #101014;
+  border-right: 1px solid var(--ink-border);
+}
+
+.about-canvas__modal-photo .about-canvas__img,
+.about-canvas__modal-photo .about-canvas__placeholder {
+  width: auto;
+  /* a little room for the frame's tilt */
+  max-width: 96%;
+  /* window height minus the title bar, the backdrop and frame padding */
+  max-height: min(600px, calc(100vh - 210px));
+  max-height: min(600px, calc(100dvh - 210px));
+  object-fit: contain;
+  background: #fafaf8;
+  padding: 10px 10px 34px;
+  border-radius: 3px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+  transform: rotate(-1.5deg);
+}
+
+.about-canvas__modal-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 28px 24px 24px;
+}
+
+.about-canvas__modal-count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--coral);
+  margin: 0 0 14px;
+}
+
+.about-canvas__modal-count span {
+  color: var(--ink-dashed);
+}
+
+.about-canvas__modal-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.2;
+  color: var(--bone);
+  margin: 0 0 12px;
+}
+
+.about-canvas__modal-desc {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--body-on-ink);
+  margin: 0;
+}
+
+.about-canvas__modal-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+.about-canvas__modal-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--ink-dashed);
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--bone);
   transition:
     border-color var(--transition-fast),
     color var(--transition-fast);
 }
 
 @media (hover: hover) {
-  .about-canvas__modal-close:hover {
+  .about-canvas__modal-step:hover {
     border-color: var(--coral);
     color: var(--coral);
   }
 }
 
-.about-canvas__modal-media {
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 20px;
-}
-
-.about-canvas__modal-title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 22px;
-  color: var(--bone);
-  margin: 0 0 10px;
-}
-
-.about-canvas__modal-desc {
+.about-canvas__modal-hint {
+  margin-left: 6px;
   font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--lilac);
-  line-height: 1.6;
-  margin: 0;
+  font-size: 11px;
+  color: var(--ink-dashed);
+}
+
+/* narrower screens: photo on top, story below, still no scrolling */
+@media (max-width: 760px) {
+  .about-canvas__modal-backdrop {
+    padding: 16px;
+  }
+
+  .about-canvas__modal {
+    max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 32px);
+  }
+
+  .about-canvas__modal-content {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .about-canvas__modal-photo {
+    padding: 20px;
+    border-right: none;
+    border-bottom: 1px solid var(--ink-border);
+  }
+
+  .about-canvas__modal-photo .about-canvas__img,
+  .about-canvas__modal-photo .about-canvas__placeholder {
+    max-height: calc(100vh - 380px);
+    max-height: calc(100dvh - 380px);
+    padding: 8px 8px 26px;
+  }
+
+  .about-canvas__modal-body {
+    padding: 18px 18px 18px;
+  }
+
+  .about-canvas__modal-title {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .about-canvas__modal-desc {
+    font-size: 14px;
+  }
+
+  .about-canvas__modal-nav {
+    padding-top: 16px;
+  }
+
+  /* touch screens have no esc key: just the × */
+  .about-canvas__modal-hint,
+  .about-canvas__modal-esc {
+    display: none;
+  }
+
+  .about-canvas__modal-close {
+    padding: 0 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-canvas__modal,
+  .about-canvas__modal-content {
+    animation: none;
+  }
 }
 
 @media (max-width: 640px) {
+  .about-canvas {
+    height: 72vh;
+    height: 72svh;
+  }
+
   .about-canvas__card {
     width: clamp(100px, 30vw, 130px);
   }

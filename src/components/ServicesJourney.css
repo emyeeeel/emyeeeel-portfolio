@@ -42,8 +42,9 @@
 
 .services-journey__label {
   color: var(--lilac);
-  margin: 0 0 20px;
+  margin: 0 0 16px;
   text-align: center;
+  opacity: calc(0.12 + (var(--stage-a) * 0.88));
 }
 
 .services-journey__heading {
@@ -53,7 +54,7 @@
   line-height: 1.1;
   color: var(--bone);
   text-align: center;
-  margin: 0 0 64px;
+  margin: 0 0 56px;
   text-wrap: balance;
   /* Stage A: starts dim (still legible, tucked behind the oversized
      rectangle) rather than fully invisible, then brightens and rises
@@ -78,7 +79,7 @@
 
 .services-journey__card {
   position: relative;
-  width: 260px;
+  width: 300px;
   flex-shrink: 0;
   transition: box-shadow var(--transition-med);
 }
@@ -165,11 +166,16 @@
   }
 }
 
+.services-journey__card-link:focus-visible {
+  outline-offset: 6px;
+}
+
 .services-journey__card-link {
   position: relative;
   display: block;
   width: 100%;
-  height: 360px;
+  height: 380px;
+  border-radius: 18px;
   transition: box-shadow var(--transition-med);
   perspective: 1400px;
 }
@@ -211,7 +217,7 @@
   background-image:
     radial-gradient(120% 140% at 25% 20%, rgba(255, 138, 111, 0.5), transparent 55%),
     linear-gradient(160deg, #ff8a6f 0%, var(--lilac) 55%, #101014 100%);
-  background-size: 780px 360px;
+  background-size: 900px 380px;
   background-position: var(--slice-x, 0) 0;
 }
 
@@ -219,23 +225,41 @@
   transform: rotateY(180deg);
 }
 
+.services-journey__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: auto;
+}
+
 .services-journey__icon {
   display: inline-flex;
-  margin-bottom: auto;
+}
+
+.services-journey__index {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.services-journey__more {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  margin-top: 18px;
 }
 
 .services-journey__tag {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 26px;
+  font-size: 25px;
   line-height: 1.15;
-  margin: 0 0 16px;
+  margin: 0 0 12px;
   text-wrap: balance;
 }
 
 .services-journey__subtitle {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.55;
   margin: 0;
 }
@@ -251,11 +275,17 @@
 }
 
 .services-journey__card--light .services-journey__subtitle {
-  color: var(--muted-on-bone);
+  color: var(--body-on-bone);
+}
+
+.services-journey__card--light .services-journey__more {
+  color: var(--coral-on-bone);
 }
 
 .services-journey__card--accent .services-journey__card-face--front {
-  background: linear-gradient(160deg, var(--coral), #b8331f);
+  /* Deepens quickly so the lower half, where the text sits, keeps bone
+     text above 4.5:1. */
+  background: linear-gradient(160deg, var(--coral) 0%, #b8331f 42%, #8c2615 100%);
   color: var(--bone);
 }
 
@@ -263,8 +293,9 @@
   color: rgba(242, 239, 233, 0.8);
 }
 
-.services-journey__card--accent .services-journey__subtitle {
-  color: rgba(242, 239, 233, 0.85);
+.services-journey__card--accent .services-journey__subtitle,
+.services-journey__card--accent .services-journey__more {
+  color: var(--bone);
 }
 
 .services-journey__card--dark .services-journey__card-face--front {
@@ -281,13 +312,33 @@
   color: var(--body-on-ink);
 }
 
+.services-journey__card--dark .services-journey__more {
+  color: var(--coral);
+}
+
+.services-journey__also {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--lilac);
+  text-align: center;
+  margin: 56px auto 0;
+  max-width: 60ch;
+  opacity: var(--stage-c);
+}
+
 @media (max-width: 900px) {
   /* The rectangle/pull-apart/flip illusion only makes sense with the
      staged desktop animation; on narrow screens the cards just stack in
      normal flow showing their real content directly. */
-  .services-journey__heading {
+  .services-journey__heading,
+  .services-journey__label,
+  .services-journey__also {
     opacity: 1;
     transform: none;
+  }
+
+  .services-journey__also {
+    margin-top: 32px;
   }
 
   .services-journey__list {
@@ -343,5 +394,18 @@
 
   .services-journey__heading {
     margin-bottom: 40px;
+  }
+}
+
+/* Reduced motion on desktop: no pinned scroll track to scrub through, so
+   drop the extra height and show the finished (flipped) cards in place. */
+@media (min-width: 901px) and (prefers-reduced-motion: reduce) {
+  .services-journey {
+    height: auto;
+  }
+
+  .services-journey__sticky {
+    position: static;
+    height: auto;
   }
 }

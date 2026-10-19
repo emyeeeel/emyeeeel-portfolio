@@ -131,16 +131,25 @@ function AboutInteractive() {
   }, [enabled]);
 
   return (
-    <section id="about" className="about-interactive">
+    <section id="about" className="about-interactive" aria-labelledby="about-heading">
       <div className="wrap about-interactive__inner">
         <div className="about-interactive__field" ref={fieldRef}>
-          <h2 className="about-interactive__headline">
-            about{" "}
-            <Link to="/about" className="about-interactive__emphasis">
-              me
+          <div className="about-interactive__copy">
+            <p className="section-label about-interactive__label">04 / about</p>
+            <h2 className="about-interactive__headline" id="about-heading">
+              about <span className="about-interactive__emphasis">me</span>.
+            </h2>
+            <p className="about-interactive__text">
+              I enjoy understanding what people are trying to achieve,
+              contributing ideas, and working through the details that make a
+              solution practical. What motivates me is seeing that work become
+              useful to someone: a task becomes easier, a process becomes
+              clearer, or an idea finally takes shape.
+            </p>
+            <Link to="/about" className="about-interactive__cta">
+              more about me →
             </Link>
-            .
-          </h2>
+          </div>
 
           {enabled &&
             trail.map((item) => {

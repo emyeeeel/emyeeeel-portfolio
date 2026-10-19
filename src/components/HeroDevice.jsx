@@ -18,6 +18,12 @@ function getSessionId() {
   return id;
 }
 
+// Shown on load so the screen never starts blank.
+const GREETING = [
+  { text: "emyeeeel terminal — ready." },
+  { text: "type help, or ask me anything.", ok: true },
+];
+
 // Shown whenever the n8n agent is unreachable, errors, or comes back with
 // nothing usable — the CRT's own "signal lost" moment.
 const DOWN_MESSAGE = [
@@ -48,7 +54,7 @@ async function getFallbackReply(input, sessionId) {
 function HeroDevice() {
   const navigate = useNavigate();
   const [value, setValue] = useState("");
-  const [log, setLog] = useState([]);
+  const [log, setLog] = useState(GREETING);
   const [loading, setLoading] = useState(false);
   const sessionId = useMemo(() => getSessionId(), []);
   const logRef = useRef(null);
@@ -76,8 +82,23 @@ function HeroDevice() {
             ?.scrollIntoView({ behavior: "smooth" });
         },
       },
+      services: {
+        respond: "→ jumping to #services ...",
+        action: () => {
+          document
+            .getElementById("services")
+            ?.scrollIntoView({ behavior: "smooth" });
+        },
+      },
+      resume: {
+        respond: "→ opening résumé (PDF) ...",
+        // Opened synchronously inside the submit handler so popup
+        // blockers still treat it as user-initiated.
+        immediate: true,
+        action: () => window.open("/Amiel_Catado_Resume.pdf", "_blank", "noopener"),
+      },
       help: {
-        respond: "available: work, about, contact, clear, help",
+        respond: "available: work, services, about, contact, resume, clear, help — or just ask a question",
       },
     }),
     [navigate],
@@ -103,7 +124,9 @@ function HeroDevice() {
       setLog((prev) =>
         [...prev, { text: command.respond, ok: true }].slice(-50),
       );
-      if (command.action) {
+      if (command.action && command.immediate) {
+        command.action();
+      } else if (command.action) {
         window.setTimeout(command.action, 500);
       }
       return;
@@ -153,8 +176,8 @@ function HeroDevice() {
                 onChange={(event) => setValue(event.target.value)}
                 autoComplete="off"
                 spellCheck="false"
-                placeholder="type a command..."
-                aria-label="Type a command: work, about, contact, or help"
+                placeholder="type what's next..."
+                aria-label="Terminal: type work, services, about, contact, resume or help, or ask a question"
                 disabled={loading}
               />
             </form>

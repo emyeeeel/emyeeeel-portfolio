@@ -1,0 +1,291 @@
+/* Project card for /work and service pages. Built from the site's own
+   parts: the home tiles' artwork panel, the hero's figure strip (value
+   over mono label, hairline divider) and mono "system" text for the
+   index, type and stack. One card = one link. */
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.project-card {
+  display: flex;
+  min-width: 0;
+}
+
+.project-card__link {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: #141419;
+  border: 1px solid var(--ink-border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition:
+    border-color var(--transition-med),
+    transform var(--transition-med);
+}
+
+.project-card__link:focus-visible {
+  outline-offset: 3px;
+}
+
+/* Hover/press feedback stays subtle: border, lift, title colour and the
+   arrow. Images never scale, so the artwork stays put when clicked. */
+@media (hover: hover) {
+  .project-card__link:hover {
+    border-color: #3a3a44;
+    transform: translateY(-3px);
+  }
+
+  .project-card__link:hover .project-card__title {
+    color: var(--coral);
+  }
+
+  .project-card__link:hover .project-card__arrow {
+    color: var(--coral);
+    transform: translateX(3px);
+  }
+}
+
+/* -------- artwork panel (same treatment as the home tiles) -------- */
+.project-card__art {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 7;
+  overflow: hidden;
+  background: linear-gradient(160deg, #1f1f26, #0c0c10);
+  border-bottom: 1px solid var(--ink-border);
+}
+
+.project-card__art--type {
+  background:
+    radial-gradient(70% 90% at 80% 10%, rgba(255, 77, 54, 0.3), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(242, 239, 233, 0.04) 0 1px, transparent 1px 24px),
+    repeating-linear-gradient(90deg, rgba(242, 239, 233, 0.04) 0 1px, transparent 1px 24px),
+    linear-gradient(160deg, #1f1f26, #0c0c10);
+}
+
+.project-card__icon {
+  height: 44%;
+  width: auto;
+  max-width: 34%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
+}
+
+/* full-bleed artwork (a 16:7 image made for the card) */
+.project-card__cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.project-card__wordmark {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--bone);
+  white-space: nowrap;
+}
+
+.project-card__wordmark-mark {
+  color: var(--coral);
+}
+
+/* -------- body -------- */
+.project-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 18px 20px 20px;
+}
+
+.project-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+
+.project-card__index {
+  color: var(--coral);
+}
+
+.project-card__type {
+  color: var(--lilac);
+}
+
+.project-card__type::before {
+  content: "/ ";
+  color: var(--ink-dashed);
+}
+
+.project-card__arrow {
+  margin-left: auto;
+  font-size: 15px;
+  color: var(--lilac);
+  transition:
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.project-card__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--bone);
+  margin-bottom: 8px;
+  transition: color var(--transition-fast);
+}
+
+/* Summaries are written to fit two lines, and that space is reserved on
+   every card so the figures line up across a row. The 3-line clamp is
+   only a safety net for overly long copy. */
+.project-card__summary {
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--body-on-ink);
+  min-height: calc(1.6em * 2);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+/* -------- figures: the hero's stat strip, in miniature -------- */
+.project-card__figures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 14px 0;
+  border-top: 1px solid var(--ink-border);
+  border-bottom: 1px solid var(--ink-border);
+}
+
+.project-card__figure {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  padding: 0 14px;
+  border-left: 1px solid var(--ink-border);
+}
+
+.project-card__figure:first-child {
+  padding-left: 0;
+  border-left: none;
+}
+
+.project-card__figure:only-child {
+  grid-column: 1 / -1;
+}
+
+.project-card__figure-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 1.1;
+  color: var(--bone);
+  overflow-wrap: anywhere;
+}
+
+/* optional trend arrow before a value (e.g. ↓93%), drawn to match the
+   figure's weight rather than relying on a font glyph */
+.project-card__trend {
+  display: inline-block;
+  width: 0.78em;
+  height: 0.78em;
+  margin-right: 0.12em;
+  vertical-align: -0.04em;
+  color: var(--coral);
+}
+
+.project-card__trend--up {
+  transform: rotate(180deg);
+}
+
+.project-card__figure-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--lilac);
+}
+
+/* dev-only draft for results that still need measuring */
+.project-card__figure--draft .project-card__figure-value {
+  color: var(--ink-dashed);
+  text-decoration: underline dashed var(--coral);
+  text-underline-offset: 5px;
+}
+
+.project-card__figure--draft .project-card__figure-label::after {
+  content: " · draft";
+  color: var(--coral);
+}
+
+/* -------- stack line -------- */
+/* pinned to the card's bottom edge; the figures above stay top-aligned
+   across a row whatever their label lengths */
+.project-card__stack {
+  display: block;
+  margin-top: auto;
+  padding-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--body-on-ink);
+}
+
+.project-card__stack-mark,
+.project-card__stack-more {
+  color: var(--lilac);
+}
+
+/* grid: first few tools + "+N"; single column: the full list */
+.project-card__stack-full {
+  display: none;
+}
+
+/* -------- responsive -------- */
+@media (max-width: 1100px) {
+  .work-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .work-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* single column: no row to line up with, so let the summary and the
+     stack line show in full */
+  .project-card__summary {
+    min-height: 0;
+    -webkit-line-clamp: unset;
+    display: block;
+  }
+
+  /* keeps longer figures like "~NT$84K/mo" on one line */
+  .project-card__figure-value {
+    font-size: clamp(15px, 4.6vw, 21px);
+  }
+
+  .project-card__stack-short {
+    display: none;
+  }
+
+  .project-card__stack-full {
+    display: inline;
+  }
+}

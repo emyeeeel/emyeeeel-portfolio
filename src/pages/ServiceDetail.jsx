@@ -1,16 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import services from "../data/services.js";
+import services, { SERVICE_ALIASES } from "../data/services.js";
 import projects from "../data/projects.js";
-import WorkRow from "../components/WorkRow.jsx";
-import MediaPeek from "../components/MediaPeek.jsx";
+import WorkCard from "../components/WorkCard.jsx";
 import Reveal from "../components/Reveal.jsx";
 import "./ServiceDetail.css";
 
 function ServiceDetail() {
   const { slug } = useParams();
   const service = services.find((s) => s.slug === slug);
-  const [peeked, setPeeked] = useState(null);
 
   useEffect(() => {
     if (service) {
@@ -19,12 +17,12 @@ function ServiceDetail() {
   }, [service]);
 
   if (!service) {
-    return <Navigate to="/" replace />;
+    const alias = SERVICE_ALIASES[slug];
+    return <Navigate to={alias ? `/services/${alias}` : "/#services"} replace />;
   }
 
-  const relatedProjects = projects.filter((p) =>
-    service.projectTags.includes(p.tag),
-  );
+  const relatedProjects = projects.filter((p) => p.services?.includes(service.slug));
+  const otherServices = services.filter((s) => s.slug !== service.slug);
 
   return (
     <article className="service-detail" key={service.slug}>
@@ -33,51 +31,81 @@ function ServiceDetail() {
           ← services
         </Link>
 
+        <p className="service-detail__index">service {service.index}</p>
         <Reveal as="h1" className="service-detail__title">
           {service.title}
         </Reveal>
+        <p className="service-detail__need">
+          <span className="service-detail__need-label">when it helps</span>
+          {service.need}
+        </p>
         <p className="service-detail__subtitle">{service.value}</p>
 
-        <ul className="service-detail__bullets">
-          {service.bullets.map((bullet) => (
-            <li key={bullet}>{bullet}</li>
-          ))}
-        </ul>
+        <section className="service-detail__section" aria-labelledby="scope-heading">
+          <h2 className="service-detail__section-label" id="scope-heading">
+            what&rsquo;s in scope
+          </h2>
+          <ul className="service-detail__bullets">
+            {service.scope.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
 
-        <div className="service-detail__tools">
-          {service.tools.map((tool) => (
-            <span className="service-detail__tool" key={tool}>
-              {tool}
-            </span>
-          ))}
-        </div>
+          <p className="service-detail__tools-label">tools I typically use</p>
+          <ul className="service-detail__tools">
+            {service.tools.map((tool) => (
+              <li className="service-detail__tool" key={tool}>
+                {tool}
+              </li>
+            ))}
+          </ul>
+        </section>
 
-        <section className="service-detail__section">
-          <Reveal as="p" className="service-detail__section-label">
+        <section className="service-detail__section" aria-labelledby="related-heading">
+          <h2 className="service-detail__section-label" id="related-heading">
             related work
-          </Reveal>
+          </h2>
 
-          {relatedProjects.length > 0 ? (
-            <ul className="service-detail__work-list">
+          {relatedProjects.length > 0 && (
+            <ul className="work-grid service-detail__work-list">
               {relatedProjects.map((project) => (
-                <WorkRow
-                  key={project.slug}
-                  project={project}
-                  onPeekStart={setPeeked}
-                  onPeekEnd={() => setPeeked(null)}
-                />
+                <WorkCard key={project.slug} project={project} />
               ))}
             </ul>
-          ) : (
-            <p className="service-detail__todo">
-              Case studies coming soon — in the meantime,{" "}
-              <a href="#contact">get in touch</a> to talk through this kind of
-              work directly.
-            </p>
+          )}
+
+          {service.privateWorkNote && (
+            <p className="service-detail__note">{service.privateWorkNote}</p>
           )}
         </section>
+
+        {/* The contact form is right below the page, so a single line
+            pointing to it (with this service preselected) is enough. */}
+        <p className="service-detail__cta">
+          <span className="service-detail__cta-mark" aria-hidden="true">
+            &gt;
+          </span>{" "}
+          Have something like this in mind?{" "}
+          <a
+            href="#contact"
+            className="service-detail__cta-link"
+            onClick={() =>
+              window.dispatchEvent(new CustomEvent("contact:inquiry", { detail: service.slug }))
+            }
+          >
+            tell me about it <span aria-hidden="true">↓</span>
+          </a>
+        </p>
+
+        <nav className="service-detail__others" aria-label="Other services">
+          {otherServices.map((other) => (
+            <Link key={other.slug} to={`/services/${other.slug}`} className="service-detail__other">
+              <span className="service-detail__other-index">{other.index}</span>
+              {other.title} →
+            </Link>
+          ))}
+        </nav>
       </div>
-      <MediaPeek project={peeked} />
     </article>
   );
 }

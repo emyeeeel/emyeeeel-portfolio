@@ -1,61 +1,71 @@
-import { useState } from "react";
-import testimonials from "../data/testimonials.js";
+import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
+import services from "../data/services.js";
 import Reveal from "./Reveal.jsx";
-import { GitHubIcon, LinkedInIcon } from "./SocialIcons.jsx";
+import { MailIcon } from "./SocialIcons.jsx";
 import "./Contact.css";
 
 const CONTACT_EMAIL = "maryamielcatado@gmail.com";
 
+// The inquiry choices, shown as chips. Each service keeps its /work filter
+// colour; `subject` is what lands in the email's subject line.
+const ACCENTS = {
+  "business-applications": { short: "Business apps", accent: "build" },
+  "workflow-automation": { short: "Automation", accent: "automate" },
+  "data-reporting": { short: "Data & reporting", accent: "data" },
+};
+
 const INQUIRY_TYPES = [
-  "AI Engineering",
-  "Fullstack Development",
-  "Technical VA & Ops Support",
-  "General / not sure yet",
+  ...services.map((service) => ({
+    key: service.slug,
+    label: ACCENTS[service.slug]?.short ?? service.title,
+    accent: ACCENTS[service.slug]?.accent ?? "craft",
+    subject: service.title,
+  })),
+  { key: "general", label: "Not sure yet", accent: "craft", subject: "General inquiry" },
 ];
 
-function initialsOf(name) {
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .slice(0, 2)
-    .join("");
-}
+const NEXT_STEPS = [
+  "Your email app opens with this message, ready to send.",
+  "I reply with a few questions, or a time for a short call.",
+  "We scope it together before anything gets built.",
+];
 
-function buildMailto({ name, email, inquiryType, details }) {
-  const subject = `${inquiryType} — via portfolio`;
-  const body = [
-    `Name: ${name}`,
-    `Email: ${email}`,
-    `Inquiry type: ${inquiryType}`,
-    "",
-    details,
-  ].join("\n");
+function buildMailto({ name, email, inquiry, details }) {
+  const type = INQUIRY_TYPES.find((item) => item.key === inquiry) ?? INQUIRY_TYPES[0];
+  const subject = `${type.subject} — via portfolio`;
+  const body = [`Name: ${name}`, `Email: ${email}`, `Inquiry type: ${type.subject}`, "", details].join(
+    "\n",
+  );
   return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 function Contact() {
-  const [index, setIndex] = useState(0);
-  const total = testimonials.length;
-  const current = testimonials[index];
-
+  const { pathname } = useLocation();
   const [form, setForm] = useState({
     name: "",
     email: "",
-    inquiryType: INQUIRY_TYPES[0],
+    inquiry: INQUIRY_TYPES[0].key,
     details: "",
   });
+  const [copied, setCopied] = useState(false);
+  const copyTimer = useRef(null);
 
-  function goPrev() {
-    setIndex((i) => (i - 1 + total) % total);
-  }
+  useEffect(() => () => clearTimeout(copyTimer.current), []);
 
-  function goNext() {
-    setIndex((i) => (i + 1) % total);
-  }
+  // Service pages can preselect their service before jumping here.
+  useEffect(() => {
+    function preselect(event) {
+      if (INQUIRY_TYPES.some((type) => type.key === event.detail)) {
+        setForm((prev) => ({ ...prev, inquiry: event.detail }));
+      }
+    }
+    window.addEventListener("contact:inquiry", preselect);
+    return () => window.removeEventListener("contact:inquiry", preselect);
+  }, []);
 
   function handleChange(field) {
-    return (event) =>
-      setForm((prev) => ({ ...prev, [field]: event.target.value }));
+    return (event) => setForm((prev) => ({ ...prev, [field]: event.target.value }));
   }
 
   function handleSubmit(event) {
@@ -63,142 +73,134 @@ function Contact() {
     window.location.href = buildMailto(form);
   }
 
+  // For visitors whose email lives in a browser tab: the form can't open
+  // it for them, so give them the address in one click.
+  async function copyEmail() {
+    try {
+      await navigator.clipboard.writeText(CONTACT_EMAIL);
+      setCopied(true);
+      clearTimeout(copyTimer.current);
+      copyTimer.current = setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.location.href = `mailto:${CONTACT_EMAIL}`;
+    }
+  }
+
   return (
-    <section id="contact" className="contact-combined">
-      <div className="contact-combined__media">
-        <div className="contact-combined__scrim" aria-hidden="true" />
-        <div className="quote-card">
-          <p className="quote-card__mark" aria-hidden="true">
-            &ldquo;
+    <section id="contact" className="contact" aria-labelledby="contact-heading">
+      <div className="wrap contact__inner">
+        {/* -------- left: heading, what happens next, direct email -------- */}
+        <div className="contact__intro">
+          <Reveal as="p" className="section-label contact__label">
+            {pathname === "/" ? "07 / contact" : "contact"}
+          </Reveal>
+          <h2 className="contact__heading" id="contact-heading">
+            Let&rsquo;s build <span className="contact__heading-accent">something.</span>
+          </h2>
+          <p className="contact__sub">
+            Tell me what you&rsquo;re working on and what it should make easier.
           </p>
-          <p className="quote-card__text">{current.quote}</p>
-          <div className="quote-card__person">
-            {/* <span className="quote-card__avatar" aria-hidden="true">
-              {initialsOf(current.name)}
-            </span> */}
-            <div className="quote-card__meta">
-              <p className="quote-card__name">{current.name}</p>
-              <p className="quote-card__role">
-                {current.role} — {current.company}
-              </p>
-            </div>
+
+          <div className="contact__next">
+            <p className="contact__next-title">what happens next</p>
+            <ol className="contact__next-list">
+              {NEXT_STEPS.map((step, i) => (
+                <li key={step}>
+                  <span className="contact__next-num">{String(i + 1).padStart(2, "0")}</span>
+                  {step}
+                </li>
+              ))}
+            </ol>
           </div>
-          <div className="quote-card__nav">
-            <button
-              type="button"
-              className="quote-card__nav-btn"
-              aria-label="Previous testimonial"
-              disabled={total <= 1}
-              onClick={goPrev}
-            >
-              ←
+
+          <div className="contact__direct">
+            <a href={`mailto:${CONTACT_EMAIL}`} className="contact__email">
+              <MailIcon />
+              <span>{CONTACT_EMAIL}</span>
+            </a>
+            <button type="button" className="contact__copy" onClick={copyEmail}>
+              {copied ? "copied ✓" : "copy"}
             </button>
-            <button
-              type="button"
-              className="quote-card__nav-btn"
-              aria-label="Next testimonial"
-              disabled={total <= 1}
-              onClick={goNext}
-            >
-              →
-            </button>
-            <span className="quote-card__count">
-              {String(index + 1).padStart(2, "0")} /{" "}
-              {String(total).padStart(2, "0")}
+            <span className="visually-hidden" role="status">
+              {copied ? "Email address copied" : ""}
             </span>
           </div>
         </div>
-      </div>
 
-      <div className="contact-combined__form">
-        <div className="contact-combined__form-inner">
-          <Reveal as="p" className="section-label">
-            05 / contact
-          </Reveal>
-          <h2 className="form-title">
-            Let's build <b>something.</b>
-          </h2>
-          {/* <p className="form-sub">
-            One form, however you'd like to work together — or email
-            directly at{" "}
-            <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
-          </p> */}
+        {/* -------- right: the form, in a terminal window -------- */}
+        <div className="contact__card">
+          <p className="contact__prompt" aria-hidden="true">
+            <span className="contact__prompt-mark">&gt;</span> new-inquiry
+          </p>
 
-          <form onSubmit={handleSubmit}>
-            <div className="field">
-              <label htmlFor="contact-name">Full name</label>
-              <input
-                id="contact-name"
-                type="text"
-                required
-                placeholder="Your name"
-                value={form.name}
-                onChange={handleChange("name")}
-              />
-            </div>
-            <div className="field">
-              <label htmlFor="contact-email">Email</label>
-              <input
-                id="contact-email"
-                type="email"
-                required
-                placeholder="you@company.com"
-                value={form.email}
-                onChange={handleChange("email")}
-              />
-            </div>
-            {/* <div className="field">
-              <label htmlFor="contact-inquiry">Inquiry type</label>
-              <select
-                id="contact-inquiry"
-                value={form.inquiryType}
-                onChange={handleChange("inquiryType")}
-              >
+          <form className="contact__form" onSubmit={handleSubmit}>
+            <fieldset className="contact__field contact__field--choices">
+              <legend>what do you need help with?</legend>
+              <div className="contact__chips">
                 {INQUIRY_TYPES.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
+                  <label key={type.key} className={`contact__chip contact--${type.accent}`}>
+                    <input
+                      type="radio"
+                      name="inquiry"
+                      value={type.key}
+                      checked={form.inquiry === type.key}
+                      onChange={handleChange("inquiry")}
+                    />
+                    <span>{type.label}</span>
+                  </label>
                 ))}
-              </select>
-            </div> */}
-            <div className="field">
-              <label htmlFor="contact-details">Project details</label>
+              </div>
+            </fieldset>
+
+            <div className="contact__row">
+              <div className="contact__field">
+                <label htmlFor="contact-name">name</label>
+                <input
+                  id="contact-name"
+                  type="text"
+                  required
+                  autoComplete="name"
+                  placeholder="Your name"
+                  value={form.name}
+                  onChange={handleChange("name")}
+                />
+              </div>
+              <div className="contact__field">
+                <label htmlFor="contact-email">email</label>
+                <input
+                  id="contact-email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  placeholder="you@company.com"
+                  value={form.email}
+                  onChange={handleChange("email")}
+                />
+              </div>
+            </div>
+
+            <div className="contact__field">
+              <label htmlFor="contact-details">project details</label>
               <textarea
                 id="contact-details"
                 required
-                placeholder="Tell me about your goals, current workflow, and timeline."
+                rows={5}
+                placeholder="What are you trying to get done, how does it work today, and when do you need it?"
                 value={form.details}
                 onChange={handleChange("details")}
               />
             </div>
-            <button type="submit" className="submit-btn">
-              send inquiry
-            </button>
-            {/* <p className="form-note">
-              Opens in your email app, pre-filled and ready to send.
-            </p> */}
-          </form>
 
-          <div className="contact__socials">
-            <a
-              href="https://github.com/emyeeeel"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="GitHub — emyeeeel"
-              className="contact__social-link"
-            >
-              <GitHubIcon />
-            </a>
-            <a
-              href="https://linkedin.com/in/emyeeeel"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="LinkedIn — emyeeeel"
-              className="contact__social-link"
-            >
-              <LinkedInIcon />
-            </a>
-          </div>
+            <div className="contact__actions">
+              <p className="contact__note">Opens in your email app, pre-filled.</p>
+              <button type="submit" className="contact__submit">
+                send inquiry
+                <span className="contact__submit-icon" aria-hidden="true">
+                  →
+                </span>
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </section>

@@ -1,11 +1,13 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import useReducedMotion from "../hooks/useReducedMotion.js";
-import servicesOffered from "../data/services-offered.js";
 import services from "../data/services.js";
 import "./ServicesJourney.css";
 
 const THEMES = ["light", "accent", "dark"];
+// Must match .services-journey__card width in ServicesJourney.css — the
+// shared back-face image is offset by this much per card.
+const CARD_WIDTH = 300;
 
 function SparkIcon() {
   return (
@@ -83,37 +85,51 @@ function ServicesJourney() {
   }, [reducedMotion]);
 
   return (
-    <section id="services" className="services-journey" ref={sectionRef}>
+    <section
+      id="services"
+      className="services-journey"
+      ref={sectionRef}
+      aria-labelledby="services-heading"
+    >
       <div className="services-journey__sticky">
         <div className="wrap">
-          <h2 className="services-journey__heading">So, what are you building?</h2>
+          <p className="section-label services-journey__label">06 / services</p>
+          <h2 className="services-journey__heading" id="services-heading">
+            So, what are you building?
+          </h2>
 
           <ul className="services-journey__list">
-            {servicesOffered.map((offer, index) => {
-              const service = services[index];
+            {services.map((service, index) => {
               const Icon = ICONS[index % ICONS.length];
               const theme = THEMES[index % THEMES.length];
 
               return (
                 <li
-                  key={service?.slug ?? offer.tag}
+                  key={service.slug}
                   className={`services-journey__card services-journey__card--${theme}`}
                 >
                   <Link
-                    to={service ? `/services/${service.slug}` : "/"}
+                    to={`/services/${service.slug}`}
                     className="services-journey__card-link"
                   >
                     <div className="services-journey__card-flip">
                       <div
                         className="services-journey__card-face services-journey__card-face--back"
-                        style={{ "--slice-x": `${-index * 260}px` }}
+                        style={{ "--slice-x": `${-index * CARD_WIDTH}px` }}
+                        aria-hidden="true"
                       />
                       <div className="services-journey__card-face services-journey__card-face--front">
-                        <span className="services-journey__icon">
-                          <Icon />
+                        <span className="services-journey__top">
+                          <span className="services-journey__icon">
+                            <Icon />
+                          </span>
+                          <span className="services-journey__index">{service.index}</span>
                         </span>
-                        <h3 className="services-journey__tag">{offer.tag}</h3>
-                        <p className="services-journey__subtitle">{offer.subtitle}</p>
+                        <h3 className="services-journey__tag">{service.title}</h3>
+                        <p className="services-journey__subtitle">{service.need}</p>
+                        <span className="services-journey__more" aria-hidden="true">
+                          see the scope →
+                        </span>
                       </div>
                     </div>
                   </Link>
@@ -121,6 +137,10 @@ function ServicesJourney() {
               );
             })}
           </ul>
+
+          <p className="services-journey__also">
+            Alongside any of these: technical troubleshooting, QA and clear documentation.
+          </p>
         </div>
       </div>
     </section>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+  <!-- Concreat Rewards tile background, built from the app's brand colours:
+       deep purple (#250E62), signal red (#C8102E) and light blue (#8AD1EA). -->
+  <defs>
+    <radialGradient id="glow" cx="45%" cy="40%" r="65%">
+      <stop offset="0" stop-color="#3B1D8F"/>
+      <stop offset="0.55" stop-color="#2A1170"/>
+      <stop offset="1" stop-color="#1A0948"/>
+    </radialGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#E0193A"/>
+      <stop offset="1" stop-color="#A50D26"/>
+    </linearGradient>
+    <pattern id="dots" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.6" fill="#ffffff" fill-opacity="0.06"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#glow)"/>
+  <rect width="1600" height="1000" fill="url(#dots)"/>
+  <!-- diagonal brand stripes, kept to the right so the centred icon stays clear -->
+  <polygon points="1290,0 1470,0 1170,1000 990,1000" fill="url(#red)" opacity="0.92"/>
+  <polygon points="1500,0 1540,0 1240,1000 1200,1000" fill="#8AD1EA" opacity="0.85"/>
+  <polygon points="1560,0 1600,0 1600,40 1300,1000 1260,1000" fill="#C8102E" opacity="0.55"/>
+</svg>

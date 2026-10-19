@@ -25,7 +25,7 @@
 }
 
 .nav-notch.is-open {
-  width: 560px;
+  width: 520px;
 }
 
 .nav-notch__content {
@@ -36,7 +36,7 @@
   padding: 12px 18px;
 }
 
-.nav-notch__trigger {
+.nav-notch__home {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,7 +55,7 @@
 }
 
 @media (hover: hover) {
-  .nav-notch__trigger:hover .nav-notch__icon {
+  .nav-notch__home:hover .nav-notch__icon {
     box-shadow:
       0 0 0 3px rgba(255, 255, 255, 0.08),
       0 0 14px rgba(255, 77, 54, 0.4);
@@ -113,31 +113,22 @@
 .nav-notch__list a {
   font-family: var(--font-mono);
   font-size: 13px;
-  color: var(--body-on-ink);
+  color: var(--bone);
   transition: color var(--transition-fast);
+}
+
+.nav-notch__list a:focus-visible {
+  outline-offset: 2px;
+}
+
+.nav-notch__home:focus-visible {
+  outline-offset: 2px;
+  border-radius: 50%;
 }
 
 @media (hover: hover) {
   .nav-notch__list a:hover {
     color: var(--coral);
-  }
-}
-
-.nav-notch__cta {
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink);
-  background: var(--coral);
-  padding: 8px 16px;
-  border-radius: 999px;
-  white-space: nowrap;
-  transition: background var(--transition-fast);
-}
-
-@media (hover: hover) {
-  .nav-notch__cta:hover {
-    background: var(--bone);
   }
 }
 
@@ -159,8 +150,21 @@
     font-size: 11.5px;
   }
 
-  .nav-notch__cta {
-    padding: 7px 12px;
-    font-size: 11.5px;
+}
+
+/* Very narrow phones: four links plus the icon need every pixel. */
+@media (max-width: 360px) {
+  .nav-notch__content {
+    padding: 12px 10px;
+    column-gap: 8px;
+  }
+
+  .nav-notch__side,
+  .nav-notch__list {
+    gap: 8px;
+  }
+
+  .nav-notch__list a {
+    font-size: 11px;
   }
 }

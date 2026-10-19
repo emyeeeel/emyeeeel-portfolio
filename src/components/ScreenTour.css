@@ -1,0 +1,281 @@
+.tour__intro {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--lilac);
+  margin: 0 0 16px;
+}
+
+.tour__body {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+/* -------- step list -------- */
+.tour__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tour__step {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--body-on-ink);
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.tour__step-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--lilac);
+}
+
+.tour__step.is-active {
+  background: #1c1c22;
+  color: var(--bone);
+  box-shadow: inset 2px 0 0 var(--coral);
+}
+
+.tour__step.is-active .tour__step-num {
+  color: var(--coral);
+}
+
+@media (hover: hover) {
+  .tour__step:hover {
+    color: var(--bone);
+  }
+}
+
+.tour__step:focus-visible {
+  outline-offset: -2px;
+}
+
+/* -------- browser frame + screenshot -------- */
+.tour__stage {
+  margin: 0;
+  min-width: 0;
+}
+
+.tour__frame {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--ink-border);
+  background: #17171c;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+}
+
+.tour__frame-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--ink-border);
+}
+
+.tour__frame-bar > span:not(.tour__frame-count) {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ink-border);
+}
+
+.tour__frame-count {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--lilac);
+}
+
+.tour__shot {
+  position: relative;
+  display: block;
+  width: 100%;
+  cursor: zoom-in;
+}
+
+.tour__shot:focus-visible {
+  outline-offset: -3px;
+}
+
+.tour__img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top left;
+  animation: tour-fade 240ms ease;
+}
+
+@keyframes tour-fade {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Wide screenshots shown whole, letterboxed on the frame colour. */
+.tour__shot--contain .tour__img {
+  object-fit: contain;
+  object-position: center;
+  background: #0e0e12;
+}
+
+/* Mobile screenshots: a phone frame centred in the same 16:10 stage, so
+   the tour doesn't change size when it moves between phone and desktop. */
+.tour__shot--phone {
+  aspect-ratio: 16 / 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(60% 70% at 50% 50%, rgba(255, 77, 54, 0.12), transparent 70%),
+    #0e0e12;
+}
+
+.tour__phone {
+  display: block;
+  height: 92%;
+  aspect-ratio: 390 / 844;
+  padding: 6px;
+  border-radius: 26px;
+  background: #2a2a30;
+  box-shadow:
+    0 0 0 1px #3a3a44,
+    0 18px 40px rgba(0, 0, 0, 0.5);
+}
+
+.tour__phone .tour__img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: cover;
+  object-position: top center;
+  border-radius: 20px;
+}
+
+.tour__zoom {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--bone);
+  background: rgba(16, 16, 20, 0.78);
+  border-radius: 999px;
+  padding: 5px 10px;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.tour__shot:hover .tour__zoom,
+.tour__shot:focus-visible .tour__zoom {
+  opacity: 1;
+}
+
+.tour__caption {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.tour__caption-text {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--body-on-ink);
+  max-width: 62ch;
+}
+
+.tour__caption-text strong {
+  color: var(--bone);
+  font-weight: 500;
+}
+
+.tour__nav {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.tour__nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--ink-border);
+  color: var(--bone);
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.tour__nav-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+@media (hover: hover) {
+  .tour__nav-btn:hover:not(:disabled) {
+    border-color: var(--coral);
+    color: var(--coral);
+  }
+}
+
+.tour__preload {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+/* -------- narrow: steps become a scrollable row of chips above -------- */
+@media (max-width: 900px) {
+  .tour__body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .tour__steps {
+    flex-direction: row;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: thin;
+  }
+
+  .tour__step {
+    width: auto;
+    white-space: nowrap;
+    border: 1px solid var(--ink-border);
+    border-radius: 999px;
+    padding: 7px 12px;
+    font-size: 13px;
+  }
+
+  .tour__step.is-active {
+    box-shadow: none;
+    border-color: var(--coral);
+  }
+
+  /* a taller stage on narrow screens so phone screenshots stay readable */
+  .tour__shot--phone {
+    aspect-ratio: 4 / 5;
+  }
+}

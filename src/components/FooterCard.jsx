@@ -1,161 +1,95 @@
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { MailIcon, GitHubIcon, LinkedInIcon } from "./SocialIcons.jsx";
-import useReducedMotion from "../hooks/useReducedMotion.js";
+import { MailIcon, GitHubIcon, LinkedInIcon, DocIcon } from "./SocialIcons.jsx";
 import "./FooterCard.css";
 
 const CONTACT_EMAIL = "maryamielcatado@gmail.com";
-const START_RADIUS = 40;
-const END_RADIUS = 999;
-const FADE_START = 0.92;
 
-function lerp(a, b, t) {
-  return a + (b - a) * t;
+// Local time in Cebu, so clients abroad can see when a reply is likely.
+function useCebuTime() {
+  const format = () =>
+    new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      timeZone: "Asia/Manila",
+    }).format(new Date());
+  const [time, setTime] = useState(format);
+  useEffect(() => {
+    const id = setInterval(() => setTime(format()), 30000);
+    return () => clearInterval(id);
+  }, []);
+  return time;
 }
 
+// Footer: a terminal-style panel like the site's other windows. Who and
+// where on the left, the sitemap and links on the right, and a status
+// bar with the copyright and back-to-top. The contact form sits right
+// above it, so there's no second "contact me" call to action here.
 function FooterCard() {
   const location = useLocation();
   const isHome = location.pathname === "/";
   const year = new Date().getFullYear();
-  const reducedMotion = useReducedMotion();
-
-  const sectionRef = useRef(null);
-  const panelRef = useRef(null);
-  const contactPillRef = useRef(null);
-  const duplicateRef = useRef(null);
+  const cebuTime = useCebuTime();
 
   function scrollToTop() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  // The bone-colored duplicate starts covering the whole panel, then
-  // shrinks and moves to match the actions box's exact size/position as
-  // the footer scrolls into view, fading out right as it finishes —
-  // revealing the real panel content (which was there underneath all
-  // along) as if it had "become" the actions box.
-  useLayoutEffect(() => {
-    const section = sectionRef.current;
-    const panel = panelRef.current;
-    const contactPill = contactPillRef.current;
-    const duplicate = duplicateRef.current;
-    if (!section || !panel || !contactPill || !duplicate) return;
-
-    if (reducedMotion) {
-      duplicate.style.opacity = "0";
-      return;
-    }
-
-    let target = null;
-    let fromSize = null;
-    let rafId = null;
-
-    function measure() {
-      const panelRect = panel.getBoundingClientRect();
-      const pillRect = contactPill.getBoundingClientRect();
-      fromSize = { width: panelRect.width, height: panelRect.height };
-      target = {
-        top: pillRect.top - panelRect.top,
-        left: pillRect.left - panelRect.left,
-        width: pillRect.width,
-        height: pillRect.height,
-      };
-    }
-
-    function updateProgress() {
-      rafId = null;
-      // Driven by distance to the true bottom of the page, not the
-      // section's own rect.top — the footer is the last thing on the
-      // page, so if it's shorter than a viewport, its top can never
-      // actually scroll up to 0 (the page runs out of room to scroll
-      // first), which left this permanently stuck mid-animation.
-      const vh = window.innerHeight;
-      const doc = document.documentElement;
-      const maxScroll = Math.max(1, doc.scrollHeight - vh);
-      const remaining = maxScroll - window.scrollY;
-      const range = vh * 0.3;
-      const raw = 1 - remaining / range;
-      const progress = Math.min(1, Math.max(0, raw));
-
-      const top = lerp(0, target.top, progress);
-      const left = lerp(0, target.left, progress);
-      const width = lerp(fromSize.width, target.width, progress);
-      const height = lerp(fromSize.height, target.height, progress);
-      const radius = lerp(START_RADIUS, END_RADIUS, progress);
-      const opacity =
-        progress < FADE_START ? 1 : Math.max(0, 1 - (progress - FADE_START) / (1 - FADE_START));
-
-      duplicate.style.top = `${top}px`;
-      duplicate.style.left = `${left}px`;
-      duplicate.style.width = `${width}px`;
-      duplicate.style.height = `${height}px`;
-      duplicate.style.borderRadius = `${radius}px`;
-      duplicate.style.opacity = opacity.toFixed(3);
-    }
-
-    function onScroll() {
-      if (rafId == null) {
-        rafId = requestAnimationFrame(updateProgress);
-      }
-    }
-
-    function onResize() {
-      measure();
-      onScroll();
-    }
-
-    measure();
-    updateProgress();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onResize);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onResize);
-      if (rafId != null) cancelAnimationFrame(rafId);
-    };
-  }, [reducedMotion]);
+  // On home, jump to the section; elsewhere, go to its page or home anchor.
+  const explore = [
+    { label: "Work", hash: "#work", to: "/work" },
+    { label: "Experience", hash: "#experience", to: "/#experience" },
+    { label: "About", hash: "#about", to: "/about" },
+    { label: "Services", hash: "#services", to: "/#services" },
+    { label: "Contact", hash: "#contact", to: "#contact" },
+  ];
 
   return (
-    <footer className="footer-card" ref={sectionRef}>
+    <footer className="footer-card">
       <div className="wrap">
-        <div className="footer-card__panel" ref={panelRef}>
-          <div className="footer-card__panel-duplicate" ref={duplicateRef} aria-hidden="true" />
+        <div className="footer-card__panel">
+          <p className="footer-card__prompt" aria-hidden="true">
+            <span className="footer-card__mark">&gt;</span> whoami
+          </p>
 
           <div className="footer-card__top">
-            <p className="footer-card__blurb">
-              Got something worth building? Let's make it real.
-            </p>
+            <div className="footer-card__id">
+              <Link to="/" className="footer-card__brand" aria-label="emyeeeel, home">
+                <img src="/assets/logo/logo-circle.png" alt="" className="footer-card__logo" />
+                <span className="footer-card__name">emyeeeel</span>
+              </Link>
+              <p className="footer-card__role">
+                Software development &amp; business automation, from Cebu, Philippines.
+              </p>
+              <p className="footer-card__status">
+                <span className="footer-card__status-tag">[online]</span> open for freelance
+                and remote work
+              </p>
+              <p className="footer-card__status footer-card__time">
+                local time · {cebuTime} in Cebu (GMT+8)
+              </p>
+            </div>
 
             <nav className="footer-card__col" aria-label="Sitemap">
-              <p className="footer-card__col-title">Explore</p>
+              <p className="footer-card__col-title">explore</p>
               <ul>
-                <li>
-                  {isHome ? <a href="#work">Work</a> : <Link to="/work">Work</Link>}
-                </li>
-                <li>
-                  {isHome ? (
-                    <a href="#services">Services</a>
-                  ) : (
-                    <Link to="/#services">Services</Link>
-                  )}
-                </li>
-                <li>
-                  {isHome ? <a href="#about">About</a> : <Link to="/about">About</Link>}
-                </li>
-                <li>
-                  <a href="#contact">Contact</a>
-                </li>
+                {explore.map((item) => (
+                  <li key={item.label}>
+                    {isHome || item.to.startsWith("#") ? (
+                      <a href={item.hash}>{item.label}</a>
+                    ) : (
+                      <Link to={item.to}>{item.label}</Link>
+                    )}
+                  </li>
+                ))}
               </ul>
             </nav>
 
-            <div className="footer-card__col" aria-label="Connect">
-              <p className="footer-card__col-title">Connect</p>
-              <ul className="footer-card__socials">
+            <div className="footer-card__col">
+              <p className="footer-card__col-title">connect</p>
+              <ul>
                 <li>
-                  <a
-                    href={`mailto:${CONTACT_EMAIL}`}
-                    className="footer-card__social-link"
-                    aria-label="Email — emyeeeel"
-                  >
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="footer-card__social-link">
                     <MailIcon />
                     Email
                   </a>
@@ -166,7 +100,6 @@ function FooterCard() {
                     target="_blank"
                     rel="noreferrer"
                     className="footer-card__social-link"
-                    aria-label="GitHub — emyeeeel"
                   >
                     <GitHubIcon />
                     GitHub
@@ -178,47 +111,45 @@ function FooterCard() {
                     target="_blank"
                     rel="noreferrer"
                     className="footer-card__social-link"
-                    aria-label="LinkedIn — emyeeeel"
                   >
                     <LinkedInIcon />
                     LinkedIn
                   </a>
                 </li>
+                <li>
+                  <a
+                    href="/Amiel_Catado_Resume.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="footer-card__social-link"
+                  >
+                    <DocIcon />
+                    Résumé
+                  </a>
+                </li>
               </ul>
             </div>
-
-            <div className="footer-card__actions">
-              <a href="#contact" className="footer-card__pill" ref={contactPillRef}>
-                Contact me
-                <span className="footer-card__pill-icon" aria-hidden="true">
-                  ↗
-                </span>
-              </a>
-              <Link to="/work" className="footer-card__pill footer-card__pill--ghost">
-                See work
-                <span className="footer-card__pill-icon" aria-hidden="true">
-                  ↗
-                </span>
-              </Link>
-            </div>
           </div>
-        </div>
 
-        <div className="footer-card__bottom">
-          <span className="footer-card__copyright">
-            <span className="footer-card__copyright-mark" aria-hidden="true">
-              {">"}
+          <div className="footer-card__bottom">
+            <span className="footer-card__copyright">
+              <span className="footer-card__mark" aria-hidden="true">
+                &gt;
+              </span>
+              © {year} emyeeeel. All rights reserved.
             </span>
-            Copyright © {year} emyeeeel. All rights reserved.
-          </span>
-          <button
-            type="button"
-            className="footer-card__top-btn"
-            onClick={scrollToTop}
-            aria-label="Back to top"
-          >
-            ↑
-          </button>
+            <button
+              type="button"
+              className="footer-card__top-btn"
+              onClick={scrollToTop}
+              aria-label="Back to top"
+            >
+              <span className="footer-card__top-label">back to top</span>
+              <span className="footer-card__top-icon" aria-hidden="true">
+                ↑
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </footer>

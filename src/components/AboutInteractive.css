@@ -13,6 +13,50 @@
   cursor: default;
 }
 
+.about-interactive__copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 640px;
+  pointer-events: none;
+}
+
+.about-interactive__label {
+  color: var(--body-on-bone);
+  margin: 0 0 16px;
+}
+
+.about-interactive__text {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--body-on-bone);
+  margin: 28px 0 28px;
+  background: rgba(242, 239, 233, 0.82);
+  border-radius: 8px;
+}
+
+.about-interactive__cta {
+  pointer-events: auto;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--bone);
+  background: var(--ink);
+  border-radius: 999px;
+  padding: 13px 22px;
+  transition: background var(--transition-fast);
+}
+
+@media (hover: hover) {
+  .about-interactive__cta:hover {
+    background: var(--coral-on-bone);
+  }
+}
+
 .about-interactive__headline {
   position: relative;
   z-index: 1;
@@ -26,8 +70,7 @@
 }
 
 .about-interactive__emphasis {
-  color: var(--coral);
-  pointer-events: auto;
+  color: var(--coral-on-bone);
 }
 
 .about-interactive__trail {

@@ -1,31 +1,40 @@
+// Photos for the /about board and the home "about me" trail. `story` is
+// optional — the photo modal only shows it when it's there.
 const aboutFacets = [
   {
     mediaSrc: "/assets/about/grad-photo.jpeg",
-    mediaLabel: "Graduation Photo",
+    mediaLabel: "Graduation photo",
+    story:
+      "BS Computer Science, major in AI, Web & Mobile Application Development, University of San Jose–Recoletos.",
   },
   {
     mediaSrc: "/assets/about/chiayi-ltc.jpg",
     mediaLabel: "LTC, Chiayi",
+    story: "Visiting a long-term care facility in Chiayi with the SpoonFull team.",
   },
   {
     mediaSrc: "/assets/about/stust.jpg",
     mediaLabel: "K Lab, Tainan — 26 weeks",
+    story:
+      "K Lab at Southern Taiwan University of Science and Technology, where I spent my TEEP research internship.",
   },
   {
     mediaSrc: "/assets/about/ai-healthcare.jpg",
     mediaLabel: "AI for Healthcare Conference STUST",
+    story: "Showing SpoonFull at an AI-in-healthcare event at STUST.",
   },
   {
     mediaSrc: "/assets/about/chunghwa-con.jpg",
     mediaLabel: "CHUNGHWA Healthcare Conference",
+    story: "Presenting SpoonFull to healthcare and industry guests.",
   },
   {
-    label: "paagi — 1st place",
     mediaSrc: "/assets/about/gothong.jpg",
-    mediaLabel: "Paagi, 1st of 38 teams",
+    mediaLabel: "Presenting Paagi at Gothong Southern",
+    story:
+      "After Paagi won the SCS Days 2025 Hackathon, Gothong Southern invited our team to present the concept.",
   },
   {
-    label: "osaka, japan",
     mediaSrc: "/assets/about/ipbl.jpg",
     mediaLabel: "IPBL 2025, Osaka",
   },
@@ -48,6 +57,8 @@ const aboutFacets = [
   {
     mediaSrc: "/assets/about/dsp-lab.jpg",
     mediaLabel: "21st DSP, 2nd Place",
+    story:
+      "Second Place, International Category, 21st DSP Creative Design Contest, with Marylle Roche and Anthony James Plaza.",
   },
   {
     mediaSrc: "/assets/about/me-mirror.jpg",

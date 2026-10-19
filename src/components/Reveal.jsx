@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import useReducedMotion from "../hooks/useReducedMotion.js";
 import "./Reveal.css";
 
-function Reveal({ children, lines, as: Tag = "div", className = "" }) {
+function Reveal({ children, lines, as: Tag = "div", className = "", ...rest }) {
   const reducedMotion = useReducedMotion();
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -33,6 +33,7 @@ function Reveal({ children, lines, as: Tag = "div", className = "" }) {
 
   return (
     <Tag
+      {...rest}
       ref={ref}
       className={`reveal${visible ? " reveal--visible" : ""}${className ? ` ${className}` : ""}`}
     >
