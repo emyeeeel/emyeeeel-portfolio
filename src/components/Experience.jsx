@@ -251,6 +251,9 @@ function Experience() {
                       </li>
                     ))}
                   </ul>
+                  {quotesFor(education).map((quote) => (
+                    <Testimonial item={quote} key={quote.name + quote.company} />
+                  ))}
                 </div>
               </div>
             </article>

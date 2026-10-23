@@ -18,10 +18,20 @@ const testimonials = [
   },
   {
     experience: "klab",
+    // Third-person version of his message; waiting on his OK.
+    // placeholder: true,
+    quote:
+      "She's smart and diligent. When working or interacting with her, I've always appreciated how considerate she is of others' feelings. She also has a strong sense of responsibility, which is something I really admire about her. Overall, she brings a lot of positive energy to the people around her.",
+    name: "Guo Weifu (郭維甫)",
+    role: "Research Assistant",
+    company: "Wise Laboratory, STUST",
+  },
+  {
+    experience: "klab",
     // placeholder: true,
     quote:
       "Give her a problem and she'll own it from start to finish. She picked things up quickly, kept the team informed, and left her work documented well enough for others to continue.",
-    name: "Yu-Sheng Lin",
+    name: "Yu-Sheng Lin (林育昇)",
     role: "Supervisor",
     company: "Wise Laboratory, STUST",
   },
@@ -42,6 +52,14 @@ const testimonials = [
     name: "Ash Raganas",
     role: "System Integrator",
     company: "Cylix Technologies",
+  },
+  {
+    experience: "education",
+    quote:
+      "As her thesis adviser, I have seen firsthand her dedication, initiative, and ability to lead and work effectively with others. … Amiel's achievements reflect not only her technical competence but also her leadership, dedication, and determination to excel.",
+    name: "Engr. Carmel M. Tejana",
+    role: "Thesis Adviser",
+    company: "University of San Jose–Recoletos",
   },
 ];
 
