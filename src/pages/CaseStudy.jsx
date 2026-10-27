@@ -5,9 +5,21 @@ import Reveal from "../components/Reveal.jsx";
 import Walkthrough from "../components/Walkthrough.jsx";
 import ScreenTour from "../components/ScreenTour.jsx";
 import Lightbox from "../components/Lightbox.jsx";
+import CaseTemplate from "../components/CaseTemplate.jsx";
 import "./CaseStudy.css";
 
 const CATEGORY_LABELS = Object.fromEntries(CATEGORIES.map((c) => [c.key, c.label]));
+
+const EVIDENCE_LABELS = {
+  milestone: "milestone",
+  "controlled test": "test result",
+  recognition: "recognition",
+  implemented: "built",
+  estimate: "estimate",
+  projection: "projection",
+  simulation: "simulation",
+  measured: "measured",
+};
 
 const FACT_LABELS = [
   { key: "role", label: "role" },
@@ -21,17 +33,6 @@ const GLANCE = [
   { key: "built", label: "what I built" },
   { key: "result", label: "the result" },
 ];
-
-const EVIDENCE_LABELS = {
-  milestone: "milestone",
-  "controlled test": "test result",
-  recognition: "recognition",
-  implemented: "built",
-  estimate: "estimate",
-  projection: "projection",
-  simulation: "simulation",
-  measured: "measured",
-};
 
 // Highlights the contents entry for the section currently in view.
 function useActiveSection(ids) {
@@ -235,6 +236,8 @@ function CaseStudy() {
   }, [project]);
 
   if (!project) return <Navigate to="/work" replace />;
+  // Projects moved to the template render there; the rest keep this layout.
+  if (project.story) return <CaseTemplate project={project} nextProject={nextProject} />;
 
   const facts = { ...project.facts, stage: project.stage };
   // Primary category first, then any it's also listed under.

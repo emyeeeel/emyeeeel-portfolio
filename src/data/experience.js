@@ -123,7 +123,7 @@ export const education = {
   logo: "/assets/experience/usjr.webp?v=3",
   role: "BS Computer Science",
   org: "University of San Jose–Recoletos · Cebu",
-  dates: "", // TODO: add the years, e.g. "2021 – 2026"
+  dates: "June 2026",
   type: "education",
   summary:
     "The first student in USJ-R's School of Computer Studies to complete a triple major: Artificial Intelligence, Web Application Development and Mobile Application Development.",
@@ -131,7 +131,7 @@ export const education = {
     { kind: "award", title: "3× Dean's Lister" },
     { kind: "award", title: "Champion, SCS Days 2025 Hackathon" },
     { kind: "award", title: "2nd Place, SCS App Expo 2026" },
-    { kind: "award", title: "Special Jury Award, iPBL 2025, Osaka" },
+    { kind: "award", title: "Special Jury's Prize, iPBL 2025, Osaka" },
     { kind: "role", title: "Vice President for Education & Auditor, ICTO · 2021–2022" },
     { kind: "role", title: "Peer tutor, MPEG & JPEG tutoring guilds · 2020–2022" },
   ],

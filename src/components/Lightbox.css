@@ -28,6 +28,13 @@
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
 }
 
+/* videos open at their own 16:9, as large as the screen allows */
+.lightbox__video {
+  width: min(1280px, calc(100vw - 64px), calc((100vh - 120px) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
 .lightbox__caption {
   font-family: var(--font-mono);
   font-size: 12px;

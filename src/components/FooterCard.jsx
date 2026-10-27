@@ -28,6 +28,8 @@ function useCebuTime() {
 function FooterCard() {
   const location = useLocation();
   const isHome = location.pathname === "/";
+  // Case studies have no contact section of their own.
+  const isCaseStudy = /^\/work\/[^/]+/.test(location.pathname);
   const year = new Date().getFullYear();
   const cebuTime = useCebuTime();
 
@@ -41,7 +43,7 @@ function FooterCard() {
     { label: "Experience", hash: "#experience", to: "/#experience" },
     { label: "About", hash: "#about", to: "/about" },
     { label: "Services", hash: "#services", to: "/#services" },
-    { label: "Contact", hash: "#contact", to: "#contact" },
+    { label: "Contact", hash: "#contact", to: isCaseStudy ? "/#contact" : "#contact" },
   ];
 
   const connect = [
@@ -99,11 +101,6 @@ function FooterCard() {
                   >
                     {item.icon}
                     {item.label}
-                    {item.external && (
-                      <span className="footer__ext" aria-hidden="true">
-                        ↗
-                      </span>
-                    )}
                   </a>
                 </li>
               ))}

@@ -31,27 +31,31 @@ const NEXT_STEPS = [
   "We scope it together before anything gets built.",
 ];
 
-function buildMailto({ name, email, inquiry, details }) {
+function buildMailto({ name, email, inquiry, details }, about) {
   const type = INQUIRY_TYPES.find((item) => item.key === inquiry) ?? INQUIRY_TYPES[0];
-  const subject = `${type.subject} — via portfolio`;
-  const body = [`Name: ${name}`, `Email: ${email}`, `Inquiry type: ${type.subject}`, "", details].join(
-    "\n",
-  );
+  const subject = about ? `Re: ${about} — ${type.subject}` : `${type.subject} — via portfolio`;
+  const body = [
+    `Name: ${name}`,
+    `Email: ${email}`,
+    `Inquiry type: ${type.subject}`,
+    ...(about ? [`Re: ${about} case study`] : []),
+    "",
+    details,
+  ].join("\n");
   return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
-function Contact() {
-  const { pathname } = useLocation();
+// The "> new-inquiry" form card, shared by the contact section and the case
+// study's slide-in panel. `about` names the project the visitor came from
+// (it shows in the prompt and lands in the email's subject); `inquiry`
+// preselects a service.
+export function InquiryForm({ idPrefix = "contact", about, inquiry }) {
   const [form, setForm] = useState({
     name: "",
     email: "",
-    inquiry: INQUIRY_TYPES[0].key,
+    inquiry: INQUIRY_TYPES.some((type) => type.key === inquiry) ? inquiry : INQUIRY_TYPES[0].key,
     details: "",
   });
-  const [copied, setCopied] = useState(false);
-  const copyTimer = useRef(null);
-
-  useEffect(() => () => clearTimeout(copyTimer.current), []);
 
   // Service pages can preselect their service before jumping here.
   useEffect(() => {
@@ -70,8 +74,104 @@ function Contact() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    window.location.href = buildMailto(form);
+    window.location.href = buildMailto(form, about);
   }
+
+  return (
+    <div className="contact__card">
+      <p className="contact__prompt" aria-hidden="true">
+        <span className="contact__prompt-mark">&gt;</span> new-inquiry
+        {about && <span className="contact__prompt-about"> --re &ldquo;{about}&rdquo;</span>}
+      </p>
+
+      <form className="contact__form" onSubmit={handleSubmit}>
+        {about && (
+          <p className="contact__about">
+            <span>re:</span> {about}
+          </p>
+        )}
+        <fieldset className="contact__field contact__field--choices">
+          <legend>what do you need help with?</legend>
+          <div className="contact__chips">
+            {INQUIRY_TYPES.map((type) => (
+              <label key={type.key} className={`contact__chip contact--${type.accent}`}>
+                <input
+                  type="radio"
+                  name={`${idPrefix}-inquiry`}
+                  value={type.key}
+                  checked={form.inquiry === type.key}
+                  onChange={handleChange("inquiry")}
+                />
+                <span>{type.label}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <div className="contact__row">
+          <div className="contact__field">
+            <label htmlFor={`${idPrefix}-name`}>name</label>
+            <input
+              id={`${idPrefix}-name`}
+              type="text"
+              required
+              autoComplete="name"
+              placeholder="Your name"
+              value={form.name}
+              onChange={handleChange("name")}
+            />
+          </div>
+          <div className="contact__field">
+            <label htmlFor={`${idPrefix}-email`}>email</label>
+            <input
+              id={`${idPrefix}-email`}
+              type="email"
+              required
+              autoComplete="email"
+              placeholder="you@company.com"
+              value={form.email}
+              onChange={handleChange("email")}
+            />
+          </div>
+        </div>
+
+        <div className="contact__field">
+          <label htmlFor={`${idPrefix}-details`}>project details</label>
+          <textarea
+            id={`${idPrefix}-details`}
+            required
+            rows={5}
+            placeholder={
+              about
+                ? `What would you want built like ${about}, how does it work today, and when do you need it?`
+                : "What are you trying to get done, how does it work today, and when do you need it?"
+            }
+            value={form.details}
+            onChange={handleChange("details")}
+          />
+        </div>
+
+        <div className="contact__actions">
+          <p className="contact__note">Opens in your email app, pre-filled.</p>
+          <button type="submit" className="contact__submit">
+            send inquiry
+            <span className="contact__submit-icon" aria-hidden="true">
+              →
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+// The direct email line, with one-click copy for visitors whose email lives
+// in a browser tab.
+export function DirectEmail() {
+  const [copied, setCopied] = useState(false);
+  const copyTimer = useRef(null);
+
+  useEffect(() => () => clearTimeout(copyTimer.current), []);
 
   // For visitors whose email lives in a browser tab: the form can't open
   // it for them, so give them the address in one click.
@@ -85,6 +185,30 @@ function Contact() {
       window.location.href = `mailto:${CONTACT_EMAIL}`;
     }
   }
+
+  return (
+    <div className="contact__direct">
+      <a href={`mailto:${CONTACT_EMAIL}`} className="contact__email">
+        <MailIcon />
+        <span>{CONTACT_EMAIL}</span>
+      </a>
+      <button type="button" className="contact__copy" onClick={copyEmail}>
+        {copied ? "copied ✓" : "copy"}
+      </button>
+      <span className="visually-hidden" role="status">
+        {copied ? "Email address copied" : ""}
+      </span>
+    </div>
+  );
+}
+
+function Contact() {
+  const { pathname, search } = useLocation();
+  // A case study's "tell me about it" lands here with ?re=<project> and
+  // ?service=<slug>, so the form arrives pre-filled.
+  const params = new URLSearchParams(search);
+  const about = params.get("re") ?? undefined;
+  const inquiry = params.get("service") ?? undefined;
 
   return (
     <section id="contact" className="contact" aria-labelledby="contact-heading">
@@ -113,95 +237,11 @@ function Contact() {
             </ol>
           </div>
 
-          <div className="contact__direct">
-            <a href={`mailto:${CONTACT_EMAIL}`} className="contact__email">
-              <MailIcon />
-              <span>{CONTACT_EMAIL}</span>
-            </a>
-            <button type="button" className="contact__copy" onClick={copyEmail}>
-              {copied ? "copied ✓" : "copy"}
-            </button>
-            <span className="visually-hidden" role="status">
-              {copied ? "Email address copied" : ""}
-            </span>
-          </div>
+          <DirectEmail />
         </div>
 
         {/* -------- right: the form, in a terminal window -------- */}
-        <div className="contact__card">
-          <p className="contact__prompt" aria-hidden="true">
-            <span className="contact__prompt-mark">&gt;</span> new-inquiry
-          </p>
-
-          <form className="contact__form" onSubmit={handleSubmit}>
-            <fieldset className="contact__field contact__field--choices">
-              <legend>what do you need help with?</legend>
-              <div className="contact__chips">
-                {INQUIRY_TYPES.map((type) => (
-                  <label key={type.key} className={`contact__chip contact--${type.accent}`}>
-                    <input
-                      type="radio"
-                      name="inquiry"
-                      value={type.key}
-                      checked={form.inquiry === type.key}
-                      onChange={handleChange("inquiry")}
-                    />
-                    <span>{type.label}</span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-
-            <div className="contact__row">
-              <div className="contact__field">
-                <label htmlFor="contact-name">name</label>
-                <input
-                  id="contact-name"
-                  type="text"
-                  required
-                  autoComplete="name"
-                  placeholder="Your name"
-                  value={form.name}
-                  onChange={handleChange("name")}
-                />
-              </div>
-              <div className="contact__field">
-                <label htmlFor="contact-email">email</label>
-                <input
-                  id="contact-email"
-                  type="email"
-                  required
-                  autoComplete="email"
-                  placeholder="you@company.com"
-                  value={form.email}
-                  onChange={handleChange("email")}
-                />
-              </div>
-            </div>
-
-            <div className="contact__field">
-              <label htmlFor="contact-details">project details</label>
-              <textarea
-                id="contact-details"
-                required
-                rows={5}
-                placeholder="What are you trying to get done, how does it work today, and when do you need it?"
-                value={form.details}
-                onChange={handleChange("details")}
-              />
-            </div>
-
-            <div className="contact__actions">
-              <p className="contact__note">Opens in your email app, pre-filled.</p>
-              <button type="submit" className="contact__submit">
-                send inquiry
-                <span className="contact__submit-icon" aria-hidden="true">
-                  →
-                </span>
-              </button>
-            </div>
-          </form>
-        </div>
+        <InquiryForm key={`${about}-${inquiry}`} idPrefix="contact" about={about} inquiry={inquiry} />
       </div>
     </section>
   );

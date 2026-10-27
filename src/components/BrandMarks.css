@@ -1,0 +1,30 @@
+/* SpoonFull's logo colours, sampled from its PNG */
+.mark-spoonfull {
+  --mark-teal: #40c1ac;
+  --mark-light: #f5f4f2;
+  display: inline-flex;
+  align-items: baseline;
+  font-family: "Poppins", sans-serif;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.mark-spoonfull__bold {
+  font-weight: 600;
+  color: var(--mark-teal);
+}
+
+.mark-spoonfull__light {
+  font-weight: 300;
+  color: var(--mark-light);
+}
+
+/* the o glyphs, sized to Poppins' x-height and sat on the baseline */
+.mark-spoonfull__o {
+  width: 0.56em;
+  height: 0.56em;
+  margin: 0 0.015em;
+  align-self: baseline;
+  transform: translateY(0.01em);
+}

@@ -60,9 +60,9 @@ const aboutFacets = [
   },
   {
     mediaSrc: "/assets/about/ipbl.jpg",
-    mediaLabel: "Special Jury Award, iPBL 2025 in Osaka",
+    mediaLabel: "Special Jury's Prize, iPBL 2025 in Osaka",
     story:
-      "At the 2025 International Project-Based Learning (iPBL) program at Osaka Institute of Technology, our team received the Special Jury Award for a smart solar energy optimization project that uses photovoltaic optimization to get more out of solar power.",
+      "At the 2025 International Project-Based Learning (iPBL) program at Osaka Institute of Technology, our team received the Special Jury's Prize for a smart solar energy optimization project that uses photovoltaic optimization to get more out of solar power.",
   },
   {
     mediaSrc: "/assets/about/ipbl-solo.jpg",

@@ -1,0 +1,185 @@
+.media-slot {
+  position: relative;
+  margin: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #17171c;
+  border: 1px solid var(--ink-border);
+}
+
+.media-slot__media {
+  display: block;
+  width: 100%;
+  aspect-ratio: var(--ratio);
+  object-fit: cover;
+  object-position: top;
+}
+
+.media-slot__caption {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--lilac);
+  padding: 10px 16px 12px;
+  border-top: 1px solid var(--ink-border);
+}
+
+/* videos fill their slot whole, never cropped */
+video.media-slot__media {
+  object-fit: contain;
+  background: #000;
+}
+
+/* the whole thumbnail is the play button; the icon sits in the corner
+   so it doesn't cover the thumbnail's own title */
+.media-slot__play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 24px;
+  width: 100%;
+  background: rgba(16, 16, 20, 0.15);
+  cursor: pointer;
+  transition: background var(--transition-med);
+}
+
+.media-slot__play-icon {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--coral);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  transition: transform var(--transition-med);
+}
+
+/* the triangle, nudged right so it looks centred */
+.media-slot__play-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 54%;
+  transform: translate(-50%, -50%);
+  border-style: solid;
+  border-width: 13px 0 13px 21px;
+  border-color: transparent transparent transparent var(--bone);
+}
+
+.media-slot__play-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.media-slot__play-time {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--bone);
+  background: rgba(16, 16, 20, 0.7);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+@media (hover: hover) {
+  .media-slot__play:hover {
+    background: rgba(16, 16, 20, 0.3);
+  }
+
+  .media-slot__play:hover .media-slot__play-icon {
+    transform: scale(1.08);
+  }
+}
+
+.media-slot__play:focus-visible {
+  outline-offset: -4px;
+}
+
+@media (max-width: 560px) {
+  .media-slot__play {
+    padding: 14px;
+  }
+
+  .media-slot__play-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .media-slot__play-icon::after {
+    border-width: 10px 0 10px 16px;
+  }
+}
+
+/* dev-only: what to make for this slot */
+.media-slot--placeholder {
+  background: repeating-linear-gradient(-45deg, #15151a 0 12px, #18181e 12px 24px);
+  border: 1px dashed var(--ink-dashed);
+}
+
+.media-slot__box {
+  aspect-ratio: var(--ratio);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  text-align: center;
+}
+
+.media-slot__kind {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--coral);
+}
+
+.media-slot__brief {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--body-on-ink);
+  max-width: 52ch;
+  margin: 0;
+}
+
+/* the cover standing in for a video: brief pinned to the bottom (dev) */
+.media-slot--cover {
+  position: relative;
+}
+
+.media-slot__overlay {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 60ch;
+  padding: 12px 16px;
+  border: 1px dashed var(--ink-dashed);
+  border-radius: 12px;
+  background: rgba(16, 16, 20, 0.85);
+  backdrop-filter: blur(6px);
+}
+
+.media-slot__overlay .media-slot__brief {
+  font-size: 13px;
+}
+
+@media (max-width: 560px) {
+  .media-slot__overlay {
+    position: static;
+    margin: 0;
+    border-radius: 0;
+    border-width: 1px 0 0;
+  }
+
+  /* short slots can't fit the brief at 16:9 on a phone */
+  .media-slot--placeholder .media-slot__box {
+    aspect-ratio: auto;
+    min-height: 200px;
+  }
+}

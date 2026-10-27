@@ -394,3 +394,23 @@
     justify-content: space-between;
   }
 }
+
+/* a case study's panel: the project the visitor came from */
+.contact__prompt-about {
+  color: var(--body-on-ink);
+}
+
+.contact__about {
+  align-self: flex-start;
+  margin: 0;
+  padding: 8px 14px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--bone);
+  border: 1px solid var(--ink-border);
+  border-radius: 999px;
+}
+
+.contact__about span {
+  color: var(--coral);
+}

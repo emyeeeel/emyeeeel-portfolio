@@ -37,6 +37,12 @@
     color var(--transition-fast);
 }
 
+.tour__step-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
 .tour__step-num {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -142,9 +148,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background:
-    radial-gradient(60% 70% at 50% 50%, rgba(255, 77, 54, 0.12), transparent 70%),
-    #0e0e12;
+  background: #0e0e12;
 }
 
 .tour__phone {
@@ -215,14 +219,24 @@
 }
 
 .tour__nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 36px;
   height: 36px;
+  padding: 0;
   border-radius: 50%;
   border: 1px solid var(--ink-border);
   color: var(--bone);
   transition:
     border-color var(--transition-fast),
     color var(--transition-fast);
+}
+
+.tour__arrow {
+  display: block;
+  width: 16px;
+  height: 16px;
 }
 
 .tour__nav-btn:disabled {
@@ -243,6 +257,141 @@
   height: 1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
+}
+
+/* -------- stage (case study template): a browser with the screens as
+   tabs and the route in the address bar. Flat fills, no gradients. -------- */
+.tour--stage .tour__frame {
+  background: #17171c;
+}
+
+.tour__tabs {
+  display: flex;
+  gap: 4px;
+  padding: 8px 8px 0;
+  overflow-x: auto;
+  background: #0c0c0f;
+  border-bottom: 1px solid var(--ink-border);
+  scrollbar-width: none;
+}
+
+/* active tab: same fill as the frame and no bottom edge, so it joins the page */
+.tour__tab {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin-bottom: -1px;
+  padding: 11px 14px;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: 10px 10px 0 0;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--body-on-ink);
+  text-align: left;
+  white-space: nowrap;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.tour__tab-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (hover: hover) {
+  .tour__tab:hover:not(.is-active) {
+    color: var(--bone);
+    background: #131317;
+  }
+}
+
+.tour__tab.is-active {
+  color: var(--bone);
+  background: #17171c;
+  border-color: var(--ink-border);
+}
+
+.tour__tab.is-active .tour__step-num {
+  color: var(--coral);
+}
+
+.tour__tab:focus-visible {
+  outline-offset: -2px;
+}
+
+/* address bar: the live host plus the screen's route */
+.tour__address {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--ink-border);
+}
+
+.tour__dots {
+  display: flex;
+  gap: 6px;
+}
+
+.tour__dots span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ink-border);
+}
+
+.tour__url {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--lilac);
+  background: #101014;
+  border: 1px solid var(--ink-border);
+  border-radius: 999px;
+  padding: 6px 14px;
+}
+
+.tour__url strong {
+  font-weight: 400;
+  color: var(--bone);
+}
+
+.tour--stage .tour__frame-count {
+  margin-left: 0;
+}
+
+.tour__lede-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 18px;
+}
+
+.tour__lede {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--body-on-ink);
+  max-width: 68ch;
+  margin: 0;
+}
+
+.tour__lede strong {
+  color: var(--bone);
+  font-weight: 500;
+}
+
+.tour--stage .tour__intro {
+  margin: 10px 0 0;
 }
 
 /* -------- narrow: steps become a scrollable row of chips above -------- */
@@ -272,6 +421,26 @@
   .tour__step.is-active {
     box-shadow: none;
     border-color: var(--coral);
+  }
+
+  /* stage: tabs keep their width and scroll sideways */
+  .tour__tab {
+    flex: 0 0 auto;
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+
+  .tour__lede-row {
+    align-items: flex-start;
+  }
+
+  .tour__lede {
+    font-size: 15px;
+  }
+
+  /* the route is what changes, so it wins the space */
+  .tour__host {
+    display: none;
   }
 
   /* a taller stage on narrow screens so phone screenshots stay readable */

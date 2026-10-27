@@ -123,11 +123,18 @@ function NavNotch() {
               {/* the home page's "about me" section, not the /about page */}
               <li>{sectionLink("about", "about")}</li>
               <li>
-                {/* The contact section is part of every page's layout, so
-                    this stays on the current page instead of going home. */}
-                <a href="#contact" onClick={closeMenu}>
-                  contact
-                </a>
+                {/* The contact section is part of most pages' layout, so
+                    this stays on the current page; case studies have none,
+                    so there it goes to the home page's. */}
+                {/^\/work\/[^/]+/.test(location.pathname) ? (
+                  <Link to="/#contact" onClick={closeMenu}>
+                    contact
+                  </Link>
+                ) : (
+                  <a href="#contact" onClick={closeMenu}>
+                    contact
+                  </a>
+                )}
               </li>
             </ul>
           </div>
