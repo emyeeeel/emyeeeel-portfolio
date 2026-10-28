@@ -551,7 +551,9 @@ function Journey({ journey }) {
         {journey.steps.map((step, i) => (
           <li
             key={step.label}
-            className={`cs-bento__tile cs-bento__tile--${step.tile ?? "single"} cs-bento__tile--${step.fit ?? "phone"}`}
+            className={`cs-bento__tile cs-bento__tile--${step.tile ?? "single"} cs-bento__tile--${step.fit ?? "phone"}${
+              step.device ? ` cs-bento__tile--${step.device}` : ""
+            }`}
             style={{ background: step.tint }}
           >
             <div className="cs-bento__copy">
@@ -645,9 +647,27 @@ function Built({ theme, ownership, decisions, headline, titleAccent }) {
 
 // A decision's artifact. "code": an excerpt in an editor frame, strings in
 // the accent. "tests": test-runner lines and their summary. "demo": the
-// app's demo-accounts panel, with its reset action. "image": a photo or
-// screen from the build, framed.
+// app's demo accounts in the same frame, roles in the accent, with its reset
+// action as the summary line. "rows": label and value pairs, values in the
+// accent, under a title and over a summary line. "image": a photo or screen
+// from the build, framed.
 function BuiltVisual({ visual }) {
+  if (visual.kind === "rows") {
+    return (
+      <figure className="cs-built__window">
+        <figcaption className="cs-built__window-bar">{visual.title}</figcaption>
+        <pre className="cs-built__code">
+          {visual.rows.map(([label, value]) => (
+            <span key={label} className="cs-built__line cs-built__line--pair">
+              <span>{label}</span>
+              <em>{value}</em>
+            </span>
+          ))}
+          <span className="cs-built__line cs-built__line--summary">{visual.summary}</span>
+        </pre>
+      </figure>
+    );
+  }
   if (visual.kind === "image") {
     return (
       <figure className="cs-built__shot">
@@ -687,19 +707,17 @@ function BuiltVisual({ visual }) {
     );
   }
   return (
-    <figure className="cs-built__demo">
-      <figcaption>
-        <span>{visual.title}</span>
-        <span className="cs-built__demo-action">↺ {visual.action}</span>
-      </figcaption>
-      <ul>
+    <figure className="cs-built__window">
+      <figcaption className="cs-built__window-bar">{visual.title}</figcaption>
+      <pre className="cs-built__code">
         {visual.accounts.map(([email, role]) => (
-          <li key={email}>
+          <span key={email} className="cs-built__line cs-built__line--pair">
             <span>{email}</span>
-            <span>{role}</span>
-          </li>
+            <em>{role}</em>
+          </span>
         ))}
-      </ul>
+        <span className="cs-built__line cs-built__line--summary">↺ {visual.action}</span>
+      </pre>
     </figure>
   );
 }

@@ -113,10 +113,10 @@ const projects = [
         title: "Demo data that's safe to share",
         body: "The review build runs on seeded data and a sign-in that stays in the browser, with a one-click reset.",
         payoff: "Anyone can explore it without real partner data.",
-        // the sign-in page's demo-accounts panel
+        // the sign-in page's demo accounts, in the same editor frame
         visual: {
           kind: "demo",
-          title: "Demo accounts · any password",
+          title: "demo accounts · any password",
           action: "Reset demo data",
           accounts: [
             ["carlos@concreat.ph", "Dealer"],
@@ -317,9 +317,10 @@ const projects = [
           {
             label: "Earn",
             title: "Every bag lands as points",
-            text: "Purchases, product mix and points in one view, on desktop and phone, with nudges like falling behind vehicle-program pace.",
-            image: "/assets/concreat-rewards/mock-multi-dashboard.webp",
-            alt: "The dealer dashboard on a laptop and on a phone: 279,350 points available and 1,791,000 bags purchased",
+            text: "Purchases, product mix and points in one view, with nudges like falling behind vehicle-program pace.",
+            // the laptop from the laptop-and-phone mockup, the phone cropped away
+            image: "/assets/concreat-rewards/mock-laptop-dashboard.webp",
+            alt: "The dealer dashboard on a laptop: 279,350 points available, 1,791,000 bags purchased and the next steps",
             fit: "mockup",
             tile: "wide",
             tint: "#ffffff",
@@ -932,31 +933,53 @@ const projects = [
         title: "Weight as a check on the camera",
         body: "The station pairs a depth camera with a load cell. The measured weight corrects the camera's volume estimate, and the app falls back on weight when segmentation is unreliable.",
         payoff: "Pixels don't weigh food. Physics does.",
-        // the station camera's view, with the load cell's reading
+        // one tray before eating, as the station read it (the team's demo),
+        // and the load cell's error from the ICBET 2026 paper
         visual: {
-          kind: "image",
-          src: "/assets/spoonfull/weigh.webp",
-          alt: "Station camera view of a meal tray labelled CLASS: BIG_METAL_TRAY and WEIGHT: 375.24 g",
+          kind: "rows",
+          title: "station · one tray, before eating",
+          rows: [
+            ["rice", "244.25 ml"],
+            ["chicken", "136.98 ml"],
+            ["broccoli", "30.46 ml"],
+            ["tray weight", "215.31 g"],
+          ],
+          summary: "load cell error < 0.3 g (lab tests)",
         },
       },
       {
         title: "Fit the caregiver's routine",
         body: "Scanning a resident's code fills in the meal assignment from the date and time, so caregivers confirm a record instead of typing it.",
         payoff: "Caregivers confirm instead of type.",
+        // what one QR scan fills in (the ICBET 2026 paper, section III-A)
         visual: {
-          kind: "image",
-          src: "/assets/about/spoonfull-in-use.jpg",
-          alt: "A caregiver at the Chiayi facility tapping the station's touchscreen with a resident's meal tray in hand",
+          kind: "rows",
+          title: "station · after one QR scan",
+          rows: [
+            ["resident", "Room 1001-01"],
+            ["meal", "from the menu cycle"],
+            ["before / after", "from the clock"],
+            ["capture", "when the scale settles"],
+          ],
+          summary: "fields typed by hand: 0",
         },
       },
       {
         title: "Recommendations anchored to HPA guidelines",
         body: "The recommendation layer gives the language model only computed intake values and the matching HPA reference thresholds, so its feedback stays tied to the national guidelines.",
         payoff: "Feedback stays within the guidelines.",
+        // the clinical notes the web app generated for one resident, with
+        // the HPA reference tables it cites
         visual: {
-          kind: "image",
-          src: "/assets/spoonfull/pipeline.webp",
-          alt: "Diagram of the dual-retriever pipeline: a PDF retriever over the HPA corpus and a MySQL patient retriever, fused into context for the LLM generator",
+          kind: "rows",
+          title: "clinical notes · one resident",
+          rows: [
+            ["hypertension", "sodium < 2,000 mg/day"],
+            ["diabetes", "watch refined carbs"],
+            ["kidney disease", "limit K and P"],
+            ["dysphagia", "no meals of concern"],
+          ],
+          summary: "sources: 3 HPA reference tables",
         },
       },
       {
@@ -1131,7 +1154,7 @@ const projects = [
         audience: "Caregivers recording meals, nutrition staff checking intake against guidelines, and staff managing residents and menus.",
       },
       ownership: {
-        summary: "Full stack and AI, in a team of three.",
+        summary: "Apps to AI advice, in a team of three.",
         phases: [
           { label: "Data model", mine: true, text: "Residents, meals and intake" },
           { label: "Backend", mine: true, text: "Django API on MySQL" },
@@ -1185,7 +1208,8 @@ const projects = [
       },
       decisionsHeadline: "Three calls that made it fit a care facility.",
       // 04: one resident's meal through the apps I built, as a bento grid.
-      // Screens and figures are from the team's recorded demo.
+      // Screens and figures are from the team's recorded demo, on device
+      // mockups of the station and the web app.
       journey: {
         theme: {
           background: "#f5f4f2",
@@ -1199,52 +1223,59 @@ const projects = [
         titleAccent: ["care", "plan"],
         intro: "Follow one resident's lunch through the apps I built, from the QR scan at the station to the advice staff read.",
         steps: [
+          // the web app on a phone in a hand, centred, the hand off the bottom
           {
             label: "Scan",
             title: "Scan the resident's code",
-            text: "The caregiver scans the resident's QR code at the station; the meal fills in from the date and time.",
-            image: "/assets/spoonfull/app-scan.webp",
-            alt: "The SpoonFull app scanning a resident's QR code through the station camera",
-            fit: "screen",
-            tint: "#ffffff",
-            chip: { label: "Resident", value: "Room 1001-01" },
+            text: "Each resident has a QR code in the web app; the caregiver scans it at the station, and the meal fills in from the date and time.",
+            image: "/assets/spoonfull/journey-phone-hand.webp",
+            alt: "A hand holding a phone showing a resident's profile in the SpoonFull web app: weight, BMI, their QR code and daily recommended intake",
+            fit: "mock",
+            device: "phone-hand",
+            tint: "#e0f1ec",
+            chip: { label: "Daily target", value: "1,657 kcal" },
           },
+          // the station app on a tablet held in two hands, on the bottom edge
           {
             label: "Weigh",
             title: "The tray, before and after",
             text: "The station photographs and weighs the tray at both ends of the meal, and outlines every food it finds.",
-            image: "/assets/spoonfull/app-before-after.webp",
-            alt: "Before and after views of a meal tray, each food outlined, with broccoli, chicken and rice listed, a weight of 215.31 g before and 43.01 g after",
-            fit: "screen",
+            image: "/assets/spoonfull/journey-tablet-hands.webp",
+            alt: "Two hands holding a tablet with the station app's before and after views of a tray: broccoli, chicken and rice at 667.12 g before, broccoli and rice at 215.78 g after",
+            fit: "mock",
+            device: "tablet-hands",
             tile: "wide",
-            tint: "#e0f1ec",
-            chip: { label: "Tray weight", value: "215 → 43 g" },
+            tint: "#ffffff",
+            chip: { label: "Tray weight", value: "667 → 216 g" },
           },
+          // the same meal's intake breakdown, on a laptop
           {
             label: "Measure",
             title: "What was eaten, dish by dish",
-            text: "Volumes before and after give the share of each dish eaten: here, all of the chicken and 80% of the rice.",
-            image: "/assets/spoonfull/app-intake.webp",
-            alt: "Intake breakdown: 87.3% of the meal eaten, with broccoli at 89.71%, chicken at 100% and rice at 79.87%",
-            fit: "screen",
+            text: "Volumes before and after give the share of each dish eaten: here, all of the chicken and about three-quarters of the rice.",
+            image: "/assets/spoonfull/journey-laptop.webp",
+            alt: "A laptop showing the intake breakdown: 83.66% of the meal eaten, with broccoli at 86.78%, chicken at 100% and rice at 73.82%",
+            fit: "mock",
+            device: "laptop",
             tile: "wide",
-            tint: "#eaf0ef",
-            chip: { label: "Meal eaten", value: "87.3%" },
+            tint: "#ffffff",
+            chip: { label: "Meal eaten", value: "83.7%" },
           },
           {
             label: "Advise",
             title: "Intake over time, with advice",
             text: "Staff follow each resident week by week against a target line, with advice drawn from Taiwan's dietary reference intakes.",
-            image: "/assets/spoonfull/app-analysis.webp",
-            alt: "A resident's weekly intake charts against a target line, above recommendations based on Taiwan's dietary reference intakes",
-            fit: "screen",
-            tint: "#ffffff",
+            image: "/assets/spoonfull/journey-tablet.webp",
+            alt: "A tablet showing a resident's weekly intake charts against a target line, above a dietary analysis based on Taiwan's dietary reference intakes",
+            fit: "mock",
+            device: "tablet-frame",
+            tint: "#e0f1ec",
             chip: { label: "Protein, men 71+", value: "66 g a day" },
           },
         ],
       },
       // 05: how I built it, on SpoonFull's dark teal
-      builtTitleAccent: ["Full", "stack", "and", "AI"],
+      builtTitleAccent: ["AI", "advice"],
       builtTheme: {
         background: "#0b3438",
         ink: "#ffffff",
@@ -1286,13 +1317,14 @@ const projects = [
             value: "~US$23K",
             label: "of staff time freed a year, net of the station's cost",
             tone: "ink",
-            // a month: ~NT$61,000 of staff time freed vs ~NT$800 for the
-            // station (hardware over three years, plus electricity)
+            // a month: ~NT$61,000 (≈ US$1,930) of staff time freed vs ~NT$800
+            // (≈ US$25) for the station, hardware over three years plus
+            // electricity; in US$ at the evidence's rate, like the headline
             chart: {
-              summary: "A month at a typical facility: about NT$800 for the station, about NT$61,000 of staff time freed.",
+              summary: "A month at a typical facility: about US$25 for the station, about US$1,900 of staff time freed.",
               groups: [
-                { label: "Station / mo", values: [0.8], text: ["NT$800"] },
-                { label: "Time freed / mo", values: [61], text: ["NT$61K"], on: true },
+                { label: "Station / mo", values: [25], text: ["US$25"] },
+                { label: "Time freed / mo", values: [1930], text: ["US$1.9K"], on: true },
               ],
             },
           },

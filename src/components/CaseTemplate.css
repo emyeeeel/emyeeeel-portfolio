@@ -1367,6 +1367,60 @@
   width: 112%;
 }
 
+/* the screen inside a tablet: a dark bezel around it, the device running
+   off the tile's edges */
+.cs-bento__tile--tablet .cs-bento__art img {
+  border: 10px solid #101718;
+  border-radius: 24px;
+  background: #101718;
+  box-shadow: 0 30px 60px rgba(11, 52, 56, 0.28);
+}
+
+/* device mockups on their own (fit "mock"), each placed so the device and
+   any hands run off the tile's edges rather than floating. Single tiles
+   widen the art to the tile's edges. */
+.cs-bento__tile--mock .cs-bento__art img {
+  max-width: none;
+  height: auto;
+}
+
+.cs-bento__tile--mock:not(.cs-bento__tile--wide) .cs-bento__art {
+  margin: 16px -28px 0;
+}
+
+/* a phone in a hand, centred, the hand running off the tile's bottom edge
+   (like Concreat's "unlock" tile) */
+.cs-bento__tile--phone-hand .cs-bento__art img {
+  top: 0;
+  left: -89%;
+  width: 168%;
+}
+
+/* a tablet in two hands on the tile's bottom edge: the left wrist meets it,
+   the right arm runs off the side (like Concreat's "redeem" tile) */
+.cs-bento__tile--tablet-hands .cs-bento__art img {
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: auto;
+  width: 100%;
+}
+
+/* a laptop running off the tile's right edge */
+.cs-bento__tile--laptop .cs-bento__art img {
+  top: 30px;
+  left: 0;
+  width: 122%;
+}
+
+/* a framed tablet running off the right and bottom edges */
+.cs-bento__tile--tablet-frame .cs-bento__art img {
+  top: 4px;
+  left: 28px;
+  width: 128%;
+  filter: drop-shadow(0 24px 40px rgba(11, 52, 56, 0.18));
+}
+
 /* a render placed by hand (step.place): no centring transform */
 .cs-bento__tile .cs-bento__art img.is-placed {
   right: auto;
@@ -1522,11 +1576,14 @@
   list-style: none;
 }
 
+/* each card's title, visual and payoff sit on rows shared across the row
+   of cards, so the windows match in height however the pills wrap */
 .cs-built__card {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
+  row-gap: 18px;
   padding: 26px 24px 24px;
   border-radius: 24px;
   background: color-mix(in srgb, var(--slide-ink) 7%, transparent);
@@ -1566,7 +1623,8 @@
 
 /* the payoff as a pill in the accent, at the foot of the card */
 .cs-built__payoff {
-  align-self: flex-start;
+  align-self: end;
+  justify-self: start;
   margin: auto 0 0;
   padding: 7px 14px;
   font-family: var(--font-mono);
@@ -1592,13 +1650,18 @@
   object-fit: cover;
 }
 
-/* code and test output in a dark editor frame */
+/* code and test output in a dark editor frame, filling its row so a
+   summary line sits at the foot */
 .cs-built__window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   container-type: inline-size;
   margin: 0;
   overflow: hidden;
   border-radius: 14px;
-  background: #120637;
+  /* a darker shade of the slide, so it sits in any project's colours */
+  background: color-mix(in srgb, var(--slide-bg) 55%, #000);
   box-shadow: 0 18px 36px rgba(0, 0, 0, 0.25);
 }
 
@@ -1624,6 +1687,7 @@
 }
 
 .cs-built__code {
+  flex: 1;
   display: flex;
   flex-direction: column;
   margin: 0;
@@ -1647,66 +1711,30 @@
   color: var(--slide-accent);
 }
 
+/* the summary keeps its gap in the tallest window, and drops to the foot
+   in the shorter ones */
+.cs-built__line:has(+ .cs-built__line--summary) {
+  margin-bottom: 8px;
+}
+
 .cs-built__line--summary {
-  margin-top: 8px;
+  margin-top: auto;
   padding-top: 8px;
   border-top: 1px dashed rgba(255, 255, 255, 0.18);
   font-weight: 700;
   color: var(--slide-accent);
 }
 
-/* the app's demo-accounts panel, in its own light colours */
-.cs-built__demo {
-  margin: 0;
-  padding: 12px;
-  border-radius: 14px;
-  color: #1f0b55;
-  background: #eff3fc;
-  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.25);
-}
-
-.cs-built__demo figcaption {
+/* an account and its role, at either end of the line */
+.cs-built__line--pair {
   display: flex;
   justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 8px;
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  gap: 12px;
 }
 
-.cs-built__demo-action {
-  padding: 2px 6px;
-  border-radius: 4px;
-  color: #fff;
-  background: #c8102e;
-  white-space: nowrap;
-}
-
-.cs-built__demo ul {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.cs-built__demo li {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 7px 9px;
-  border-radius: 6px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  background: #fff;
-}
-
-.cs-built__demo li span:last-child {
-  color: #6b6590;
+.cs-built__line--pair > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (max-width: 1100px) {
@@ -3639,6 +3667,18 @@
   .cs-bento__tile--wide .cs-bento__art {
     margin: 16px 0 0;
   }
+
+  .cs-bento__tile--tablet-hands .cs-bento__art img {
+    width: calc(100% + 28px);
+  }
+
+  /* the laptop sits on the tile's bottom edge, running off the right */
+  .cs-bento__tile--laptop .cs-bento__art img {
+    top: auto;
+    bottom: -4%;
+    width: 150%;
+  }
+
 
   .cs-bento__tile--wide.cs-bento__tile--mockup .cs-bento__art img {
     left: -10%;
