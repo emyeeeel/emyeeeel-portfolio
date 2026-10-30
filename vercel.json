@@ -1,6 +1,7 @@
 {
   "redirects": [
-    { "source": "/works", "destination": "/work", "permanent": true }
+    { "source": "/works", "destination": "/work", "permanent": true },
+    { "source": "/work/hubspot-crm-cleanup", "destination": "/work/hubspot-crm", "permanent": true }
   ],
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.html" }

@@ -528,6 +528,7 @@
 
 .cs-cover-page--card .cs-cover-page__sub {
   max-width: 22ch;
+  text-wrap: balance;
 }
 
 /* the tagline's key words in colour only, as in the logo lockup */
@@ -576,6 +577,95 @@
 .cs-cover-page--logo .cs-cover-page__sub strong {
   font-weight: inherit;
   font-style: normal;
+}
+
+/* a tagline split over lines ("\n"), each line on its own */
+.cs-cover-page__sub > span {
+  display: block;
+}
+
+/* caption: the kicker, the logo and the tagline under it, set at the
+   bottom left over the photo. The logo leads; the tagline is a size down,
+   its accent words bold over a swoosh in the highlight colour. */
+.cs-cover-page--caption {
+  place-items: end start;
+  padding-bottom: clamp(88px, 13vh, 140px);
+  --logo-w: clamp(220px, 21vw, 340px);
+}
+
+/* a caption centred on the photo's plain side, clear of the subject */
+.cs-cover-page--caption.cs-cover-page--middle {
+  place-items: center start;
+  padding-bottom: 0;
+}
+
+/* a caption cover with no logo: the name a size up from the tagline, in
+   the cover's font as typed, its second line in the highlight */
+.cs-cover-page--caption .cs-cover-page__name {
+  font-weight: 700;
+  font-size: clamp(38px, 4vw, 64px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  text-transform: none;
+}
+
+/* a long wordmark is sized up so it carries the same weight */
+.cs-cover-page--caption.cs-cover-page--logo-wide {
+  --logo-w: clamp(280px, 28vw, 440px);
+}
+
+/* the crop, from the cover's `focus` (`focusMobile` on phones) */
+.cs-cover-page--caption .cs-cover-page__photo--full {
+  object-position: var(--focus, center);
+}
+
+/* a flat navy wash over the photo: it darkens and cools it so the white
+   type reads, in the project's own blue */
+.cs-cover-page--caption::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--cover-wash, rgba(10, 24, 56, 0.5));
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.cs-cover-page--caption .cs-cover-page__kicker {
+  margin-bottom: 22px;
+  text-wrap: balance;
+}
+
+/* the tagline a size under the logo, left-aligned, its accent words bold
+   over a swoosh (every caption cover) */
+.cs-cover-page--swoosh .cs-cover-page__sub {
+  width: auto;
+  margin: 26px 0 0;
+  text-align: left;
+  font-weight: 400;
+  font-size: clamp(24px, 2.3vw, 38px);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+.cs-cover-page--swoosh .cs-cover-page__sub strong {
+  position: relative;
+  display: inline-block;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--cover-text);
+}
+
+.cs-cover-page--swoosh .cs-cover-page__sub strong::after {
+  content: "";
+  position: absolute;
+  left: -4%;
+  right: 2%;
+  bottom: -0.34em;
+  height: 0.4em;
+  background: var(--cover-highlight);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 28' preserveAspectRatio='none'%3E%3Cpath d='M2 8Q100 20 198 2Q100 46 2 8Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 28' preserveAspectRatio='none'%3E%3Cpath d='M2 8Q100 20 198 2Q100 46 2 8Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
 }
 
 /* brand: the logo and motto beside a framed photo */
@@ -3512,6 +3602,64 @@
 
   .cs-cover-page--logo .cs-cover-page__cue {
     display: none;
+  }
+
+  /* a caption stays on the photo, which fills the cover */
+  .cs-cover-page--caption.cs-cover-page--logo.cs-cover-page--overlay {
+    justify-content: flex-end;
+    min-height: 100svh;
+    padding: 120px 0 72px;
+    --logo-w: 190px;
+  }
+
+  .cs-cover-page--caption.cs-cover-page--logo .cs-cover-page__photo--full {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    object-position: var(--focus-m, center);
+  }
+
+  .cs-cover-page--caption.cs-cover-page--logo-wide.cs-cover-page--overlay {
+    --logo-w: 250px;
+  }
+
+  .cs-cover-page--caption.cs-cover-page--overlay .cs-cover-page__name {
+    font-size: 40px;
+  }
+
+  /* a caption cover without a logo keeps the photo on top: its crop comes
+     from `focusMobile`, else the overlay's default */
+  .cs-cover-page--caption.cs-cover-page--overlay .cs-cover-page__photo--full {
+    object-position: var(--focus-m, 84% center);
+  }
+
+  /* on phones a centred caption falls over the subject, so the tint goes
+     back to full strength */
+  .cs-cover-page--caption.cs-cover-page--middle::after {
+    background: var(--cover-wash-m, rgba(10, 24, 56, 0.5));
+  }
+
+  /* stacked: the caption on the cover's colour, then the photo at its own
+     shape, doubled and anchored right so its subject spans the screen */
+  .cs-cover-page--caption.cs-cover-page--stack.cs-cover-page--logo.cs-cover-page--overlay {
+    justify-content: flex-start;
+    min-height: 0;
+    padding: 150px 0 0;
+  }
+
+  .cs-cover-page--caption.cs-cover-page--stack.cs-cover-page--logo .cs-cover-page__photo--full {
+    position: static;
+    order: 2;
+    width: 200%;
+    max-width: none;
+    height: auto;
+    margin: 40px 0 0 -100%;
+  }
+
+  .cs-cover-page--swoosh .cs-cover-page__sub {
+    font-size: 22px;
   }
 
   .cs-cover-page__sub {

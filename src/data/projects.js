@@ -573,7 +573,7 @@ const projects = [
     category: "applications",
     // Also listed under these filters (the card shows only the primary).
     alsoIn: ["data-reporting"],
-    tags: ["React", "Vite", "Supabase", "PostgreSQL", "Role-based access", "Data modeling"],
+    tags: ["React", "Vite", "Recharts", "Role-based access", "Data modeling", "Supabase-ready"],
     // Feeds the hero figures strip (highlights.js).
     sector: "Agriculture & food trading",
     // Made for a real organization: a prospective client, RCL Egg Trading.
@@ -583,16 +583,16 @@ const projects = [
     stageKind: "prototype",
     highlights: [
       { value: "6 modules", label: "In one system" },
-      { value: "Role-based", label: "Access control" },
+      { value: "6 roles", label: "Each with its own access" },
     ],
-    tagline: "One role-based system for an egg supplier's day-to-day records.",
+    tagline: "One back office for an egg supplier, from the day's collection to the books.",
     summary:
       "One back office for an egg supplier, from flock and stock to invoices and payroll.",
     // Three short lines for the case study's "at a glance" row.
     glance: {
       problem: "Every part of the business kept its own spreadsheet.",
-      built: "One back office for the whole business, split by role.",
-      result: "Working prototype on React, Vite and Supabase.",
+      built: "One back office for the farm, stock, sales, deliveries, payroll and books.",
+      result: "Working prototype in React and Vite, its data layer ready for Supabase.",
     },
     subtitle:
       "A business application prototype for a Philippine egg supplier's daily operations.",
@@ -601,133 +601,188 @@ const projects = [
     icon: "/assets/rcl-egg-trading/rcl-egg-trading_logo_icon.png",
     facts: {
       role: "Software Developer",
-      stack: "React · Vite · Supabase (PostgreSQL)",
+      stack: "React 19 · Vite · Recharts · localStorage (Supabase-ready)",
       timeline: "2026, Cebu",
       stage: "Business application prototype",
     },
     overview:
-      "A small trading business keeps its operations across spreadsheets and paper. I scoped and built a prototype that brings those records into one application, with each role seeing the parts of the business it works with.",
+      "A small egg supplier keeps its operations across spreadsheets and paper. I scoped and built a prototype that brings those records into one back office, from each flock's daily collection to the receipt, the delivery and the books, with each role seeing only the parts of the business it works with. It comes with a public site for the business's customers.",
     problem:
-      "Inventory, sales, deliveries, staff and accounts were tracked in separate spreadsheets and on paper. There was no single source of truth, and no way to give staff access to only the records relevant to their work.",
+      "Collections, stock, sales, deliveries, staff and accounts were tracked in separate spreadsheets and on paper. There was no single source of truth, no way to see which trays would expire first, and no way to give staff access to only the records relevant to their work.",
     users:
-      "The owner and managers, office and sales staff, and the people handling deliveries.",
+      "The owner and managers, the farm manager, sales and warehouse staff, drivers and the accountant.",
     contribution: {
-      text: "I worked solo, from requirements and data model to the application itself.",
+      text: "I worked solo, from requirements and data model to the application and its public site.",
       items: [
-        "Mapped the business's day-to-day records into one relational data model",
-        "Built the application in React and Vite on Supabase (PostgreSQL)",
-        "Implemented role-based access control across modules",
+        "Mapped the business's day-to-day records into one linked data model of 20 record types",
+        "Built the back office in React 19 and Vite: farm, inventory, sales, logistics, HR and payroll, and accounting, with a dashboard across them",
+        "Turned each grade of a day's collection into a stock batch with its own best-before, sold first-expiring first",
+        "Linked deliveries to packaging: trips deduct trays and crates, and returned trays become credit on the client's next order",
+        "Built semi-monthly payroll with SSS, PhilHealth, Pag-IBIG and withholding tax, with printable payslips",
+        "Added official receipts, BIR reference reports and QuickBooks CSV and IIF import and export",
+        "Implemented role-based access for six roles",
+        "Kept the data in the browser for the demo, with every data function mapped to its Supabase call",
       ],
     },
     scope: {
-      intro: "The prototype's scope covers six connected areas of the business:",
+      intro: "The prototype covers six connected areas of the business, with a dashboard across them:",
       items: [
-        "Farm and flock records",
-        "Inventory",
-        "Sales and invoicing",
-        "Logistics and deliveries",
-        "HR and payroll",
-        "Accounting, with a CSV export for QuickBooks",
+        "Farm: flocks, daily collection by grade, feed and health",
+        "Inventory: egg batches by freshness, packaging and waste",
+        "Sales: orders, clients, credit terms and official receipts",
+        "Logistics: trips, vehicles, drivers and tray returns",
+        "HR and payroll: attendance, semi-monthly payroll and payslips",
+        "Accounting: profit and loss, expenses, tax reports and QuickBooks",
       ],
     },
     // The template shows the first three, each with its one-line payoff.
     decisions: [
       {
-        title: "One data model, not six spreadsheets",
-        body: "The modules share one PostgreSQL database, so products, customers and staff are defined once and referenced everywhere instead of re-typed per sheet.",
-        payoff: "Define a record once; use it everywhere.",
+        title: "A best-before on every tray",
+        body: "Each grade of a day's collection becomes its own stock batch, with a shelf life and tray price set by grade. Orders offer batches first-expiring first, and stock is flagged three days before it expires.",
+        payoff: "The oldest eggs go out first.",
+        // the grade rules in the prototype's data layer (GRADE_CONFIG)
+        visual: {
+          kind: "rows",
+          title: "batch rules · by grade",
+          rows: [
+            ["Grade AA", "21 days · ₱480/tray"],
+            ["Grade A", "18 days · ₱420/tray"],
+            ["Grade B", "14 days · ₱360/tray"],
+            ["near expiry", "3 days left"],
+          ],
+          summary: "orders list batches first-expiring first",
+        },
+      },
+      {
+        title: "Returned trays become credit",
+        body: "Finishing a delivery trip records the trays and crates each client hands back. They go back into packaging stock, and the client gets a credit memo that comes off their next order on its own.",
+        payoff: "Returns pay the client back.",
+        // the return credits and memo rules in the demo data
+        visual: {
+          kind: "rows",
+          title: "trip complete · tray returns",
+          rows: [
+            ["30-egg plastic tray", "₱5 credit"],
+            ["bulk plastic crate", "₱20 credit"],
+            ["credit memo", "valid 90 days"],
+            ["next order", "applied on save"],
+          ],
+          summary: "returned trays go back into stock",
+        },
+      },
+      {
+        title: "Built for Supabase, running without it",
+        body: "For the demo, every record lives in the browser. Each data function carries the Supabase call that replaces it, so the move to a hosted PostgreSQL database changes the data layer, not the screens.",
+        payoff: "Swap the storage, keep the app.",
+        // one of the prototype's data functions, as written
+        visual: {
+          kind: "code",
+          file: "src/db.js",
+          lines: [
+            "// supabase.from('flocks').select('*')",
+            "export function getAllFlocks() {",
+            "  return load(KEY.flocks);",
+            "}",
+          ],
+        },
       },
       {
         title: "Access by role",
-        body: "Each person reaches only the modules and actions their job needs, which matters once payroll and accounting sit in the same system as sales.",
+        body: "Six roles each reach only the modules their job needs, from the driver's trips to the accountant's payroll and books.",
         payoff: "Each person sees only their part.",
-      },
-      {
-        title: "Export to the accounting tool, don't replace it",
-        body: "Accounting output is a CSV export for QuickBooks, so the prototype fits around the tool the business's books already use.",
-        payoff: "The books stay where they are.",
       },
     ],
     evidence: [
       {
         kind: "implemented",
-        text: "Working prototype on React, Vite and Supabase with role-based access control.",
+        text: "Working prototype in React 19 and Vite: six modules and a dashboard, six demo roles and a public site, on demo data stored in the browser.",
       },
     ],
     limitations:
-      "This is a prototype, not a production deployment. It isn't presented as tax- or payroll-compliant software: those rules would need checking by the business and its accountant before any real use.",
+      "This is a prototype, not a production deployment. Its data lives in the browser for the demo, and the Supabase backend is planned but not yet connected. It isn't presented as tax- or payroll-compliant software: those rules would need checking by the business and its accountant before any real use.",
     story: {
       kpis: [
-        { value: "6", label: "Connected modules, from flock records to accounting" },
-        { value: "1", label: "Shared PostgreSQL database in place of separate sheets" },
-        { value: "3", label: "User groups, each seeing only its own modules" },
+        { value: "6", label: "Connected modules, from the farm to the books" },
+        { value: "6", label: "Roles, each seeing only its own modules" },
+        { value: "3", label: "Egg grades, each with its own shelf life and tray price" },
       ],
       context: {
-        text: "Flocks, stock, sales, deliveries, staff and accounts were tracked in separate spreadsheets and on paper. Nothing was the single source of truth, and there was no way to show staff only the records their job needed.",
-        audience: "The owner and managers, office and sales staff, and the people handling deliveries.",
+        text: "Collections, stock, sales, deliveries, staff and accounts were tracked in separate spreadsheets and on paper. Nothing was the single source of truth, nobody could see which trays would expire first, and there was no way to show staff only the records their job needed.",
+        audience: "The owner and managers, the farm manager, sales and warehouse staff, drivers and the accountant.",
       },
       ownership: {
         summary: "Solo, from requirements to a working app.",
         phases: [
           { label: "Requirements", mine: true, text: "Daily records mapped" },
-          { label: "Data model", mine: true, text: "One PostgreSQL schema" },
-          { label: "Build", mine: true, text: "React and Vite on Supabase" },
-          { label: "Access", mine: true, text: "Roles across every module" },
+          { label: "Data model", mine: true, text: "20 linked record types" },
+          { label: "Build", mine: true, text: "React 19 and Vite" },
+          { label: "Access", mine: true, text: "Six roles" },
+          { label: "Public site", mine: true, text: "Catalog and contact" },
         ],
       },
       flow: {
         kind: "features",
         items: [
-          { title: "Farm and flock", body: "Flock and farm records, kept in the same system as everything they feed." },
-          { title: "Inventory", body: "Stock on hand, drawn from the same product records sales uses." },
-          { title: "Sales and invoicing", body: "Sales and invoices tied to shared customer and product records." },
-          { title: "Logistics", body: "Deliveries tracked alongside the sales they fulfil." },
-          { title: "HR and payroll", body: "Staff and payroll, open only to the roles allowed to see them." },
-          { title: "Accounting", body: "The books, with a CSV export for QuickBooks." },
+          { title: "Farm", body: "Flocks, each day's collection by grade, and feed and health logs that file their own expenses." },
+          { title: "Inventory", body: "Egg batches by freshness and rack, packaging stock, and waste and rejects." },
+          { title: "Sales", body: "Orders from batches first-expiring first, with VAT, credit terms and official receipts." },
+          { title: "Logistics", body: "Trips by truck and driver, with packaging deducted and tray returns credited." },
+          { title: "HR and payroll", body: "Attendance and semi-monthly payroll with SSS, PhilHealth and Pag-IBIG, and payslips." },
+          { title: "Accounting", body: "Profit and loss, expenses, BIR reference reports and QuickBooks import and export." },
         ],
       },
       decisionsHeadline: "Three decisions behind one back office.",
-      // The deck. Draft structure: the journey's steps have no screenshots
-      // yet (dev shows a frame to fill), and the copy comes from the fields
-      // above.
+      // The deck. A worker lifting a full tray of brown eggs in morning
+      // sun, the kicker, logo and tagline on the plain cream wall to its
+      // left, in dark blue; on phones they sit above the photo, on the
+      // colour of its top edge.
       cover: {
         layout: "overlay",
-        backdrop: true,
-        background: "#f9d64a",
+        caption: true,
+        background: "#c6ae8e",
         text: "#123f6b",
-        highlight: "#1a66a6",
+        highlight: "#005EB8",
         font: "Poppins, sans-serif",
-        kicker: "Business application · prototype",
-        logo: { src: "/assets/rcl-egg-trading/rcl-egg-trading_logo.png", alt: "RCL Egg Trading" },
-        tagline: "“One back office, from flock to books.”",
-        accent: ["flock", "books"],
+        kicker: "Egg supplier back office · prototype",
+        logo: { src: "/assets/rcl-egg-trading/rcl-egg-trading_logo.png", alt: "RCL Egg Trading", wide: true },
+        tagline: "Every tray, accounted for.",
+        accent: ["accounted", "for"],
         image: {
-          src: "/assets/rcl-egg-trading/rcl-egg-trading_bg.png",
-          alt: "RCL Egg Trading's yellow brand backdrop",
+          src: "/assets/rcl-egg-trading/cover-trays.webp",
+          alt: "A worker in a blue shirt lifting a full blue tray of brown eggs off a stack of trays in morning sunlight",
         },
+        // the trays right of centre on wide screens, clear of the logo; no
+        // tint, as the photo is light and the type is dark; the caption
+        // centred, clear of the table
+        focus: "80% center",
+        wash: "transparent",
+        washMobile: "transparent",
+        middle: true,
+        stack: true,
       },
       overview: {
-        background: "#fbf8ee",
+        background: "#FFF8E8",
         ink: "#123f6b",
         muted: "#8a8f9a",
-        accent: "#1a66a6",
+        accent: "#005EB8",
         font: "Poppins, sans-serif",
         thumb: "tile",
         lead: "RCL Egg Trading's back office brings an egg supplier's records into one app,",
-        rest: "from flock and stock to invoices, deliveries and payroll, split by role.",
+        rest: "from each flock's collection to receipts, deliveries, payroll and the books, split by role.",
         meta: [
           ["Client", "RCL Egg Trading"],
           ["Year", "2026"],
           ["Platform", "Web app"],
           ["Role", "Solo developer"],
         ],
-        tags: ["Requirements", "Data modeling", "Front-end", "Supabase", "Role-based access", "Prototyping"],
+        tags: ["Requirements", "Data modeling", "Front-end", "Role-based access", "Payroll rules", "Prototyping"],
       },
       why: {
-        background: "#1a66a6",
+        background: "#005EB8",
         ink: "#ffffff",
-        muted: "#cfe0f2",
-        accent: "#f9d64a",
+        muted: "#D6E8FF",
+        accent: "#FED141",
         font: "Poppins, sans-serif",
         titleStyle: "plain",
         image: {
@@ -736,66 +791,83 @@ const projects = [
         },
         lines: ["Why one", "back office?"],
         subhead: "Because every part of the business kept its own spreadsheet.",
-        text: "Flocks, stock, sales, deliveries, staff and accounts lived in separate sheets and on paper, with no single source of truth and no way to show staff only what their job needed.",
+        text: "Collections, stock, sales, deliveries, staff and accounts lived in separate sheets and on paper, with no single source of truth, no view of which trays would expire first, and no way to show staff only what their job needed.",
         points: [
           {
             value: "6",
             unit: "modules",
             title: "The whole business, one app",
-            text: "Flock, inventory, sales, deliveries, payroll and accounting.",
+            text: "Farm, inventory, sales, logistics, payroll and accounting.",
           },
           {
-            value: "1",
-            unit: "database",
+            value: "20",
+            unit: "record types",
             title: "Define it once",
-            text: "Products, customers and staff live in one PostgreSQL database, referenced everywhere.",
+            text: "Flocks, batches, clients, orders, trips and staff, linked by ID instead of re-typed per sheet.",
           },
           {
-            value: "3",
-            unit: "user groups",
+            value: "6",
+            unit: "roles",
             title: "Each role sees its part",
-            text: "Owner and managers, office and sales staff, and deliveries each reach only their modules.",
+            text: "From the farm manager's flocks to the driver's trips and the accountant's books.",
           },
         ],
       },
+      // 04: a day's eggs through the prototype, on its demo data.
       journey: {
         theme: {
-          background: "#fbf8ee",
+          background: "#FFF8E8",
           ink: "#123f6b",
           muted: "#6b7280",
-          accent: "#1a66a6",
+          accent: "#005EB8",
           font: "Poppins, sans-serif",
           plain: true,
         },
-        title: "From flock to the books.",
-        titleAccent: ["books"],
-        intro: "Follow a day's eggs through the six modules of the prototype I built, each role seeing only its part.",
+        title: "From the coop to the receipt.",
+        titleAccent: ["receipt"],
+        intro: "Follow a day's eggs through the prototype I built, on its demo data.",
         steps: [
           {
-            label: "Flock",
-            title: "Eggs in from the farm",
-            text: "Farm and flock records feed the same product list that stock and sales use.",
+            label: "Collect",
+            title: "The day's eggs, by grade",
+            text: "Each flock's collection is logged by grade; rejects are counted but never reach stock.",
+            image: "/assets/rcl-egg-trading/journey-collect.webp",
+            alt: "The Log egg collection form for Flock Beta: 9 trays of Grade AA, 7 of Grade A, 3 of Grade B and 1 of rejects, collected by Maria Santos",
+            fit: "screen",
             tint: "#ffffff",
+            chip: { label: "To stock", value: "19 trays" },
           },
           {
             label: "Stock",
-            title: "Stock on hand",
-            text: "Inventory draws on the shared product records, so counts match what's sold.",
+            title: "Every batch, by freshness",
+            text: "Each grade becomes a batch with its rack, trays left and best-before, from Fresh to Pull now.",
+            image: "/assets/rcl-egg-trading/journey-stock.webp",
+            alt: "The Egg Stock table: batches by flock and grade with rack locations, trays left, best-before dates and freshness tags from Expired to Fresh",
+            fit: "screen",
             tile: "wide",
-            tint: "#fdf3c7",
+            tint: "#FEF4C0",
+            chip: { label: "Shelf life, Grade AA", value: "21 days" },
           },
           {
             label: "Sell",
-            title: "Sale, invoice, delivery",
-            text: "An order becomes an invoice and a delivery, all tied to one customer record.",
+            title: "An order, first-expiring first",
+            text: "Batches are offered oldest first, with VAT and the client's tray-return credit worked out on the order.",
+            image: "/assets/rcl-egg-trading/journey-sell.webp",
+            alt: "The New sales order form for Sunrise Hotel Group: a Grade AA batch flagged to deliver promptly, 12% VAT and ₱50 of tray-return credit applied",
+            fit: "screen",
             tile: "wide",
-            tint: "#e6eef7",
+            tint: "#D6E8FF",
+            chip: { label: "Tray credit applied", value: "−₱50" },
           },
           {
-            label: "Close",
-            title: "Payroll and the books",
-            text: "Payroll stays with the roles allowed to see it; the books export to QuickBooks as CSV.",
-            tint: "#ffffff",
+            label: "Bill",
+            title: "The official receipt",
+            text: "Each order prints an official receipt with the business's TIN, VAT and the balance due.",
+            image: "/assets/rcl-egg-trading/journey-receipt.webp",
+            alt: "An official receipt for Sunrise Hotel Group: 10 trays of Grade AA and 5 of Grade A, ₱828 VAT and ₱7,728 due",
+            fit: "screen",
+            tint: "#FEF4C0",
+            chip: { label: "Total amount due", value: "₱7,728" },
           },
         ],
       },
@@ -804,28 +876,28 @@ const projects = [
         background: "#123f6b",
         ink: "#ffffff",
         muted: "#b9cbe0",
-        accent: "#f9d64a",
+        accent: "#FED141",
         font: "Poppins, sans-serif",
         plain: true,
       },
       outcomeTheme: {
-        background: "#fdf6d8",
+        background: "#FEF4C0",
         ink: "#123f6b",
         muted: "#6b7280",
-        accent: "#1a66a6",
+        accent: "#005EB8",
         font: "Poppins, sans-serif",
         plain: true,
       },
       outcome: {
-        headline: "A working prototype of one shared back office.",
+        headline: "A working prototype, ready for a real backend.",
         titleAccent: ["working", "prototype"],
-        text: "It runs on React, Vite and Supabase, with role-based access across all six modules. Before any real use, the business and its accountant would need to check its tax and payroll rules.",
+        text: "All six modules run end to end on demo data in the browser, and every data function is already mapped to its Supabase call. Before any real use, the business and its accountant would need to check its tax and payroll rules.",
       },
       closing: {
-        background: "#f9d64a",
+        background: "#FED141",
         ink: "#123f6b",
         muted: "#123f6b",
-        accent: "#1a66a6",
+        accent: "#005EB8",
         font: "Poppins, sans-serif",
         title: "Need something like this?",
         cta: "tell me about it",
@@ -840,7 +912,7 @@ const projects = [
         "Requirements → data model",
         "Relational data modelling",
         "Role-based access control",
-        "React · Supabase",
+        "React · Vite",
         "Business-process mapping",
       ],
     },
@@ -1504,22 +1576,31 @@ const projects = [
       decisionsHeadline: "Three rules behind every recommendation.",
       // The deck. Draft structure: the journey's steps have no screenshots
       // yet (dev shows a frame to fill).
+      // A parcel handed over at a navy front door, the kicker, logo and
+      // tagline (from the team's pitch deck) on the door's plain left.
       cover: {
         layout: "overlay",
-        backdrop: true,
+        caption: true,
         background: "#0a1a2b",
         text: "#f2f2f2",
         highlight: "#f7841f",
         font: "Urbanist, sans-serif",
-        kicker: "Hackathon champion · SCS Days 2025",
-        logo: { src: "/assets/paagi/paagi_logo.png", alt: "Paagi" },
-        // from the team's pitch deck
-        tagline: "“Perfect fit. Zero waste.”",
-        accent: ["fit", "waste"],
+        // a no-break space keeps the dot on the first line on phones
+        kicker: "Hackathon champion · SCS Days 2025",
+        logo: { src: "/assets/paagi/paagi_logo.png", alt: "Paagi", wide: true },
+        tagline: "Perfect fit. Zero waste.",
+        accent: ["Perfect", "fit"],
         image: {
-          src: "/assets/paagi/paagi_bg.png",
-          alt: "Paagi's dark blue brand backdrop",
+          src: "/assets/paagi/cover-handoff.webp",
+          alt: "A courier's hands passing a neat kraft box sealed with orange tape into a customer's hands at a navy front door",
         },
+        // the handoff right of centre on wide screens, the box on phones; a
+        // light tint, as the door is already dark; the caption centred, above
+        // the receiver's sleeve
+        focus: "68% center",
+        focusMobile: "74% center",
+        wash: "rgba(10, 26, 43, 0.22)",
+        middle: true,
       },
       overview: {
         background: "#f4f5f7",
@@ -1858,22 +1939,25 @@ const projects = [
       decisionsHeadline: "Three choices that keep a child-facing model safe.",
       // The deck. Draft structure: most journey steps have no screenshots
       // yet (dev shows a frame to fill).
+      // A parent and child sharing a tablet in the dark, the kicker, logo
+      // and tagline at its bottom left.
       cover: {
         layout: "overlay",
-        backdrop: true,
+        caption: true,
         background: "#0a1838",
         text: "#ffffff",
         highlight: "#1aa7e6",
         font: "Poppins, sans-serif",
         kicker: "Family habit app · attention screening",
         logo: { src: "/assets/gabai/gabai_logo.png", alt: "GabAI" },
-        // from the team's pitch deck
-        tagline: "“A habit companion that learns your family's rhythm.”",
-        accent: ["family's", "rhythm"],
+        tagline: "Rediscover real\nconnection unplugged.",
+        accent: ["unplugged"],
         image: {
-          src: "/assets/gabai/gabai_bg.png",
-          alt: "GabAI's deep blue brand backdrop",
+          src: "/assets/gabai/cover-family.webp",
+          alt: "A young girl and her mother lying side by side in the dark, smiling at a tablet, a hand pointing at its screen",
         },
+        // the family on the right of wide screens; the child's face on phones
+        focusMobile: "40% center",
       },
       overview: {
         background: "#f3f7fb",
@@ -2065,29 +2149,28 @@ const projects = [
     // Feeds the hero figures strip (highlights.js).
     sector: "Events",
     featured: false,
-    stage: "Live · In use",
+    stage: "Used for the event · Oct 2026",
     stageKind: "live",
     // One-off event, so no monthly figure for the hero total.
     hoursSavedPerMonth: null,
-    // ESTIMATE of tallying by hand over the RSVP period: ~1 min to log each
-    // of 71 replies (~71 min) + ~6 re-checks of totals and who's missing at
-    // ~10 min each (~60 min) ≈ 2 hrs. The dashboard does all of it.
+    // Figures from the hosts' dashboard as it stood after the event (last
+    // synced Oct 29, 2026): 71 invited, 45 replied, 42 coming, 3 not, 26
+    // waiting, head count 44 with the hosts, 39 guesses (25 boy, 14 girl)
+    // and 25 messages.
     highlights: [
-      // Key feature rather than a number: the dashboard keeps a live list
-      // of guests who haven't replied, so hosts know exactly who to nudge.
+      { value: "45 of 71", label: "Guests replied (63%)" },
       { value: "Follow-ups", label: "Who hasn't replied, listed live" },
-      { value: "~2h → 0", label: "Manual tallying" },
     ],
     // 16:7 artwork for the /work card (replaces the typed placeholder).
     cardArt: "/assets/gender-reveal-rsvp/card.webp",
-    tagline: "Guests reply on their phones; the hosts' dashboard fills itself in.",
+    tagline: "A phone-first RSVP for 71 guests, tallied live in the hosts' Google Sheet.",
     summary:
       "Guests RSVP and guess from their phones; replies sync to the hosts' live dashboard.",
     // Three short lines for the case study's "at a glance" row.
     glance: {
-      problem: "71 guests, three questions, replies lost in group chats.",
-      built: "Guests reply in seconds; the hosts' sheet fills itself in.",
-      result: "Live and in use; the hosts follow replies at a glance.",
+      problem: "71 guests, three questions, replies scattered across group chats.",
+      built: "A three-step RSVP site and a Google Sheets dashboard that updates itself.",
+      result: "45 replies in 16 days: 42 coming, 39 guesses and 25 messages for the baby.",
     },
     subtitle:
       "An RSVP site and self-updating dashboard for a family gender reveal.",
@@ -2097,37 +2180,75 @@ const projects = [
       timeline: "2026, Cebu",
     },
     overview:
-      "My brother and sister-in-law were planning a gender reveal and needed to know who was coming without chasing replies across group chats. I built a lightweight RSVP site for their guest list and connected it to a Google Sheets dashboard, so they could follow replies, guesses and messages without ever opening a database.",
+      "My brother and sister-in-law were planning a gender reveal for Baby Biyaya and needed to know who was coming without chasing replies across group chats. I built a phone-first RSVP site for their 71 guests and connected it to a Google Sheets dashboard, so they could follow replies, guesses and messages without ever opening a database.",
     problem:
-      "Party RSVPs usually end up scattered across chats and memory. The hosts had three simple questions — who's coming, who still hasn't replied, and what guests are guessing — but no single place to see the answers, and no time to keep a list up to date by hand.",
+      "Party RSVPs usually end up scattered across chats and memory. The hosts had three simple questions: who's coming, who still hasn't replied, and what guests are guessing. They had no single place to see the answers, and no time to keep a list up to date by hand.",
     users:
-      "Invited guests replying from their phones, and the two hosts following replies as they come in.",
+      "71 invited guests of every age replying from their phones, and the two hosts following replies as they came in.",
     contribution: {
-      text: "I built it on my own, from the guest flow to the hosts' dashboard.",
+      text: "I built it on my own, from the invite's QR code to the hosts' dashboard.",
       items: [
-        "Built the RSVP site as a lightweight HTML and JavaScript page: guests find their name on the hosts' list, confirm whether they're coming, and can add a boy-or-girl guess and a short message",
-        "Stored replies in Supabase (PostgreSQL)",
+        "Built the RSVP site as a lightweight HTML and JavaScript page in three steps: find your name, confirm it's you, reply",
+        "Made the name search forgiving: two letters are enough, accents and punctuation are ignored, and the best matches come first",
+        "Gave every guest a personal code and link as a backup, and had the phone remember each guest, so coming back opens their reply to change",
+        "Stored replies in Supabase (PostgreSQL), reached only through three database functions: search, look up and submit",
+        "Made the guess part of the party: Little Lyle or Little Ivy, after the parents, with balloons in the guessed colour on a yes",
         "Wrote a Google Apps Script that pulls replies from Supabase through its API into Google Sheets",
         "Built the hosts' dashboard: headline counts, response rate, head count, replies over time, guesses, latest messages and a list of who hasn't replied yet",
-        "Deployed the site on Netlify, with a shareable link and QR code for the family group chat",
+        "Deployed the site on Netlify, with a shareable link and the QR code on the printed invite",
       ],
     },
     // The template shows the first three, each with its one-line payoff.
     decisions: [
       {
-        title: "A fixed guest list, not a free-text name",
-        body: "Guests type a few letters and tap their name from the hosts' list, so every reply matches an invited guest.",
-        payoff: "The hosts see exactly who hasn't replied.",
+        title: "Pick your name, don't type it",
+        body: "Guests type two letters and tap their name from the hosts' list, then confirm it's them. The search ignores accents and punctuation and puts the best matches first.",
+        payoff: "Every reply lands on an invited guest.",
+        // the search rules in the site's code
+        visual: {
+          kind: "rows",
+          title: "find your name · the rules",
+          rows: [
+            ["start after", "2 letters"],
+            ["accents, punctuation", "ignored"],
+            ["matches", "best first"],
+            ["then", "is this you?"],
+          ],
+          summary: "unknown or misspelled names: 0",
+        },
       },
       {
         title: "A dashboard where the hosts already are",
-        body: "Instead of an admin panel, the dashboard lives in Google Sheets, which the hosts already open and share from their phones.",
+        body: "Instead of an admin panel, the dashboard lives in Google Sheets, which the hosts already open and share from their phones. An Apps Script fills it from Supabase and stamps when it last synced.",
         payoff: "Nothing new for the hosts to learn.",
+        // the dashboard's headline counts after the event
+        visual: {
+          kind: "rows",
+          title: "rsvp dashboard · after the event",
+          rows: [
+            ["invited", "71"],
+            ["coming", "42"],
+            ["not coming", "3"],
+            ["waiting", "26"],
+          ],
+          summary: "head count 44, with the hosts",
+        },
       },
       {
-        title: "Pulled through the API, not copied by hand",
-        body: "A Google Apps Script reads replies straight from Supabase, and the sheet shows when it last synced.",
-        payoff: "The hosts always know how fresh it is.",
+        title: "Make the guess part of the party",
+        body: "The guess reads Little Lyle or Little Ivy, after the parents, and a yes sends up balloons in the guessed colour. It stays optional, like the message for the baby.",
+        payoff: "39 guests played along.",
+        // the reveal on the day, with the hosts behind
+        visual: {
+          kind: "image",
+          src: "/assets/gender-reveal-rsvp/reveal.webp",
+          alt: "A pickleball paddle dusted with pink powder after the reveal, the hosts hugging by the white balloon arch behind it",
+        },
+      },
+      {
+        title: "The database holds the rules, not the page",
+        body: "The page only calls three database functions, never the guest table itself. Closing the RSVP is set on the database side, and guests can change their reply until then; the latest one counts.",
+        payoff: "Guests can't break it, even by accident.",
       },
       {
         title: "Keep the reply quick",
@@ -2142,7 +2263,7 @@ const projects = [
       steps: [
         {
           title: "Open the invite",
-          body: "Guests open the link or scan the QR code from the family group chat. The page shows the date, venue, dress code and RSVP deadline.",
+          body: "Guests scan the QR code on the printed invite or open the link from the family group chat. The page shows the date, venue, dress code and RSVP deadline.",
           image: "/assets/gender-reveal-rsvp/landing.webp",
           alt: "RSVP landing page with event details and a 'Find your name' search box",
         },
@@ -2160,7 +2281,7 @@ const projects = [
         },
         {
           title: "Reply",
-          body: "Guests say whether they're coming and can add a boy-or-girl guess and a short message, then send.",
+          body: "Guests say whether they're coming and can add a guess, Little Lyle or Little Ivy, and a message for the baby, then send.",
           image: "/assets/gender-reveal-rsvp/reply.webp",
           alt: "Reply form with attendance options, a boy-or-girl guess and a message box",
         },
@@ -2181,41 +2302,41 @@ const projects = [
     evidence: [
       {
         kind: "milestone",
-        text: "Live and in use for the event, with replies coming in from invited guests.",
+        text: "Used for Baby Biyaya's gender reveal on October 24, 2026: 45 of 71 invited guests replied over 16 days, 13 of them on the first day.",
       },
       {
         kind: "implemented",
-        text: "The hosts track replies, guesses and messages from the Google Sheets dashboard instead of the database.",
+        text: "The hosts followed replies, guesses and messages from the Google Sheets dashboard instead of the database: 42 coming, 3 not, 26 waiting, and a head count of 44 with the hosts.",
       },
       {
         kind: "implemented",
         text: "Every reply is matched to an invited guest: guests pick their own name from the hosts' list and confirm it, so there are no misspelled or unknown names to sort out.",
       },
       {
-        kind: "estimate",
-        text: "Tallying by hand would take about 2 hours over the RSVP period: roughly a minute to log each of the 71 guests' replies, plus several re-checks of the totals and of who's still missing. The dashboard tallies replies, guesses and head count on its own, so that time drops to zero, with no re-typing and no tally mistakes from manual entry.",
+        kind: "milestone",
+        text: "39 guests guessed: 25 said boy and 14 said girl. Baby Biyaya is a girl.",
       },
     ],
     limitations:
-      "It's built for one private family event. Anyone with the link can reply for any name on the list — fine among family and friends, but a public event would need per-guest links or codes.",
+      "It's built for one private family event. With name search on, anyone with the shared link can reply for any name on the list, which is fine among family and friends. The personal links already work on their own, so a public event would switch name search off.",
     story: {
       kpis: [
-        { value: "71", label: "Invited guests, each reply matched to a name" },
-        { value: "~2h → 0", label: "Manual tallying over the RSVP period (est.)" },
-        { value: "0", label: "Misspelled or unknown names to sort out" },
+        { value: "45/71", label: "Guests replied, every reply matched to a name" },
+        { value: "13", label: "Replies on the first day" },
+        { value: "25", label: "Messages left for Baby Biyaya" },
       ],
       context: {
-        text: "My brother and sister-in-law needed three answers for their gender reveal: who's coming, who hasn't replied, and what guests are guessing. Replies were scattered across chats, and there was no time to keep a list by hand.",
-        audience: "Invited guests replying from their phones, and the two hosts following along.",
+        text: "My brother and sister-in-law needed three answers for their gender reveal: who's coming, who hasn't replied, and what guests are guessing. Replies were scattered across group chats, and there was no time to keep a list by hand.",
+        audience: "71 invited guests of every age replying from their phones, and the two hosts following along.",
       },
       ownership: {
-        summary: "Solo, from the guest flow to the dashboard.",
+        summary: "Solo, from the invite's QR code to the dashboard.",
         phases: [
           { label: "Guest flow", mine: true, text: "Find, confirm, reply" },
           { label: "Storage", mine: true, text: "Replies in Supabase" },
           { label: "Sync", mine: true, text: "Apps Script via the API" },
           { label: "Dashboard", mine: true, text: "Google Sheets, live" },
-          { label: "Launch", mine: true, text: "Netlify link and QR code" },
+          { label: "Launch", mine: true, text: "Netlify, link and QR code" },
         ],
       },
       flow: {
@@ -2223,7 +2344,7 @@ const projects = [
         steps: [
           {
             title: "Open the invite",
-            body: "Guests open the link or scan the QR code from the family chat: date, venue, dress code and deadline.",
+            body: "Guests scan the QR code on the invite or open the link from the family chat: date, venue, dress code and deadline.",
             image: "/assets/gender-reveal-rsvp/landing.webp",
             alt: "RSVP landing page with event details and a 'Find your name' search box",
           },
@@ -2241,7 +2362,7 @@ const projects = [
           },
           {
             title: "Reply",
-            body: "Coming or not, plus an optional boy-or-girl guess and a short message.",
+            body: "Coming or not, plus an optional guess, Little Lyle or Little Ivy, and a message for the baby.",
             image: "/assets/gender-reveal-rsvp/reply.webp",
             alt: "Reply form with attendance options, a boy-or-girl guess and a message box",
           },
@@ -2260,23 +2381,31 @@ const projects = [
         ],
       },
       decisionsHeadline: "Three decisions that kept it simple for everyone.",
-      // The deck. Draft structure: colours from the invite's card art, copy
-      // from the fields above.
+      // The deck. The cover: a guest in white replying on a phone by the
+      // balloons, the invite's own lettering and the tagline on the soft
+      // light to its left, in the invite's warm brown; on phones they sit
+      // above the photo, on the colour of its top edge.
       cover: {
         layout: "overlay",
-        background: "#faf6f2",
+        caption: true,
+        background: "#ecdcc6",
         text: "#4a3a2e",
         highlight: "#d9776f",
         font: "Poppins, sans-serif",
         kicker: "RSVP site + live dashboard · family event",
-        lines: ["Gender reveal", "RSVP"],
-        tagline: "“Guests reply in seconds; the sheet fills itself in.”",
-        accent: ["seconds"],
+        logo: { src: "/assets/gender-reveal-rsvp/lettering.webp", alt: "Biyaya's Gender Reveal", wide: true },
+        tagline: "RSVPs, minus the chasing.",
+        accent: ["minus", "the", "chasing"],
         image: {
-          src: "/assets/gender-reveal-rsvp/card.webp",
-          alt: "The invite's artwork: two teddy bears with blue and pink rattles above “Boy or Girl”, Baby Biyaya's gender reveal",
-          frame: true,
+          src: "/assets/gender-reveal-rsvp/cover-reply.webp",
+          alt: "A guest in a white linen shirt holding a phone by a white balloon garland with one pastel blue and one pastel pink balloon, in golden-hour light",
         },
+        // the phone right of centre on wide screens; no tint, as the photo
+        // is light and the type is dark
+        focus: "70% center",
+        wash: "transparent",
+        washMobile: "transparent",
+        stack: true,
       },
       overview: {
         background: "#fdfbf8",
@@ -2302,14 +2431,16 @@ const projects = [
         accent: "#f8c3bb",
         font: "Poppins, sans-serif",
         titleStyle: "plain",
+        // the printed invite, its QR code leading to the site
         image: {
-          src: "/assets/gender-reveal-rsvp/dashboard.webp",
-          alt: "Google Sheets RSVP dashboard with headline counts, a replies donut chart and a guesses bar chart",
+          src: "/assets/gender-reveal-rsvp/invite.webp",
+          alt: "The printed invite: Boy or Girl, please RSVP for Biyaya's Gender Reveal, with the date, venue, all-white dress code, the October 18 deadline and a QR code to scan",
           frame: true,
+          ratio: "1118 / 1498",
         },
         lines: ["Why an", "RSVP site?"],
         subhead: "Because replies were getting lost in group chats.",
-        text: "The hosts had three questions: who's coming, who hasn't replied, and what guests are guessing. There was no single place to see the answers, and no time to keep a list by hand.",
+        text: "The hosts had three questions: who's coming, who hasn't replied, and what guests are guessing. There was no single place to see the answers, and no time to keep a list by hand. The invite asks for one thing: scan, find your name, then tap yes or no.",
         points: [
           {
             value: "71",
@@ -2318,16 +2449,16 @@ const projects = [
             text: "Guests tap their own name from the hosts' list, so none are misspelled or unknown.",
           },
           {
+            value: "3",
+            unit: "steps",
+            title: "Find, confirm, reply",
+            text: "Only attendance is required; the guess and the message are optional.",
+          },
+          {
             value: "0",
             unit: "manual tallying",
             title: "A sheet that fills itself in",
-            text: "An Apps Script pulls replies from Supabase into the hosts' Google Sheet.",
-          },
-          {
-            value: "Live",
-            unit: "follow-up list",
-            title: "Who hasn't replied",
-            text: "The dashboard lists the guests yet to reply, so the hosts know who to nudge.",
+            text: "An Apps Script pulls replies into the hosts' Google Sheet, with a live list of who hasn't replied.",
           },
         ],
       },
@@ -2340,14 +2471,14 @@ const projects = [
           font: "Poppins, sans-serif",
           plain: true,
         },
-        title: "From group chat to head count.",
+        title: "From the group chat to the head count.",
         titleAccent: ["head", "count"],
-        intro: "Follow one guest's reply from the family chat to the hosts' dashboard.",
+        intro: "Follow one guest's reply from the invite's QR code to the hosts' dashboard.",
         steps: [
           {
             label: "Open",
             title: "Open the invite",
-            text: "A link or QR code in the family chat opens the date, venue, dress code and deadline.",
+            text: "The QR code on the invite or the link in the family chat opens the date, venue, dress code and deadline.",
             image: "/assets/gender-reveal-rsvp/landing.webp",
             alt: "RSVP landing page with event details and a 'Find your name' search box",
             fit: "screen",
@@ -2366,12 +2497,14 @@ const projects = [
           {
             label: "Reply",
             title: "Coming, a guess, a message",
-            text: "Attendance is the only required step; the boy-or-girl guess and the message are optional.",
+            text: "Only attendance is required; the guess, Little Lyle or Little Ivy, and a message for the baby are optional.",
             image: "/assets/gender-reveal-rsvp/reply.webp",
-            alt: "Reply form with attendance options, a boy-or-girl guess and a message box",
+            alt: "Reply form with attendance options, a Little Lyle or Little Ivy guess and a message box",
             fit: "screen",
             tile: "wide",
             tint: "#fbe7e3",
+            // one of the 25 guest messages
+            chip: { label: "A guest's message", value: "“Welcome to the world!”" },
           },
           {
             label: "Tally",
@@ -2381,7 +2514,7 @@ const projects = [
             alt: "Google Sheets RSVP dashboard with headline counts, a replies donut chart and a guesses bar chart",
             fit: "screen",
             tint: "#ffffff",
-            chip: { label: "Invited", value: "71 guests" },
+            chip: { label: "Head count", value: "44" },
           },
         ],
       },
@@ -2403,28 +2536,37 @@ const projects = [
         plain: true,
       },
       outcome: {
-        headline: "Live, and the hosts check one sheet.",
-        titleAccent: ["one", "sheet"],
-        text: "Replies came in from invited guests, and the dashboard tallied head count, guesses and messages on its own. It's built for one private event; a public one would need per-guest links.",
-        noteLabel: "how the time saving was estimated",
-        impactsLabel: "Over the RSVP period (estimated)",
+        headline: "45 replies in, and a list of who to nudge.",
+        titleAccent: ["who", "to", "nudge"],
+        text: "Over 16 days, 45 of 71 guests replied: 42 coming and 3 not, a head count of 44 with the hosts, and the 26 still waiting on a follow-up list. 25 guests left a message for the baby, from “Welcome to the world!” to “Girl na pleaseeeee!” On October 24, the pink came out: Baby Biyaya is a girl.",
+        impactsLabel: "From the hosts' dashboard",
         impacts: [
           {
-            value: "~2 h → 0",
-            label: "of tallying replies by hand",
+            value: "45 of 71",
+            label: "guests replied, 13 of them on the first day",
             tone: "accent",
+            // the replies as they stood after the event
             chart: {
-              summary: "Tallying replies over the RSVP period: about 2 hours by hand, none with the dashboard.",
+              summary: "Of 71 invited guests: 42 coming, 3 not coming, 26 still waiting.",
               groups: [
-                { label: "By hand", values: [120], text: ["~2 h"] },
-                { label: "Dashboard", values: [0], text: ["0"], on: true },
+                { label: "Coming", values: [42], text: ["42"], on: true },
+                { label: "Not coming", values: [3], text: ["3"] },
+                { label: "Waiting", values: [26], text: ["26"] },
               ],
             },
           },
           {
-            value: "71",
-            label: "invited guests, every reply matched to a name",
+            value: "14 of 39",
+            label: "guessed right: Baby Biyaya is a girl",
             tone: "ink",
+            // the guesses: Little Lyle (boy) vs Little Ivy (girl)
+            chart: {
+              summary: "Of 39 guesses, 25 said boy (Little Lyle) and 14 said girl (Little Ivy). It was a girl.",
+              groups: [
+                { label: "Little Lyle", values: [25], text: ["25"] },
+                { label: "Little Ivy", values: [14], text: ["14"], on: true },
+              ],
+            },
           },
         ],
       },
@@ -2462,39 +2604,39 @@ const projects = [
     // Feeds the hero figures strip (highlights.js).
     sector: "Real estate finance",
     // Made for a real organization: a client's finance team (kept confidential).
+    // The tracker, email and log shown are samples rebuilt on invented data.
     realWorld: true,
     featured: true,
-    stage: "Built · Tested in manual runs",
-    stageKind: "prototype",
+    stage: "Live · runs weekly",
+    stageKind: "live",
     // Hours saved per month — feeds the hero total. ESTIMATE, from an
-    // observed ~1 min per lead × 67 leads = ~67 min/week reviewing the
-    // tracker (excludes compiling the list), vs ~5 min reading the email
-    // (assumed): 62 min/week × 52 ÷ 12 ≈ 4.5 hrs/month. Set
-    // hoursEstimate to false once both sides are timed.
+    // observed ~1 min per lead reading its columns × 67 leads = ~67
+    // min/week reviewing the tracker (excludes compiling the list), vs ~5
+    // min reading the email (assumed): 62 min/week × 52 ÷ 12 ≈ 4.5
+    // hrs/month. Set hoursEstimate to false once both sides are timed.
     hoursSavedPerMonth: 4.48,
     hoursEstimate: true,
     // Net savings per year in US$ — feeds the hero total. ESTIMATE: the
     // hours above at US$39.31/hr, at today's 67 leads.
     savingsPerYear: 2100,
     savingsEstimate: true,
-    // Value at today's 67 leads, at US$39.31/hr (US real-estate finance
-    // average pay, Oct 2026): ~62 min/week saved → ~54 hrs/yr → ~US$2,100/yr.
-    // Each added lead saves ~1 min/week ≈ US$34/yr more.
+    // The build's own figures first: each lead's 27 tracker columns come
+    // down to the 7 a follow-up needs, and a data-store check keeps it to
+    // one email a week. The time and money estimates sit in the outcome.
     highlights: [
-      // A percentage holds at any lead count (67 → ~5 min today).
-      { value: "93%", trend: "down", label: "Weekly review time reduction" },
-      { value: "~$2.1K/yr", label: "Estimated savings, +$34/yr per lead" },
+      { value: "27 → 7", label: "Columns per lead, tracker to email" },
+      { value: "1× a week", label: "Never sent twice" },
     ],
     // 16:7 artwork for the /work card (replaces the typed placeholder).
     cardArt: "/assets/lead-follow-up-reminder/card.webp",
-    tagline: "A lead tracker that emails the finance manager each week's follow-ups.",
+    tagline: "One weekly email of every lender follow-up due, with its owner and next step.",
     summary:
       "Reads the lead tracker and emails one weekly list of follow-ups, owners and actions.",
     // Three short lines for the case study's "at a glance" row.
     glance: {
-      problem: "67 lender leads, each a follow-up that could slip.",
-      built: "The lead tracker, turned into one weekly email of what's due.",
-      result: "Tested end to end: every active lead, its owner and next action in one email.",
+      problem: "67 lender leads in one sheet, each a follow-up that could slip.",
+      built: "A Make.com scenario that turns the tracker into one weekly email of what's due.",
+      result: "Live and weekly: every lead due, its owner and next step, in under 10 seconds.",
     },
     subtitle:
       "A weekly follow-up overview, built from a finance team's lead tracker and sent automatically.",
@@ -2504,37 +2646,73 @@ const projects = [
       timeline: "2026",
     },
     overview:
-      "A finance team tracks its lender and financing leads in a shared Google Sheet. I built a Make.com scenario that reads that tracker and sends the finance manager one weekly email listing every lead due for follow-up, so the team can agree on next steps without combing through the sheet. Client and lead details are confidential, so this case study shows the workflow rather than real data.",
+      "A finance team tracks its lender and financing leads in a shared Google Sheet, 27 columns a lead across two tabs. I built a Make.com scenario that reads that tracker every week and sends the finance manager one email of every lead due for follow-up, with its owner, the latest reference points and the next action. Client and lead details are confidential, so the tracker, email and log shown here are samples rebuilt on invented data.",
     problem:
-      "With dozens of lenders at different stages — documents requested, meetings pending, no reply yet — it's easy for a follow-up to slip. The tracker held the right information, but someone had to read through it every week to see what was due, who owned it and what should happen next.",
+      "With dozens of lenders at different stages (documents requested, meetings pending, no reply yet) it's easy for a follow-up to slip. The tracker held the right information, but someone had to read through 27 columns a lead every week to see what was due, who owned it and what should happen next.",
     users:
       "The finance manager who coordinates follow-ups, and the lead owners who act on them.",
     contribution: {
       text: "I designed and built the automation, from reading the tracker to the email the manager receives.",
       items: [
-        "Built the Make.com scenario that reads the lead tracker from Google Sheets",
-        "Filtered it down to active leads with a follow-up due, and aggregated them into one email",
-        "Designed the email: each lead with its status, priority, owner, follow-up date and next action, plus a link back to the tracker",
-        "Added a data store check so the weekly email is only sent once, even if the scenario runs again",
-        "Recorded each send in the data store, so there's a log of which weekly reminders went out",
+        "Built the Make.com scenario, on a weekly schedule, that reads both tabs of the lead tracker from Google Sheets",
+        "Filtered it down to active leads with a follow-up due that week, and aggregated them into one email",
+        "Designed the email: each lead with its project, category, owner, follow-up date, reference points with a link to the source email, and next action, plus a button back to the tracker",
+        "Added a data store check so each report week's email is only sent once, even if the scenario runs again",
+        "Logged every send in the data store, with its recipient, report week, send time and Gmail message ID",
       ],
     },
     // The template shows the first three, each with its one-line payoff.
     decisions: [
       {
-        title: "The tracker stays the source of truth",
-        body: "The team keeps working in the Google Sheet they already use. The automation only reads it.",
+        title: "The sheet stays in charge",
+        body: "The team keeps working in the Google Sheet they already use. The scenario only reads it, and the email links back to it.",
         payoff: "No second system to keep in sync.",
+        // the tracker against the email, by the numbers
+        visual: {
+          kind: "rows",
+          title: "tracker → weekly email",
+          rows: [
+            ["tabs read", "2"],
+            ["columns per lead", "27 → 7"],
+            ["leads tracked", "67"],
+            ["writes to the sheet", "0"],
+          ],
+          summary: "the team works where it already works",
+        },
       },
       {
-        title: "Send once per week, no matter what",
-        body: "Before sending, the scenario checks a data store for this week's reminder, so a re-run or retry can't send a duplicate.",
+        title: "Once a week, guaranteed",
+        body: "Before sending, the scenario looks for this report week in a data store. A re-run or retry finds it and stops; a new week sends the email and logs it.",
         payoff: "Retries never double-send.",
+        // the check before the send, as the scenario runs it
+        visual: {
+          kind: "rows",
+          title: "data store · before sending",
+          rows: [
+            ["look up", "this report week"],
+            ["found", "stop, send nothing"],
+            ["not found", "send the email"],
+            ["then", "log week, time, Gmail ID"],
+          ],
+          summary: "one email per report week",
+        },
       },
       {
         title: "Written for action, not for reading",
-        body: "Every row says who owns the lead, when to follow up and what to do next, with high-priority leads first.",
+        body: "Every row says who owns the lead, when it's due, what was last documented and what to do next, with a link to the source email for context.",
         payoff: "Owners know exactly what to do next.",
+        // what each lead in the email carries
+        visual: {
+          kind: "rows",
+          title: "weekly email · one lead",
+          rows: [
+            ["lead", "ID, status, priority"],
+            ["owner", "who acts on it"],
+            ["reference points", "last exchange + source"],
+            ["next action", "one line"],
+          ],
+          summary: "plus one button back to the tracker",
+        },
       },
       {
         title: "Built to scale with the pipeline",
@@ -2554,31 +2732,35 @@ const projects = [
     },
     evidence: [
       {
-        kind: "implemented",
-        text: "Runs successfully end to end in Make.com, in under 10 seconds per run.",
+        kind: "milestone",
+        text: "Live on a weekly schedule: each week the finance manager gets one email of every lead due for follow-up.",
       },
       {
         kind: "implemented",
-        text: "One email covers every active lead with its owner, follow-up date and next action, with high-priority leads first.",
+        text: "Runs end to end in Make.com in under 10 seconds per run, and logs every send with its report week, time and Gmail message ID.",
+      },
+      {
+        kind: "implemented",
+        text: "One email covers every lead due that week with its owner, follow-up date, reference points and next action: 7 of the tracker's 27 columns.",
       },
       {
         kind: "estimate",
-        text: "Weekly follow-up review: about 1 minute per lead across 67 leads is roughly 67 minutes reviewing the tracker by hand — before compiling the list — vs. about 5 minutes reading the email. That's ~93% less review time, or about 4.5 hours a month.",
+        text: "Weekly follow-up review: reading a lead's columns takes about 1 minute (observed), so 67 leads is roughly 67 minutes reviewing the tracker by hand, before compiling the list, vs. about 5 minutes reading the email (assumed). That's ~93% less review time, or about 4.5 hours a month.",
       },
       {
         kind: "estimate",
-        text: "At US$39.31 an hour (average US pay for real-estate finance roles, as of Oct 2026), that time is worth about US$2,100 a year at today's 67 leads. Because manual review grows with every lead while the scenario doesn't, each added lead is worth about US$34 a year more. Running cost is negligible — about 30 Make credits a month, within the free allowance. This is time freed up, not cash saved.",
+        text: "At US$39.31 an hour (average US pay for real-estate finance roles, as of Oct 2026), that time is worth about US$2,100 a year at today's 67 leads. Because manual review grows with every lead while the scenario doesn't, each added lead is worth about US$34 a year more. Running cost is negligible: about 30 Make credits a month, within the free allowance. This is time freed up, not cash saved.",
       },
     ],
     limitations:
-      "It has been tested with manual runs; the weekly schedule isn't switched on yet. The time saved is an estimate until the manual review and the email are timed side by side.",
+      "The time saved is an estimate until the manual review and the email are timed side by side. Client and lead details are confidential, so the tracker, email and log shown are samples rebuilt on invented data, not the real ones.",
     nextSteps:
-      "Once it runs on schedule, compare how long the weekly review takes before and after, and track how many follow-ups are updated in the tracker.",
+      "Time the weekly review before and after, and track how many follow-ups are updated in the tracker after each email.",
     story: {
       kpis: [
-        { value: "−93%", label: "Weekly follow-up review time (est.)" },
-        { value: "<10s", label: "Per run, tracker to inbox, in testing" },
-        { value: "~$2.1K", label: "Staff time a year at today's 67 leads (est.)" },
+        { value: "27 → 7", label: "Tracker columns per lead, down to what a follow-up needs" },
+        { value: "<10s", label: "Per run, tracker to inbox" },
+        { value: "1×", label: "A week, checked before every send" },
       ],
       context: {
         text: "A finance team tracks dozens of lenders in a shared sheet, each at a different stage. The information was there, but every week someone had to read through it to see what was due, who owned it and what came next.",
@@ -2587,10 +2769,10 @@ const projects = [
       ownership: {
         summary: "Solo, from the tracker to the inbox.",
         phases: [
-          { label: "Read", mine: true, text: "The Google Sheets tracker" },
-          { label: "Filter", mine: true, text: "Active, follow-up due" },
-          { label: "Compose", mine: true, text: "One prioritised email" },
-          { label: "Guard", mine: true, text: "Sent once per week" },
+          { label: "Read", mine: true, text: "Both tabs of the tracker" },
+          { label: "Filter", mine: true, text: "Active, due this week" },
+          { label: "Compose", mine: true, text: "One email, 7 columns" },
+          { label: "Guard", mine: true, text: "Once per report week" },
           { label: "Log", mine: true, text: "Every send recorded" },
         ],
       },
@@ -2605,23 +2787,31 @@ const projects = [
         ],
       },
       decisionsHeadline: "Three decisions that make it trustworthy.",
-      // The deck. Draft structure: colours from Make.com's purple, copy from
-      // the fields above.
+      // The deck. The cover: the weekly email (a sample on invented data)
+      // on a phone at a desk by a city window, the kicker, name and tagline
+      // on the bright window to its left; on phones they sit above the
+      // photo, on the colour of its top edge.
       cover: {
         layout: "overlay",
-        background: "#f5f4fb",
+        caption: true,
+        background: "#eef4f7",
         text: "#1f1640",
         highlight: "#6d4fe0",
         font: "Poppins, sans-serif",
         kicker: "Make.com automation · finance team",
         lines: ["Lead follow-up", "reminder"],
-        tagline: "“Every follow-up due, in one weekly email.”",
-        accent: ["one", "weekly", "email"],
+        tagline: "The week's follow-ups, in one email.",
+        accent: ["in", "one", "email"],
         image: {
-          src: "/assets/lead-follow-up-reminder/card.webp",
-          alt: "The Make.com scenario's modules: JSON, iterator, Google Sheets, text aggregator, data store, Gmail and data store",
-          frame: true,
+          src: "/assets/lead-follow-up-reminder/cover-email.webp",
+          alt: "Hands holding a phone showing a sample weekly follow-up email, by a desk with a violet mug and a city skyline through the window",
         },
+        // the phone right of centre on wide screens; no tint, as the photo
+        // is light and the type is dark
+        focus: "40% center",
+        wash: "transparent",
+        washMobile: "transparent",
+        stack: true,
       },
       overview: {
         background: "#fbfaff",
@@ -2649,26 +2839,28 @@ const projects = [
         accent: "#a98bea",
         font: "Poppins, sans-serif",
         titleStyle: "plain",
+        // a sample of the weekly email, on invented data
         image: {
-          src: "/assets/lead-follow-up-reminder/scenario.webp",
-          alt: "Make.com scenario: JSON, Iterator, Google Sheets search, a follow-up filter, text aggregator, data store check, a weekly-reminder filter, Gmail and a data store record",
+          src: "/assets/lead-follow-up-reminder/sample-email.webp",
+          alt: "A sample weekly follow-up email on invented data: a header with the project's name, a short note to the manager and a table of four leads with owner, due date, reference points and next action",
           frame: true,
+          ratio: "1040 / 903",
         },
         lines: ["Why a", "weekly email?"],
         subhead: "Because a follow-up is easy to miss in 67 rows.",
-        text: "The tracker held the right information, but every week someone had to read through it to see what was due, who owned it and what came next.",
+        text: "The tracker held the right information, but every week someone had to read 27 columns a lead to see what was due, who owned it and what came next.",
         points: [
           {
-            value: "−93%",
-            unit: "review time",
-            title: "Minutes, not an hour",
-            text: "About 67 minutes of reading the tracker becomes a 5-minute email (estimated).",
+            value: "27 → 7",
+            unit: "columns",
+            title: "Only what a follow-up needs",
+            text: "Owner, due date, reference points and next action, with the source one click away.",
           },
           {
             value: "<10",
             unit: "s / run",
             title: "Tracker to inbox",
-            text: "Tested end to end in Make.com, in under 10 seconds per run.",
+            text: "The whole scenario runs in under 10 seconds, every week.",
           },
           {
             value: "1×",
@@ -2689,36 +2881,49 @@ const projects = [
         },
         title: "From tracker to inbox.",
         titleAccent: ["inbox"],
-        intro: "Follow one week's follow-ups through the Make.com scenario I built, from the shared sheet to the manager's inbox.",
+        intro: "Follow one week's follow-ups through the scenario I built. The tracker, email and log are samples on invented data; the real ones are confidential.",
         steps: [
           {
             label: "Read",
             title: "The tracker stays put",
-            text: "The scenario reads the team's Google Sheet; nobody works anywhere new.",
+            text: "The scenario reads both tabs of the team's Google Sheet; nobody works anywhere new.",
+            image: "/assets/lead-follow-up-reminder/sample-tracker.webp",
+            alt: "A sample lender tracker on invented data: ID, lender, status, priority, next action, follow-up due, owner and more columns",
+            fit: "screen",
             tint: "#ffffff",
+            chip: { label: "Leads tracked", value: "67" },
           },
           {
             label: "Filter",
             title: "Only what's due",
-            text: "Active leads with a follow-up due are kept, high priority first.",
+            text: "Active leads with a follow-up due this week make the cut; the rest wait for their week.",
             image: "/assets/lead-follow-up-reminder/scenario.webp",
             alt: "The Make.com scenario, from the JSON trigger through the follow-up filter to Gmail",
             fit: "screen",
             tile: "wide",
             tint: "#ece8fb",
+            chip: { label: "Per run", value: "<10 s" },
           },
           {
             label: "Compose",
             title: "One email, written for action",
-            text: "Each lead with its status, owner, follow-up date and next action, and a link back to the tracker.",
+            text: "Each lead with its owner, due date, reference points and next action, and a button back to the tracker.",
+            image: "/assets/lead-follow-up-reminder/sample-email.webp",
+            alt: "A sample weekly follow-up email on invented data, with four leads and their owners, due dates, reference points and next actions",
+            fit: "screen",
             tile: "wide",
-            tint: "#e6f4ea",
+            tint: "#e8f0fa",
+            chip: { label: "Columns per lead", value: "27 → 7" },
           },
           {
             label: "Send",
             title: "Once a week, logged",
-            text: "A data store check prevents duplicates, and every send is recorded.",
+            text: "A data store check stops duplicates, and every send is logged with its week and Gmail ID.",
+            image: "/assets/lead-follow-up-reminder/sample-log.webp",
+            alt: "A sample reminder log on invented data: one row per report week with recipient, send time and Gmail message ID",
+            fit: "screen",
             tint: "#ffffff",
+            chip: { label: "Sent", value: "1× a week" },
           },
         ],
       },
@@ -2740,9 +2945,9 @@ const projects = [
         plain: true,
       },
       outcome: {
-        headline: "Built, and tested end to end.",
-        titleAccent: ["tested"],
-        text: "It runs in under 10 seconds and covers every active lead in one email. The weekly schedule isn't switched on yet, so the time saving stays an estimate until the review is timed before and after.",
+        headline: "Live, and in the inbox every week.",
+        titleAccent: ["every", "week"],
+        text: "The scenario runs on its weekly schedule in under 10 seconds, and the manager gets one email of every lead due, never two. The time saved stays an estimate until the review is timed before and after.",
         noteLabel: "how the savings were estimated",
         impactsLabel: "A week's follow-up review at today's 67 leads (estimated)",
         impacts: [
@@ -2786,12 +2991,12 @@ const projects = [
       ctaText: "Turn a weekly spreadsheet chore into one email.",
     },
     services: ["workflow-automation", "data-reporting"],
-    next: "hubspot-crm-cleanup",
+    next: "hubspot-crm",
   },
   {
-    slug: "hubspot-crm-cleanup",
+    slug: "hubspot-crm",
     index: "08",
-    title: "HubSpot CRM Cleanup",
+    title: "HubSpot CRM",
     category: "data-reporting",
     // Also listed under these filters (the card shows only the primary).
     alsoIn: ["automation"],
@@ -2799,6 +3004,9 @@ const projects = [
     // Feeds the hero figures strip (highlights.js).
     sector: "Medical diagnostics",
     // Made for a real organization: a US diagnostic company (kept confidential).
+    // The tagging table, duplicate check and dashboard shown in the deck are
+    // samples rebuilt on invented data; the workflow is the real one, with
+    // its IDs replaced.
     realWorld: true,
     featured: true,
     stage: "Live · client CRM",
@@ -2812,14 +3020,14 @@ const projects = [
       { value: "395", label: "Duplicates caught before import" },
     ],
     // 16:7 artwork for the /work card: the dashboard, with dummy labels.
-    cardArt: "/assets/hubspot-crm-cleanup/card.webp",
-    tagline: "Cleaning, maintaining and reporting on a US diagnostic company's HubSpot CRM.",
+    cardArt: "/assets/hubspot-crm/card.webp",
+    tagline: "Clean data, a self-filling workflow and a daily dashboard for a diagnostics company's HubSpot.",
     summary:
-      "Traces duplicate contacts, tags lead sources, fills missing addresses and reports daily.",
+      "Tags lead sources, catches duplicates, fills missing addresses and reports the team's day in HubSpot.",
     // Three short lines for the case study's "at a glance" row.
     glance: {
-      problem: "324 leads with no source, and no way to tag them in bulk.",
-      built: "Clean data, a self-filling address workflow, a daily dashboard.",
+      problem: "324 leads with no source, duplicates creeping in, addresses missing.",
+      built: "Cleanup in Python, a self-filling address workflow and a daily dashboard.",
       result: "Manual lead review cut from 324 leads to 22; 395 duplicates caught before import.",
     },
     subtitle:
@@ -2830,37 +3038,78 @@ const projects = [
       timeline: "2026",
     },
     overview:
-      "A US diagnostic company runs its sales on HubSpot. Its CRM had three problems: leads with no source tag, duplicate contacts, and contacts missing addresses their company record already had. I cleaned the existing data, set up a workflow to keep addresses filled in, and built a dashboard for the team's daily activity. Client details are confidential, so this case study shows the approach rather than real records.",
+      "A US diagnostic company runs its sales on HubSpot, and its CRM needed three kinds of work. Clean: leads had no source tag and duplicate contacts kept arriving with every new list. Automate: contacts were missing addresses their company record already had. Report: the team had no single view of its day. I tagged and de-duplicated the data outside HubSpot with Python, set up a workflow that keeps addresses filled in, and built a daily dashboard. Client details are confidential, so the tables and dashboard shown here are samples rebuilt on invented data.",
     problem:
       "HubSpot can't tag a lead's source in bulk: someone has to open each lead and read through its associated contacts' activity to decide where it came from. Across a whole pipeline that's hours of manual review, and duplicate contacts and missing addresses made the data harder to trust and report on.",
     users: "The client's sales team and the managers who report on its pipeline.",
     contribution: {
-      text: "I handled the CRM work end to end, from cleaning the existing data to the automation and reporting that keep it useful.",
+      text: "I handled the CRM work end to end: cleaning the existing data, then the automation and reporting that keep it useful.",
       items: [
         "Exported contacts and leads, then joined and cleaned them with spreadsheets and Python",
-        "Merged a new campaign list from three sources and checked it against the CRM, so only new contacts were added",
         "Suggested a source tag for each lead from its record source, with a confidence level so uncertain rows get a human check",
+        "Merged a new campaign list from three sources and checked it against the CRM, so only new contacts were added and existing ones got their missing names and phone numbers",
         "Re-imported the cleaned data into HubSpot",
         "Built a workflow that copies a company's address onto its contacts when theirs is missing",
-        "Built a daily dashboard of deals by type, activities and KPIs",
+        "Built a daily dashboard of deals by type, the day's activities and activity KPIs",
       ],
     },
     // The template shows the first three, each with its one-line payoff.
     decisions: [
       {
         title: "Work around the CRM's limit, not inside it",
-        body: "Instead of reviewing leads one by one in HubSpot, the data is exported, matched and tagged outside it, then imported back.",
+        body: "Instead of reviewing leads one by one in HubSpot, the data is exported, matched and tagged outside it with Python, then imported back.",
         payoff: "Rerun whenever new leads come in.",
+        // the loop, as it runs
+        visual: {
+          kind: "rows",
+          title: "lead sources · outside HubSpot",
+          rows: [
+            ["export", "contacts + leads"],
+            ["match", "each lead to its record source"],
+            ["suggest", "a source tag + confidence"],
+            ["import", "back into HubSpot"],
+          ],
+          summary: "324 untagged leads, one pass",
+        },
       },
       {
         title: "Confidence, not just a tag",
-        body: "Each suggested source comes with a High or Medium confidence. High goes straight in; Medium is flagged for a quick check.",
+        body: "Each suggested source comes with a High or Medium confidence: High goes straight in and Medium gets a quick check. Leads with nothing to go on are left for a person.",
         payoff: "People check only the unsure rows.",
+        // the 324 untagged leads, by outcome (measured)
+        visual: {
+          kind: "rows",
+          title: "324 untagged leads · by outcome",
+          rows: [
+            ["High", "tagged straight in"],
+            ["Medium", "tagged, quick check"],
+            ["suggested", "302 of 324 (93%)"],
+            ["manual review", "22"],
+          ],
+          summary: "a person reads 22 leads, not 324",
+        },
       },
       {
         title: "Only fill what's missing",
         body: "The address workflow copies a company's city, state, postal code and country onto contacts one field at a time, skipping any the company doesn't have.",
         payoff: "Good data is never overwritten.",
+        // the workflow's trigger and branches (the real workflow)
+        visual: {
+          kind: "rows",
+          title: "workflow · copy company address",
+          rows: [
+            ["enrols", "no street address + a company"],
+            ["city, state", "copied if the company has it"],
+            ["postal code", "copied if the company has it"],
+            ["country", "copied if the company has it"],
+          ],
+          summary: "each field skips when the company's is empty",
+        },
+      },
+      {
+        title: "Check the list before it's imported",
+        body: "A new campaign list from three sources is matched against itself and against HubSpot, so duplicates are merged and existing contacts only gain what they're missing.",
+        payoff: "Only new contacts go in.",
       },
     ],
     demo: {
@@ -2868,17 +3117,17 @@ const projects = [
       layout: "stack",
       items: [
         {
-          src: "/assets/hubspot-crm-cleanup/lead-tagging.webp",
+          src: "/assets/hubspot-crm/lead-tagging.webp",
           alt: "Slide describing the exported contacts and leads data, next to a table of leads with record source, suggested source tag and confidence",
           caption: "Lead source tagging: each lead's record source mapped to a suggested tag and a confidence level. Lead names removed; file names replaced with placeholders.",
         },
         {
-          src: "/assets/hubspot-crm-cleanup/workflow.webp",
+          src: "/assets/hubspot-crm/workflow.webp",
           alt: "HubSpot workflow that copies a company's city, state, postal code and country onto a contact, with branches that skip missing values",
           caption: "The address workflow, shown in test mode before it went live. Contact and record ID replaced with sample values.",
         },
         {
-          src: "/assets/hubspot-crm-cleanup/dashboard.webp",
+          src: "/assets/hubspot-crm/dashboard.webp",
           alt: "HubSpot dashboard with a deals distribution pie chart, activity KPIs and an activity bar chart",
           caption: "The daily dashboard: deals by type, today's activities and KPIs. Deal categories and names replaced with dummy labels.",
         },
@@ -2903,7 +3152,7 @@ const projects = [
       },
     ],
     limitations:
-      "Client data is confidential, so the screenshots here have names, IDs, file names and deal categories replaced with sample values, and no real records are shown.",
+      "Client data is confidential, so no real records are shown: the tagging table, duplicate check and dashboard are samples rebuilt on invented data, and the workflow screenshot has its IDs replaced with sample values.",
     story: {
       kpis: [
         { value: "324 → 22", label: "Leads left for manual source review" },
@@ -2911,11 +3160,11 @@ const projects = [
         { value: "93%", label: "Of untagged leads given a suggested source" },
       ],
       context: {
-        text: "HubSpot can't tag a lead's source in bulk: someone has to open each lead and read through its contacts' activity. On top of that, duplicates crept in and contacts were missing addresses their company already had.",
+        text: "HubSpot can't tag a lead's source in bulk: someone has to open each lead and read through its contacts' activity. On top of that, duplicates crept in with every new list, and contacts were missing addresses their company already had.",
         audience: "The client's sales team and the managers who report on its pipeline. Client details are confidential.",
       },
       ownership: {
-        summary: "Solo, from export to dashboard.",
+        summary: "Solo: clean, automate, report.",
         phases: [
           { label: "Clean", mine: true, text: "Spreadsheets and Python" },
           { label: "Tag", mine: true, text: "Sources, with confidence" },
@@ -2929,40 +3178,49 @@ const projects = [
         layout: "stack",
         items: [
           {
-            src: "/assets/hubspot-crm-cleanup/lead-tagging.webp",
-            alt: "Slide describing the exported contacts and leads data, next to a table of leads with record source, suggested source tag and confidence",
-            caption: "Source tagging: each lead's record source mapped to a suggested tag and a confidence level. Names removed.",
+            src: "/assets/hubspot-crm/sample-tagging.webp",
+            alt: "A sample lead source tagging table on invented data: lead, record source, source detail, suggested tag and confidence",
+            caption: "Source tagging: each lead's record source mapped to a suggested tag and a confidence level. Sample data.",
           },
           {
-            src: "/assets/hubspot-crm-cleanup/workflow.webp",
+            src: "/assets/hubspot-crm/workflow.webp",
             alt: "HubSpot workflow that copies a company's city, state, postal code and country onto a contact, with branches that skip missing values",
             caption: "The address workflow, in test mode before it went live. IDs replaced with sample values.",
           },
           {
-            src: "/assets/hubspot-crm-cleanup/dashboard.webp",
-            alt: "HubSpot dashboard with a deals distribution pie chart, activity KPIs and an activity bar chart",
-            caption: "The daily dashboard: deals by type, today's activities and KPIs, with dummy labels.",
+            src: "/assets/hubspot-crm/sample-dashboard.webp",
+            alt: "A sample daily dashboard on invented data: deals by type, activity KPIs and activity by deal",
+            caption: "The daily dashboard: deals by type, today's activities and KPIs. Sample data.",
           },
         ],
       },
       decisionsHeadline: "Three decisions that made the data trustworthy.",
-      // The deck. Draft structure: colours from HubSpot's orange and navy,
-      // copy from the fields above.
+      // The deck. The cover: the daily dashboard (a sample on invented
+      // data) on a laptop at a desk by a diagnostics lab, the kicker, name
+      // and tagline on the light wall to its left; on phones they sit above
+      // the photo, on the colour of its top edge.
       cover: {
         layout: "overlay",
-        background: "#f6f9fc",
+        caption: true,
+        background: "#edf2f6",
         text: "#213343",
         highlight: "#ff7a59",
         font: "Poppins, sans-serif",
-        kicker: "CRM data & reporting · US diagnostics company",
-        lines: ["HubSpot", "CRM cleanup"],
-        tagline: "“A CRM the sales team can trust again.”",
-        accent: ["trust"],
+        kicker: "CRM data, automation & reporting · US diagnostics",
+        lines: ["HubSpot", "CRM"],
+        tagline: "Clean data in, clear reports out.",
+        accent: ["clear", "reports", "out"],
         image: {
-          src: "/assets/hubspot-crm-cleanup/card.webp",
-          alt: "The HubSpot dashboard: a deals distribution pie chart, activity KPIs and an activity bar chart, with dummy labels",
-          frame: true,
+          src: "/assets/hubspot-crm/cover-laptop.webp",
+          alt: "A hand on a laptop showing a sample daily pipeline dashboard, beside a coral mug and sample boxes, with a diagnostics lab blurred behind the glass",
         },
+        // the laptop right of centre on wide screens, the screen on phones;
+        // no tint, as the photo is light and the type is dark
+        focus: "40% center",
+        focusMobile: "62% center",
+        wash: "transparent",
+        washMobile: "transparent",
+        stack: true,
       },
       overview: {
         background: "#fbfcfe",
@@ -2972,9 +3230,9 @@ const projects = [
         font: "Poppins, sans-serif",
         // the tool it's built on, as the card
         thumb: "logo",
-        logo: { src: "/assets/hubspot-crm-cleanup/hubspot-logo.svg", alt: "HubSpot logo", background: "#213343" },
-        lead: "HubSpot CRM Cleanup tags lead sources, catches duplicates and fills missing addresses",
-        rest: "in a US diagnostic company's CRM, then reports the team's activity daily.",
+        logo: { src: "/assets/hubspot-crm/hubspot-logo.svg", alt: "HubSpot logo", background: "#213343" },
+        lead: "HubSpot CRM cleans, automates and reports on a US diagnostic company's CRM:",
+        rest: "lead sources tagged, duplicates caught, addresses filled and the team's day on one dashboard.",
         meta: [
           ["Client", "US diagnostics company (confidential)"],
           ["Year", "2026"],
@@ -2990,14 +3248,18 @@ const projects = [
         accent: "#ff7a59",
         font: "Poppins, sans-serif",
         titleStyle: "plain",
+        // a sample of the source tagging, on invented data
         image: {
-          src: "/assets/hubspot-crm-cleanup/lead-tagging.webp",
-          alt: "A table of leads with record source, suggested source tag and confidence, names removed",
+          src: "/assets/hubspot-crm/sample-tagging.webp",
+          alt: "A sample lead source tagging table on invented data: lead, record source, source detail, suggested tag and confidence",
           frame: true,
+          // cropped into the source, suggested tag and confidence columns
+          ratio: "16 / 10",
+          position: "45% top",
         },
-        lines: ["Why clean", "the CRM?"],
+        lines: ["Why rework", "the CRM?"],
         subhead: "Because HubSpot can't tag a lead's source in bulk.",
-        text: "Someone had to open each lead and read its contacts' activity, while duplicates crept in and contacts were missing addresses their company already had.",
+        text: "Someone had to open each lead and read its contacts' activity, while duplicates crept in with every new list and contacts were missing addresses their company already had.",
         points: [
           {
             value: "93%",
@@ -3030,29 +3292,34 @@ const projects = [
         },
         title: "From export to dashboard.",
         titleAccent: ["dashboard"],
-        intro: "Follow the client's CRM data through the cleanup, from the first export to the daily report.",
+        intro: "Follow the client's CRM data from the first export to the daily report. The tables and dashboard are samples on invented data; the real records are confidential.",
         steps: [
           {
             label: "Tag",
             title: "A source for every lead",
             text: "Each lead's record source maps to a suggested tag, with a confidence level for a human check.",
-            image: "/assets/hubspot-crm-cleanup/lead-tagging.webp",
-            alt: "A table of leads with record source, suggested source tag and confidence, names removed",
+            image: "/assets/hubspot-crm/sample-tagging.webp",
+            alt: "A sample lead source tagging table on invented data: lead, record source, source detail, suggested tag and confidence",
             fit: "screen",
             tint: "#ffffff",
+            chip: { label: "Left for a person", value: "22 of 324" },
           },
           {
             label: "De-duplicate",
             title: "Checked before import",
-            text: "A campaign list from three sources is matched against the CRM, so only new contacts go in.",
+            text: "A campaign list from three sources is matched against itself and the CRM, so only new contacts go in.",
+            image: "/assets/hubspot-crm/sample-duplicates.webp",
+            alt: "A sample merged campaign list on invented data: 493 entries, 64 duplicates, 331 already in HubSpot and 98 new, with each row's match and action",
+            fit: "screen",
             tile: "wide",
             tint: "#ffeee8",
+            chip: { label: "Caught before import", value: "395" },
           },
           {
             label: "Fill",
             title: "Missing addresses, filled",
             text: "A live workflow copies city, state, postal code and country from the company record.",
-            image: "/assets/hubspot-crm-cleanup/workflow.webp",
+            image: "/assets/hubspot-crm/workflow.webp",
             alt: "HubSpot workflow that copies a company's city, state, postal code and country onto a contact, with branches that skip missing values",
             fit: "screen",
             tile: "wide",
@@ -3061,9 +3328,9 @@ const projects = [
           {
             label: "Report",
             title: "The day at a glance",
-            text: "A daily dashboard of deals by type, activities and KPIs.",
-            image: "/assets/hubspot-crm-cleanup/dashboard.webp",
-            alt: "HubSpot dashboard with a deals distribution pie chart, activity KPIs and an activity bar chart",
+            text: "A daily dashboard of deals by type, the day's activities and activity KPIs.",
+            image: "/assets/hubspot-crm/sample-dashboard.webp",
+            alt: "A sample daily dashboard on invented data: deals by type, activity KPIs and activity by deal",
             fit: "screen",
             tint: "#ffffff",
           },
@@ -3087,9 +3354,9 @@ const projects = [
         plain: true,
       },
       outcome: {
-        headline: "A cleaner pipeline, live in the client's CRM.",
-        titleAccent: ["cleaner", "pipeline"],
-        text: "The address workflow and the daily dashboard run in the client's HubSpot, and the tagging and duplicate checks can be rerun as new leads arrive. The figures are measured on the client's data.",
+        headline: "Cleaner data, live in the client's HubSpot.",
+        titleAccent: ["cleaner", "data"],
+        text: "The address workflow and the daily dashboard run in the client's HubSpot, and the tagging and duplicate checks can be rerun as new leads and lists arrive. The figures are measured on the client's data.",
         impactsLabel: "Measured on the client's data",
         impacts: [
           {
@@ -3165,14 +3432,14 @@ const projects = [
     ],
     // 16:7 artwork for the /work card: the real terminal answering "how many projects?".
     cardArt: "/assets/portfolio-terminal-agent/card.webp",
-    tagline: "A retro terminal on this site that answers questions about my work.",
+    tagline: "A retro terminal on this site that answers visitors' questions, on the page or through an n8n agent.",
     summary:
       "A retro terminal that answers visitors' questions about my work through an n8n RAG agent.",
     // Three short lines for the case study's "at a glance" row.
     glance: {
-      problem: "Recruiters have one question, buried across pages.",
-      built: "A terminal on the home page that simply answers.",
-      result: "Common questions answer instantly; anything else goes to the agent.",
+      problem: "A visitor's one question, buried across ten case studies and a résumé.",
+      built: "A terminal on the home page: built-in answers first, an n8n agent for the rest.",
+      result: "Live on this site: 20 topics and 14 commands answer offline; the rest goes to the agent.",
     },
     subtitle:
       "An AI agent built into this portfolio's retro terminal, so visitors can simply ask about my work.",
@@ -3182,7 +3449,7 @@ const projects = [
       timeline: "2026",
     },
     overview:
-      "The computer on this portfolio's home page is a working terminal. Visitors can ask a question in plain words or type a slash command like /work to jump around the site. Common questions are answered on the page straight away, and anything else goes to an AI agent I built in n8n, which answers from what it knows about my work. I'm still improving the agent's workflow; the parts below describe how the pieces fit together today.",
+      "The computer on this portfolio's home page is a working terminal. Visitors can ask a question in plain words or type a slash command like /work to jump around the site. Common questions, any project and any skill are answered on the page straight away, from the same data the site shows. Anything else goes through a serverless function to an AI agent I built in n8n. I'm still improving the agent's workflow; the parts below describe how the pieces fit together today.",
     problem:
       "A recruiter or client usually has one question: has she done the thing I need? Answering it means reading several case studies and the résumé. A terminal they can just ask turns that search into a sentence, and fits the site's terminal style.",
     users: "Recruiters and potential clients visiting the portfolio.",
@@ -3190,10 +3457,11 @@ const projects = [
       text: "I built the whole chain, from the terminal on the page to the agent that answers.",
       items: [
         "Built the terminal in React, with slash commands for moving around the site",
-        "Wrote built-in answers to common questions, matched by pattern and built from the site's own data",
+        "Wrote built-in answers to 20 common question topics, matched by pattern and built from the site's own data, plus lookups for any project or skill by name",
         "Wrote a Vercel serverless function that checks each question and passes it on",
         "Connected it to an n8n webhook that runs the RAG agent, with the webhook's address and auth kept server-side",
         "Gave each browser session an ID, so the agent can remember the conversation",
+        "Added a CRT-style \"NO SIGNAL\" fallback and ↑/↓ recall of past questions",
         "Built the n8n agent workflow, which I'm still improving",
       ],
     },
@@ -3203,16 +3471,53 @@ const projects = [
         title: "Common questions stay in the browser",
         body: "Questions like \"does she know Python?\" are matched by pattern and answered on the page from the same data the site shows. Only questions that match nothing go to the agent.",
         payoff: "Current answers, nothing to run.",
+        // the order the terminal tries, from terminalCommands.js
+        visual: {
+          kind: "rows",
+          title: "terminal · in this order",
+          rows: [
+            ["/commands", "14, move the page"],
+            ["single words", "projects, skills, help"],
+            ["projects, skills", "looked up by name"],
+            ["plain questions", "20 topics, by pattern"],
+          ],
+          summary: "no match? only then, the agent",
+        },
       },
       {
         title: "The browser never talks to n8n",
         body: "Questions go to a serverless function, which calls the n8n webhook. Its address and auth header live in environment variables.",
         payoff: "Credentials never reach visitors.",
+        // the function's call to n8n, as written (server/chatService.js)
+        visual: {
+          kind: "code",
+          file: "server/chatService.js",
+          lines: [
+            "const webhookUrl = process.env.N8N_WEBHOOK_URL;",
+            "const url = new URL(webhookUrl);",
+            'url.searchParams.set("message", userInput);',
+            "",
+            "const headerName = process.env.N8N_WEBHOOK_HEADER_NAME;",
+            "const headerValue = process.env.N8N_WEBHOOK_HEADER_VALUE;",
+          ],
+        },
       },
       {
         title: "A graceful \"no signal\"",
         body: "If the agent is unreachable or rate-limited, the screen shows a CRT-style \"NO SIGNAL\" message, and the built-in answers keep working.",
         payoff: "The terminal never just breaks.",
+        // the message the terminal shows, as written (HeroDevice.jsx)
+        visual: {
+          kind: "code",
+          file: "src/components/HeroDevice.jsx",
+          lines: [
+            "const DOWN_MESSAGE = [",
+            '  { text: "NO SIGNAL — brain\'s offline", down: true },',
+            '  { text: "— the built-in answers still work: try help", ok: true },',
+            "];",
+            "if (!response.ok) return DOWN_MESSAGE;",
+          ],
+        },
       },
       {
         title: "Only slash commands move the page",
@@ -3244,7 +3549,7 @@ const projects = [
     evidence: [
       {
         kind: "implemented",
-        text: "Built-in answers for 20 question topics and 14 slash commands, handled in the browser without calling the agent.",
+        text: "Built-in answers for 20 question topics and 14 slash commands, plus lookups for any project or skill by name, handled in the browser without calling the agent.",
       },
       {
         kind: "implemented",
@@ -3266,14 +3571,15 @@ const projects = [
         { value: "0", label: "Agent credentials sent to the browser" },
       ],
       context: {
-        text: "A recruiter or client usually wants to know one thing: has she done what I need? Answering it meant reading several case studies and the résumé. A terminal they can ask turns that search into a sentence.",
+        text: "A recruiter or client usually wants to know one thing: has she done what I need? Answering it meant reading through ten case studies and the résumé. A terminal they can ask turns that search into a sentence.",
         audience: "Recruiters and potential clients visiting the portfolio.",
       },
       ownership: {
-        summary: "Solo, from the terminal to the agent.",
+        summary: "Solo, from the prompt to the agent.",
         phases: [
           { label: "Terminal", mine: true, text: "React, slash commands" },
           { label: "Answers", mine: true, text: "20 topics, on the page" },
+          { label: "Fallback", mine: true, text: "NO SIGNAL, never a crash" },
           { label: "Gateway", mine: true, text: "Vercel serverless function" },
           { label: "Agent", mine: true, text: "n8n RAG, still improving" },
         ],
@@ -3289,22 +3595,31 @@ const projects = [
         ],
       },
       decisionsHeadline: "Three decisions that keep it fast and safe.",
-      // The deck. Draft structure: it lives on this site, so it wears the
-      // portfolio's own ink, bone and coral; copy from the fields above.
+      // The deck. It lives on this site, so it wears the portfolio's own
+      // ink, bone and coral. The cover: this site's home page, its terminal
+      // answering "how many projects?", on a laptop in lamplight; the
+      // kicker, name and tagline on the dark wall to its left.
       cover: {
         layout: "overlay",
-        background: "#101014",
+        caption: true,
+        background: "#0d0b0b",
         text: "#f2efe9",
         highlight: "#ff4d36",
         kicker: "n8n RAG agent · on this site",
         lines: ["Portfolio", "terminal agent"],
-        tagline: "“Ask about my work. It answers.”",
-        accent: ["answers"],
+        tagline: "Skip the scroll. Just ask.",
+        accent: ["Just", "ask"],
         image: {
-          src: "/assets/portfolio-terminal-agent/card.webp",
-          alt: "The retro computer on the home page, its terminal answering “how many projects?”",
-          frame: true,
+          src: "/assets/portfolio-terminal-agent/cover-laptop.webp",
+          alt: "A laptop in warm lamplight showing this portfolio's home page, its retro terminal answering “how many projects?”, beside a coral mug",
         },
+        // the laptop right of centre on wide screens, the screen on phones;
+        // no tint, as the wall is already dark
+        focus: "40% center",
+        focusMobile: "62% center",
+        wash: "transparent",
+        washMobile: "transparent",
+        stack: true,
       },
       overview: {
         background: "#f2efe9",
@@ -3327,12 +3642,16 @@ const projects = [
         ink: "#f2efe9",
         muted: "#b9b6ad",
         accent: "#ff4d36",
+        // the real terminal, answering on the page
         image: {
-          placeholder: "The terminal mid-answer, or the n8n agent workflow",
+          src: "/assets/portfolio-terminal-agent/screen-projects.webp",
+          alt: "The terminal answering “how many projects?” with the count by category and the project list",
+          frame: true,
+          ratio: "226 / 172",
         },
         lines: ["Why a", "terminal?"],
         subhead: "Because recruiters have one question, buried across pages.",
-        text: "Has she done the thing I need? Answering it meant reading several case studies and the résumé. A terminal they can just ask turns that search into a sentence.",
+        text: "Has she done the thing I need? Answering it meant reading through ten case studies and the résumé. A terminal they can just ask turns that search into a sentence.",
         points: [
           {
             value: "20",
@@ -3354,6 +3673,9 @@ const projects = [
           },
         ],
       },
+      // 04: one visitor's questions through the terminal. Screens are real
+      // captures of the home page terminal (the fallback shown is the real
+      // one, with no agent connected).
       journey: {
         theme: {
           background: "#f2efe9",
@@ -3363,35 +3685,46 @@ const projects = [
         },
         title: "From a question to an answer.",
         titleAccent: ["answer"],
-        intro: "Follow one visitor's question through the terminal, the function and the agent I built.",
+        intro: "Follow one visitor's questions through the terminal I built. The screens are real captures from the home page.",
         steps: [
           {
             label: "Ask",
             title: "A question or a command",
-            text: "Plain questions get answers; /commands jump around the site.",
+            text: "Plain questions get answers; /commands jump around the site. Type help to see both.",
+            image: "/assets/portfolio-terminal-agent/screen-help.webp",
+            alt: "The terminal after typing help: example questions, the commands and the /go-to shortcuts",
+            fit: "screen",
             tint: "#ffffff",
+            chip: { label: "Slash commands", value: "14" },
           },
           {
             label: "Answer",
             title: "Common questions, instantly",
-            text: "Twenty topics are matched by pattern and answered on the page, no agent needed.",
-            image: "/assets/portfolio-terminal-agent/card.webp",
-            alt: "The terminal answering “how many projects?” with the project count by category",
+            text: "Twenty topics are matched by pattern and answered on the page from the site's own data, no agent needed.",
+            image: "/assets/portfolio-terminal-agent/screen-projects.webp",
+            alt: "The terminal answering “how many projects?” with the count by category and the project list",
             fit: "screen",
             tile: "wide",
             tint: "#ffe3dd",
+            chip: { label: "Topics answered offline", value: "20" },
           },
           {
-            label: "Agent",
-            title: "Anything else, to the agent",
-            text: "A serverless function checks the question and passes it to the n8n RAG agent, with a session ID for memory.",
+            label: "Look up",
+            title: "Any skill, any project",
+            text: "Ask whether she knows a tool or name a project, and the answer points to where it was used.",
+            image: "/assets/portfolio-terminal-agent/screen-skill.webp",
+            alt: "The terminal answering “does she know python?”: yes, Python scripting, used in HubSpot CRM",
+            fit: "screen",
             tile: "wide",
             tint: "#e9e6f2",
           },
           {
             label: "Fallback",
             title: "No signal, no crash",
-            text: "If the agent is down, a CRT-style “NO SIGNAL” appears and built-in answers keep working.",
+            text: "Anything else goes to the agent; if it's unreachable, a CRT-style “NO SIGNAL” appears and the built-in answers keep working.",
+            image: "/assets/portfolio-terminal-agent/screen-nosignal.webp",
+            alt: "The terminal showing NO SIGNAL, brain's offline, the built-in answers still work: try help",
+            fit: "screen",
             tint: "#ffffff",
           },
         ],
@@ -3410,9 +3743,9 @@ const projects = [
         accent: "#c8361f",
       },
       outcome: {
-        headline: "Live on this site, and still learning.",
-        titleAccent: ["Live"],
-        text: "Try it on the home page: common questions answer instantly, and anything else goes to the agent. Its workflow is still being improved, and reply time and accuracy haven't been measured yet.",
+        headline: "Live on this site. Go ahead, ask it.",
+        titleAccent: ["ask", "it"],
+        text: "It's the computer at the top of the home page: common questions, projects and skills answer instantly, and anything else goes to the agent. Its workflow is still being improved, and reply time and accuracy haven't been measured yet.",
       },
       closing: {
         background: "#ff4d36",
@@ -3445,7 +3778,9 @@ const projects = [
     // Feeds the hero figures strip (highlights.js).
     sector: "Logistics",
     // Made for a real organization: Raykan Technologies' client, a US
-    // logistics company (kept confidential).
+    // logistics company (kept confidential). The code, test run and report
+    // shown in the deck are samples rebuilt on an invented app
+    // ("Harborline") and invented data.
     realWorld: true,
     featured: false,
     stage: "Delivered · handed over with an SOP",
@@ -3458,14 +3793,14 @@ const projects = [
     ],
     // 16:7 artwork for the /work card: the suite's folder layout.
     cardArt: "/assets/qa-test-automation/card.webp",
-    tagline: "Automated release checks for a logistics platform's two portals.",
+    tagline: "18 Cypress suites that check a logistics platform's two portals before every release.",
     summary:
       "End-to-end Cypress tests for a logistics platform's customer and employee portals.",
     // Three short lines for the case study's "at a glance" row.
     glance: {
-      problem: "Two portals, dozens of screens, checked by hand every release.",
-      built: "Cypress suites that check every main flow before release.",
-      result: "18 suites the next tester could run, read and extend.",
+      problem: "Two portals, dozens of screens, checked by hand every release, and no test IDs.",
+      built: "18 Cypress suites, page objects and per-portal HTML reports, plus an SOP.",
+      result: "Handed over as a suite the next tester could run, read and extend.",
     },
     subtitle:
       "Cypress end-to-end testing for a US logistics company's operations platform, built during my QA internship at Raykan Technologies.",
@@ -3475,7 +3810,7 @@ const projects = [
       timeline: "Feb – Jun 2024",
     },
     overview:
-      "Raykan Technologies was rebuilding the operations platform of a US logistics company, covering user management, customer care, sales, warehousing and accounting, for both its customers and its employees. In Raykan's QA team I built the Cypress end-to-end tests that check those portals before each release, and co-wrote the SOP that lets the next tester run and extend them. Client details, screens and data are confidential, so this case study shows how the testing was done rather than the application.",
+      "Raykan Technologies was rebuilding the operations platform of a US logistics company, covering user management, customer care, sales, warehousing and accounting, for both its customers and its employees. In Raykan's QA team I built the Cypress end-to-end tests that check those portals before each release, and co-wrote the SOP that lets the next tester run and extend them. Client details, screens and data are confidential, so the code, test run and report shown here are samples rebuilt on an invented app.",
     problem:
       "Every release touched a large app with two portals and dozens of screens. Checking the main flows by hand each time was slow and easy to get inconsistent, and the app's elements had no test IDs, so tests needed a careful way to find what to click.",
     users:
@@ -3496,16 +3831,53 @@ const projects = [
         title: "Page objects, one file per screen",
         body: "Each screen's elements live in one place, grouped by form or page, and every test reuses them.",
         payoff: "One UI change, one file change.",
+        // a sample page object on the invented app
+        visual: {
+          kind: "code",
+          file: "pages/salesOrderPage.js · sample",
+          lines: [
+            "export const salesOrderPage = {",
+            "  form: {",
+            '    customer: () => cy.contains("label", "Customer").next(),',
+            '    save: () => cy.contains("button", "Save order"),',
+            "  },",
+            "};",
+          ],
+        },
       },
       {
         title: "Selectors that work without test IDs",
         body: "With no unique IDs in the app, tests target an element by its type and text in a single query instead of filtering every match.",
         payoff: "Fast even on crowded screens.",
+        // the two ways to find a button with no test ID (sample)
+        visual: {
+          kind: "code",
+          file: "selectors · sample",
+          lines: [
+            "// filters every button on the page",
+            'cy.get("button").filter(":contains(Save)")',
+            "",
+            "// one query, by type and text",
+            'cy.contains("button", "Save order")',
+          ],
+        },
       },
       {
         title: "Built to be handed over",
         body: "Suites are numbered to match the app's sidebar, and the SOP covers structure, naming, setup and reports.",
         payoff: "The next tester starts on day one.",
+        // what the handover covers
+        visual: {
+          kind: "rows",
+          title: "handover · the SOP",
+          rows: [
+            ["suites", "numbered like the sidebar"],
+            ["structure", "e2e, pages, navigation"],
+            ["conventions", "naming, selectors"],
+            ["reports", "one HTML per portal"],
+          ],
+          summary: "18 suites, run and extended from day one",
+        },
       },
       {
         title: "Automate the paths that must always work",
@@ -3544,7 +3916,7 @@ const projects = [
       },
     ],
     limitations:
-      "The automated tests cover the main success paths; negative cases were tested manually by the QA team. Client details, screens and data are confidential, so this case study describes the approach rather than the application.",
+      "The automated tests cover the main success paths; negative cases were tested manually by the QA team. Client details, screens and data are confidential, so the screens shown are samples rebuilt on an invented app (\"Harborline\") with invented data.",
     nextSteps:
       "The SOP recommends running the suite in Docker as part of the deployment pipeline, so every release is checked automatically.",
     story: {
@@ -3578,8 +3950,8 @@ const projects = [
         ],
       },
       decisionsHeadline: "Three decisions that made the suite last.",
-      // The deck. Draft structure: colours from the suite's card art (lime on
-      // a dark editor), copy from the fields above.
+      // The deck, in the suite's colours (lime on a dark editor). The cover
+      // keeps the suite card until its photo is in.
       cover: {
         layout: "overlay",
         background: "#141418",
@@ -3588,8 +3960,8 @@ const projects = [
         font: "Poppins, sans-serif",
         kicker: "Cypress · QA internship, Raykan Technologies",
         lines: ["End-to-end", "test automation"],
-        tagline: "“Every release, checked the same way.”",
-        accent: ["same", "way"],
+        tagline: "Every release, checked the same way.",
+        accent: ["the", "same", "way"],
         image: {
           src: "/assets/qa-test-automation/card.webp",
           alt: "The test suite's folders in a terminal: customer-side and employee-side suites, navigation, page objects, shared commands and reports",
@@ -3622,8 +3994,14 @@ const projects = [
         accent: "#d4f53c",
         font: "Poppins, sans-serif",
         titleStyle: "plain",
+        // a sample HTML report, on invented data
         image: {
-          placeholder: "A Cypress run, or an HTML report with a failed-step screenshot",
+          src: "/assets/qa-test-automation/sample-report.webp",
+          alt: "A sample HTML test report on invented data: suites, tests passed and failed, and a failed step with its error and screenshot",
+          frame: true,
+          // cropped into the summary and the failed step
+          ratio: "4 / 3",
+          position: "left center",
         },
         lines: ["Why", "automate it?"],
         subhead: "Because two portals were checked by hand every release.",
@@ -3649,6 +4027,8 @@ const projects = [
           },
         ],
       },
+      // 04: one release check through the suite. The screens are samples on
+      // an invented app ("Harborline"); the client's are confidential.
       journey: {
         theme: {
           background: "#f6f8ee",
@@ -3660,33 +4040,50 @@ const projects = [
         },
         title: "From a screen to a report.",
         titleAccent: ["report"],
-        intro: "Follow one release check through the suite I built, from describing a screen to the report the client reads.",
+        intro: "Follow one release check through the suite I built. The screens are samples on an invented app; the client's are confidential.",
         steps: [
           {
             label: "Describe",
             title: "One file per screen",
-            text: "Page objects hold each screen's elements once, grouped by form or page.",
+            text: "Page objects hold each screen's elements once, grouped by form or table, found by type and text.",
+            image: "/assets/qa-test-automation/sample-pageobject.webp",
+            alt: "A sample page object in an editor: the suite's folders and a sales order screen's form and table, described once",
+            fit: "screen",
             tint: "#ffffff",
+            chip: { label: "Test IDs needed", value: "0" },
           },
           {
             label: "Test",
             title: "Suites by module",
             text: "Numbered to match the app's sidebar, from login through sales, warehousing and accounting.",
+            image: "/assets/qa-test-automation/sample-run.webp",
+            alt: "A sample Cypress run: a sales orders suite passing beside the invented app's orders screen",
+            fit: "screen",
             tile: "wide",
             tint: "#eef7c8",
+            chip: { label: "End-to-end suites", value: "18" },
           },
           {
             label: "Check",
             title: "The backend, when the screen can't tell",
-            text: "Actions with no visible result, like generating a PDF, pass only on a successful request.",
+            text: "Generating a PDF shows nothing to assert on, so the test waits on the request and passes only on a 200.",
+            image: "/assets/qa-test-automation/sample-run.webp",
+            alt: "A sample Cypress command log: intercept the invoice request, click Generate invoice, wait for a 200",
+            fit: "screen",
             tile: "wide",
             tint: "#e7e8f2",
+            // zoomed into the command log: the request, then the wait on it
+            place: { left: "0", top: "-24px", width: "280%" },
           },
           {
             label: "Report",
             title: "A report per portal",
-            text: "HTML, with a screenshot of every failed step, for the team and the client.",
+            text: "HTML, with the error and a screenshot of every failed step, for the team and the client.",
+            image: "/assets/qa-test-automation/sample-report.webp",
+            alt: "A sample HTML test report: suites and tests passed, and one failed step with its error and screenshot",
+            fit: "screen",
             tint: "#ffffff",
+            chip: { label: "Portals reported", value: "2" },
           },
         ],
       },
@@ -3709,6 +4106,7 @@ const projects = [
       },
       outcome: {
         headline: "Delivered, and handed over with an SOP.",
+        status: "Feb – Jun 2024 · Raykan Technologies",
         titleAccent: ["handed", "over"],
         text: "The suites cover each module's main success paths, with negative cases left to manual testing. The SOP recommends running them in Docker in the deployment pipeline, so every release gets checked automatically.",
       },
@@ -3739,6 +4137,11 @@ const projects = [
 // Primary tag for each project (`category`), shown on its card. Projects
 // can also appear under other filters through `alsoIn`. Secondary `tags`
 // list the skills and tools involved and are display-only.
+// Older case study URLs that may still be linked from elsewhere.
+export const PROJECT_ALIASES = {
+  "hubspot-crm-cleanup": "hubspot-crm",
+};
+
 export const CATEGORIES = [
   { key: "all", label: "All" },
   { key: "applications", label: "Applications" },

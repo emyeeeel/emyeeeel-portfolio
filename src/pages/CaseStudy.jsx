@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import projects, { CATEGORIES } from "../data/projects.js";
+import projects, { CATEGORIES, PROJECT_ALIASES } from "../data/projects.js";
 import Reveal from "../components/Reveal.jsx";
 import Walkthrough from "../components/Walkthrough.jsx";
 import ScreenTour from "../components/ScreenTour.jsx";
@@ -235,7 +235,10 @@ function CaseStudy() {
     if (project) document.title = `emyeeeel — ${project.title}`;
   }, [project]);
 
-  if (!project) return <Navigate to="/work" replace />;
+  if (!project) {
+    const alias = PROJECT_ALIASES[slug];
+    return <Navigate to={alias ? `/work/${alias}` : "/work"} replace />;
+  }
   // Projects moved to the template render there; the rest keep this layout.
   if (project.story) return <CaseTemplate project={project} nextProject={nextProject} />;
 

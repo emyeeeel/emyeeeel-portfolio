@@ -104,7 +104,18 @@ function Accented({ text, words = [] }) {
 //                   marks an image with no subject, so phones fill with it;
 //                   `focus` sets the photo's crop (object-position);
 //                   `image.frame` shows the image as a framed card on the
-//                   right instead, for a project with no photo or backdrop
+//                   right instead, for a project with no photo or backdrop;
+//                   `caption` sets the kicker, logo and tagline at the
+//                   bottom left of the photo, the tagline as the headline
+//                   (a "\n" breaks its lines) with `accent` words bold and
+//                   underlined with a swoosh; there `focus` and
+//                   `focusMobile` crop the photo on wide screens and phones,
+//                   `logo.wide` sizes a long wordmark up, `wash` sets the
+//                   flat tint over the photo (`washMobile` on phones),
+//                   `middle` centres the caption on wide screens, and
+//                   `stack` sets it above the photo on phones, on the
+//                   photo's top-edge colour, for a light photo whose subject
+//                   fills its right
 //   layout "brand"  the project's logo (`mark`, from BrandMarks) and
 //                   tagline beside a framed photo; `accent` lists tagline
 //                   words to set in the logo's colour.
@@ -116,12 +127,19 @@ function Cover({ title, cover }) {
     "--cover-highlight": cover.highlight ?? "var(--coral)",
     // the wordmark is sized to its length so it always fits the screen
     "--chars": (cover.wordmark ?? title).length,
+    // a caption's crop, set apart for wide screens and phones
+    ...(cover.caption && {
+      "--focus": cover.focus,
+      "--focus-m": cover.focusMobile,
+      "--cover-wash": cover.wash,
+      "--cover-wash-m": cover.washMobile,
+    }),
   };
   const layout = cover.layout ?? "stage";
 
   return (
     <section
-      className={`cs-cover-page cs-cover-page--${layout}${cover.logo ? " cs-cover-page--logo" : ""}${cover.backdrop ? " cs-cover-page--backdrop" : ""}${cover.image?.frame ? " cs-cover-page--card" : ""}`}
+      className={`cs-cover-page cs-cover-page--${layout}${cover.logo ? " cs-cover-page--logo" : ""}${cover.backdrop ? " cs-cover-page--backdrop" : ""}${cover.image?.frame ? " cs-cover-page--card" : ""}${cover.caption ? " cs-cover-page--caption" : ""}${cover.logo?.wide ? " cs-cover-page--logo-wide" : ""}${cover.middle ? " cs-cover-page--middle" : ""}${cover.stack ? " cs-cover-page--stack" : ""}${cover.caption ? " cs-cover-page--swoosh" : ""}`}
       style={style}
       aria-label={`${title} cover`}
     >
@@ -151,7 +169,7 @@ function Cover({ title, cover }) {
               }`}
               src={cover.image.src}
               alt={cover.image.alt}
-              style={cover.focus ? { objectPosition: cover.focus } : undefined}
+              style={cover.focus && !cover.caption ? { objectPosition: cover.focus } : undefined}
             />
           )}
           {layout === "split" && (
@@ -186,7 +204,11 @@ function Cover({ title, cover }) {
                     : "cs-cover-page__headline cs-cover-page__headline--inline"
                 }
               >
-                <Accented text={cover.tagline} words={cover.accent} />
+                {cover.tagline.split("\n").map((line) => (
+                  <span key={line}>
+                    <Accented text={line} words={cover.accent} />
+                  </span>
+                ))}
               </p>
             )}
           </div>
