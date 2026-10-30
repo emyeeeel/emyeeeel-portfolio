@@ -444,6 +444,7 @@ function Overview({ overview, video, project }) {
 // margins with rounded corners instead of bleeding off the edge;
 // `image.ratio` and `image.position` crop a framed photo to its subject;
 // `image.cutout` stands a cut-out product in a solid arch (`image.panel`);
+// `image.float` stands cut-out devices free inside the margin, no arch;
 // `image.placeholder` holds that frame open, labelled, until the photo exists.
 function Why({ why }) {
   const style = {
@@ -507,7 +508,7 @@ function Why({ why }) {
             <figure
               className={`cs-why__art${why.image.frame ? " cs-why__art--frame" : ""}${
                 why.image.cutout ? " cs-why__art--cutout" : ""
-              }`}
+              }${why.image.float ? " cs-why__art--float" : ""}`}
               style={{
                 "--art-ratio": why.image.ratio,
                 "--art-pos": why.image.position,
@@ -845,7 +846,10 @@ function ImpactBars({ chart }) {
 // subject reaches further left; `cutout.mark` sizes the cutout as a logo
 // mark beside the text rather than a figure rising from the bottom;
 // `cutout.height`, `cutout.bottom` and `cutout.right` size and place a
-// figure that's wider than the default hand.
+// figure that's wider than the default hand, and `cutout.rotate` tilts it
+// about its bottom-right corner (wide screens only); `cutout.corner` keeps a
+// figure whose arm leaves its bottom-right corner flush to that corner on
+// phones.
 function Closing({ closing, contactTo }) {
   const style = {
     "--slide-bg": closing.background ?? "var(--bone)",
@@ -856,7 +860,7 @@ function Closing({ closing, contactTo }) {
   };
   return (
     <section
-      className={`cs-end${closing.cutout ? " cs-end--cutout" : ""}${closing.cutout?.mark ? " cs-end--mark" : ""}${closing.narrow ? " cs-end--narrow" : ""}`}
+      className={`cs-end${closing.cutout ? " cs-end--cutout" : ""}${closing.cutout?.mark ? " cs-end--mark" : ""}${closing.cutout?.corner ? " cs-end--corner" : ""}${closing.narrow ? " cs-end--narrow" : ""}`}
       style={style}
       aria-labelledby="cs-end"
     >
@@ -874,6 +878,7 @@ function Closing({ closing, contactTo }) {
             "--cutout-h": closing.cutout.height,
             "--cutout-bottom": closing.cutout.bottom,
             "--cutout-right": closing.cutout.right,
+            "--cutout-rotate": closing.cutout.rotate,
           }}
         />
       )}

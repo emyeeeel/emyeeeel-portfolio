@@ -1148,6 +1148,20 @@
   filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.35));
 }
 
+/* cut-out devices standing free, centred in the space right of the copy
+   (the slide's padding, then the copy's width), no arch */
+.cs-why__art--float {
+  right: max(
+    var(--gutter),
+    calc(
+      (100vw - max(var(--gutter), calc((100vw - var(--max-width)) / 2 + var(--gutter)))
+        - min(560px, 44vw) - min(540px, 37vw)) / 2
+    )
+  );
+  width: min(540px, 37vw);
+  filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.4));
+}
+
 /* no photo yet: the frame held open, dashed and labelled */
 .cs-why__art--todo {
   display: flex;
@@ -2259,6 +2273,9 @@
   height: var(--cutout-h, 112%);
   width: auto;
   filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.35));
+  /* tilted about the arm's end, so the arm still leaves the slide */
+  transform: rotate(var(--cutout-rotate, 0deg));
+  transform-origin: 100% 100%;
 }
 
 .cs-end--cutout .cs-end__text {
@@ -3722,10 +3739,18 @@
     height: auto;
     width: 78%;
     margin-bottom: -30%;
+    transform: none;
   }
 
   .cs-end--cutout {
     padding-bottom: 0;
+  }
+
+  /* an arm leaving the figure's bottom-right corner: flush to the slide's */
+  .cs-end--corner .cs-end__cutout {
+    align-self: flex-end;
+    width: 64%;
+    margin: -24px 0 0;
   }
 
   .cs-end--mark .cs-end__cutout {
@@ -3797,6 +3822,14 @@
     position: relative;
     right: auto;
     width: min(100%, 420px);
+    margin: 40px auto 0;
+    align-self: center;
+  }
+
+  .cs-why__art--float {
+    position: relative;
+    right: auto;
+    width: min(100%, 400px);
     margin: 40px auto 0;
     align-self: center;
   }

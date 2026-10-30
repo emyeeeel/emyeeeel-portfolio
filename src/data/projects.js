@@ -2,7 +2,8 @@
 //
 // `stage` is shown wherever a project appears, so keep it accurate:
 // it describes where the project actually is, not where it might go.
-// `stageKind` only picks the badge color (prototype / research / concept).
+// `stageKind` only picks the badge color (prototype / build / research /
+// concept); "build" is working software that isn't deployed yet.
 //
 // Case-study sections are all optional — CaseStudy.jsx skips any that are
 // missing, so leave a field out rather than filling it with a placeholder.
@@ -579,8 +580,8 @@ const projects = [
     // Made for a real organization: a prospective client, RCL Egg Trading.
     realWorld: true,
     featured: false,
-    stage: "Business application prototype",
-    stageKind: "prototype",
+    stage: "Working app · Supabase backend next",
+    stageKind: "build",
     highlights: [
       { value: "6 modules", label: "In one system" },
       { value: "6 roles", label: "Each with its own access" },
@@ -592,10 +593,10 @@ const projects = [
     glance: {
       problem: "Every part of the business kept its own spreadsheet.",
       built: "One back office for the farm, stock, sales, deliveries, payroll and books.",
-      result: "Working prototype in React and Vite, its data layer ready for Supabase.",
+      result: "A working back office in React and Vite, its data layer ready for Supabase.",
     },
     subtitle:
-      "A business application prototype for a Philippine egg supplier's daily operations.",
+      "A back-office app for a Philippine egg supplier's daily operations.",
     logo: "/assets/rcl-egg-trading/rcl-egg-trading_logo.png",
     logoBg: "/assets/rcl-egg-trading/rcl-egg-trading_bg.png",
     icon: "/assets/rcl-egg-trading/rcl-egg-trading_logo_icon.png",
@@ -603,10 +604,10 @@ const projects = [
       role: "Software Developer",
       stack: "React 19 · Vite · Recharts · localStorage (Supabase-ready)",
       timeline: "2026, Cebu",
-      stage: "Business application prototype",
+      stage: "Working app · Supabase backend next",
     },
     overview:
-      "A small egg supplier keeps its operations across spreadsheets and paper. I scoped and built a prototype that brings those records into one back office, from each flock's daily collection to the receipt, the delivery and the books, with each role seeing only the parts of the business it works with. It comes with a public site for the business's customers.",
+      "A small egg supplier keeps its operations across spreadsheets and paper. I scoped and built a back-office app that brings those records into one back office, from each flock's daily collection to the receipt, the delivery and the books, with each role seeing only the parts of the business it works with. It comes with a public site for the business's customers.",
     problem:
       "Collections, stock, sales, deliveries, staff and accounts were tracked in separate spreadsheets and on paper. There was no single source of truth, no way to see which trays would expire first, and no way to give staff access to only the records relevant to their work.",
     users:
@@ -621,11 +622,11 @@ const projects = [
         "Built semi-monthly payroll with SSS, PhilHealth, Pag-IBIG and withholding tax, with printable payslips",
         "Added official receipts, BIR reference reports and QuickBooks CSV and IIF import and export",
         "Implemented role-based access for six roles",
-        "Kept the data in the browser for the demo, with every data function mapped to its Supabase call",
+        "Kept the data in the browser for now, with every data function mapped to its Supabase call",
       ],
     },
     scope: {
-      intro: "The prototype covers six connected areas of the business, with a dashboard across them:",
+      intro: "The app covers six connected areas of the business, with a dashboard across them:",
       items: [
         "Farm: flocks, daily collection by grade, feed and health",
         "Inventory: egg batches by freshness, packaging and waste",
@@ -641,7 +642,7 @@ const projects = [
         title: "A best-before on every tray",
         body: "Each grade of a day's collection becomes its own stock batch, with a shelf life and tray price set by grade. Orders offer batches first-expiring first, and stock is flagged three days before it expires.",
         payoff: "The oldest eggs go out first.",
-        // the grade rules in the prototype's data layer (GRADE_CONFIG)
+        // the grade rules in the app's data layer (GRADE_CONFIG)
         visual: {
           kind: "rows",
           title: "batch rules · by grade",
@@ -673,9 +674,9 @@ const projects = [
       },
       {
         title: "Built for Supabase, running without it",
-        body: "For the demo, every record lives in the browser. Each data function carries the Supabase call that replaces it, so the move to a hosted PostgreSQL database changes the data layer, not the screens.",
+        body: "For now, every record lives in the browser. Each data function carries the Supabase call that replaces it, so the move to a hosted PostgreSQL database changes the data layer, not the screens.",
         payoff: "Swap the storage, keep the app.",
-        // one of the prototype's data functions, as written
+        // one of the app's data functions, as written
         visual: {
           kind: "code",
           file: "src/db.js",
@@ -696,11 +697,11 @@ const projects = [
     evidence: [
       {
         kind: "implemented",
-        text: "Working prototype in React 19 and Vite: six modules and a dashboard, six demo roles and a public site, on demo data stored in the browser.",
+        text: "A working app in React 19 and Vite: six modules and a dashboard, six demo roles and a public site, on demo data stored in the browser.",
       },
     ],
     limitations:
-      "This is a prototype, not a production deployment. Its data lives in the browser for the demo, and the Supabase backend is planned but not yet connected. It isn't presented as tax- or payroll-compliant software: those rules would need checking by the business and its accountant before any real use.",
+      "It isn't deployed yet: its data lives in the browser for now, and the Supabase backend is the next step, not yet connected. It isn't presented as tax- or payroll-compliant software: those rules would need checking by the business and its accountant before any real use.",
     story: {
       kpis: [
         { value: "6", label: "Connected modules, from the farm to the books" },
@@ -744,7 +745,7 @@ const projects = [
         text: "#123f6b",
         highlight: "#005EB8",
         font: "Poppins, sans-serif",
-        kicker: "Egg supplier back office · prototype",
+        kicker: "Egg supplier back office · six modules",
         logo: { src: "/assets/rcl-egg-trading/rcl-egg-trading_logo.png", alt: "RCL Egg Trading", wide: true },
         tagline: "Every tray, accounted for.",
         accent: ["accounted", "for"],
@@ -813,7 +814,7 @@ const projects = [
           },
         ],
       },
-      // 04: a day's eggs through the prototype, on its demo data.
+      // 04: a day's eggs through the app, on its demo data.
       journey: {
         theme: {
           background: "#FFF8E8",
@@ -825,7 +826,7 @@ const projects = [
         },
         title: "From the coop to the receipt.",
         titleAccent: ["receipt"],
-        intro: "Follow a day's eggs through the prototype I built, on its demo data.",
+        intro: "Follow a day's eggs through the app I built, on its demo data.",
         steps: [
           {
             label: "Collect",
@@ -889,8 +890,8 @@ const projects = [
         plain: true,
       },
       outcome: {
-        headline: "A working prototype, ready for a real backend.",
-        titleAccent: ["working", "prototype"],
+        headline: "A working back office, ready for its backend.",
+        titleAccent: ["working"],
         text: "All six modules run end to end on demo data in the browser, and every data function is already mapped to its Supabase call. Before any real use, the business and its accountant would need to check its tax and payroll rules.",
       },
       closing: {
@@ -1446,8 +1447,8 @@ const projects = [
     // Feeds the hero figures strip (highlights.js).
     sector: "Logistics",
     featured: false,
-    stage: "Hackathon prototype",
-    stageKind: "prototype",
+    stage: "Hackathon champion · SCS Days 2025",
+    stageKind: "build",
     highlights: [
       { value: "Champion", label: "SCS Days 2025 Hackathon" },
       { value: "72%", trend: "down", label: "Wasted box space reduction" },
@@ -1474,7 +1475,7 @@ const projects = [
       role: "Problem analysis · web demo · pitch",
       stack: "Angular · Django · Roboflow",
       timeline: "2025, Cebu",
-      stage: "Hackathon prototype",
+      stage: "Hackathon champion · SCS Days 2025",
     },
     overview:
       "Paagi recognizes an item from a photo, retrieves its details and recommends how to pack and move it. During the SCS Days 2025 Hackathon (Jaguars' Lair) I built the working demo: an Angular front end and a Django API that sends the photo to an object detection model, matches the result to a product record, and walks through packaging and transport options. The project won the hackathon, and Gothong Southern's CTO invited me to present it to the company's IT and R&D teams.",
@@ -1789,20 +1790,20 @@ const projects = [
     // Feeds the hero figures strip (highlights.js).
     sector: "Family & education",
     featured: false,
-    stage: "App prototype",
-    stageKind: "prototype",
+    stage: "Android app · presented at IBPAP",
+    stageKind: "build",
     highlights: [
       { value: "Free", label: "SNAP-IV-based screening" },
       { value: "130 hrs/yr", trend: "down", label: "Screen time reduction per child" },
     ],
-    tagline: "Attention-risk screening from screen habits, turned into family quests and nudges.",
+    tagline: "A family app that reads a child's screen habits for attention risk, then trades screen time for family quests.",
     summary:
-      "Predicts attention risk from screen-time habits, then nudges kids toward family quests.",
+      "Screens attention risk from a child's screen habits, then turns it into offline quests the family does together.",
     // Three short lines for the case study's "at a glance" row.
     glance: {
       problem: "Screen habits shape attention, and families notice late.",
-      built: "Eight playful questions in, a family plan of quests out.",
-      result: "Projected ~130 fewer screen hours a year per child; reviewed by a licensed psychometrician.",
+      built: "A few playful questions in; quests, rewards and nudges for the family out.",
+      result: "A working Android app, reviewed by a licensed psychometrician and presented at IBPAP; ~130 fewer screen hours a year projected.",
     },
     subtitle:
       "A family habit app for children aged 6–15, built around a machine learning model that screens attention risk from screen-time habits.",
@@ -1814,28 +1815,28 @@ const projects = [
       alt: "GabAI welcome screen and home screen with quests, badges and recent adventures",
     },
     facts: {
-      role: "ML model · app development",
-      stack: "scikit-learn · Ionic · Angular · Django · Firebase",
+      role: "Idea & product lead · ML and app",
+      stack: "scikit-learn · Ionic · Angular · Django · Firebase · DeepSeek",
       timeline: "2025",
-      stage: "App prototype",
+      stage: "Android app · presented at IBPAP",
     },
     overview:
-      "GabAI is a habit companion for families, built on an attention-risk model I developed. A child answers a few playful questions about their screen habits during onboarding, and the model estimates where they sit on three attention and behaviour scales. Those levels shape the offline quests and nudges the child gets, so the app responds to the child's actual habits instead of giving everyone the same tips.",
+      "GabAI is a family habit app I came up with and led from idea to a working Android app. A child answers a few playful questions about their screen habits, and an attention-risk model places them on three attention and behaviour scales. Those levels quietly shape the offline quests, rewards and nudges the family gets, and give parents a daily snapshot and a coach to ask.",
     problem:
       "Parents want to encourage offline habits and family time without turning it into another screen-time negotiation. GabAI explores whether small, profile-matched activities and rewards make that easier to keep up.",
     users: "Children aged 6–15 and the family members who join them in the app.",
     contribution: {
-      text: "Beyond the app, I developed the machine learning model. We collected survey responses from teachers and students in public and private elementary schools, and I trained three Random Forest classifiers on them, served them from the Django API and connected them to the app's onboarding and nudges.",
+      text: "I came up with GabAI and led it from idea to a working Android app: the screening approach behind the model, the quests and rewards loop, and how the model, the nudges and the parent coach connect. I directed the school-survey data gathering and model building, and the app build, and presented GabAI at IBPAP in Cebu.",
     },
     scope: {
-      intro: "The prototype includes:",
+      intro: "The app includes:",
       items: [
-        "A gamified onboarding assessment that feeds the attention-risk models",
-        "Family accounts that members can join",
-        "Quests, points, badges and a family leaderboard",
-        "Reward redemption and a wishlist",
-        "A mood tracker and reminders",
-        "AI-generated nudges and a chat assistant",
+        "Separate paths for a grown-up and a kid, with a playful onboarding assessment that feeds the attention-risk models",
+        "A daily mood check-in",
+        "Gift Quests picked by the child's superpower, with points (bituin) and badges",
+        "A rewards store with family rewards and a wishlist",
+        "Take a Breather nudges matched to the child's profile",
+        "A parent snapshot of screen time, sleep and activity, and a Coach chat",
       ],
     },
     // The template shows the first three, each with its one-line payoff.
@@ -1844,20 +1845,57 @@ const projects = [
         title: "A model trained on real school surveys",
         body: "Students answered a ScreenQ-based questionnaire and teachers rated the same students on the 26-item SNAP-IV. Those ratings became the labels for three Random Forests, one per subscale, using 8 inputs.",
         payoff: "Labels from teachers, not guesses.",
+        // the training setup, as described above
+        visual: {
+          kind: "rows",
+          title: "training · school surveys",
+          rows: [
+            ["students", "ScreenQ-based survey"],
+            ["teachers", "SNAP-IV, 26 items"],
+            ["inputs", "8 per child"],
+            ["models", "3 Random Forests"],
+          ],
+          summary: "one model per SNAP-IV subscale",
+        },
       },
       {
         title: "Three levels, not a diagnosis",
         body: "Each model returns Within Typical Range, Elevated or High Risk. The app uses the levels to tailor activities and never shows them to a child as a label.",
         payoff: "Guidance for families, no labels for kids.",
+        // the three subscales the models score (assessment/views.py)
+        visual: {
+          kind: "rows",
+          title: "levels · one per subscale",
+          rows: [
+            ["inattentive", "typical · elevated · high"],
+            ["hyperactive", "typical · elevated · high"],
+            ["oppositional", "typical · elevated · high"],
+          ],
+          summary: "used to match quests and nudges, never shown",
+        },
       },
       {
-        title: "Pre-generated nudges for children",
-        body: "Instead of generating text live, the backend creates batches of short offline nudges, each tagged with the profile it suits, and matches them to the child.",
+        title: "Nudges written ahead, not live",
+        body: "Instead of generating text in front of a child, the backend asks DeepSeek for 100 short offline nudges in five batches, each tagged with the age, habits and levels it suits, and stores them in Firebase to match to the child.",
         payoff: "Every message can be reviewed first.",
+        // one of the 100 nudges as stored, trimmed (nudges.json)
+        visual: {
+          kind: "code",
+          file: "nudges.json · 1 of 100",
+          lines: [
+            "{",
+            '  "text": "Walk like a penguin…",',
+            '  "age": 6,',
+            '  "hyperactive_result": 2,',
+            '  "inattentive_result": 0,',
+            '  "oppositional_result": 0',
+            "}",
+          ],
+        },
       },
       {
         title: "Questions a child can answer",
-        body: "The questionnaire is rewritten as short, friendly onboarding questions and mapped back to the model's inputs, so the assessment feels like part of the game.",
+        body: "The questionnaire is rewritten as short, friendly onboarding questions, like \"Are your shows mostly slow with talking, or fast with lots of action?\", and mapped back to the model's inputs, so the assessment feels like part of the game.",
         payoff: "The screening feels like play.",
       },
       {
@@ -1872,7 +1910,7 @@ const projects = [
         {
           src: "/assets/gabai/gabai_1.png",
           alt: "GabAI welcome screen and home screen with quests, badges and recent adventures",
-          caption: "Welcome and home screens from the prototype.",
+          caption: "Welcome and home screens from the app.",
         },
         {
           src: "/assets/gabai/gabai_2.png",
@@ -1888,7 +1926,7 @@ const projects = [
       },
       {
         kind: "implemented",
-        text: "A free first attention screen at home, built on SNAP-IV, a standard rating scale for attention and behaviour. Instead of a teacher or parent rating its 26 items (about 10 minutes), the child and family answer 8 short onboarding questions (about 2 minutes, estimated) and the model returns the same three risk levels, so families get an early signal of whether to talk to a specialist.",
+        text: "A free first attention screen at home, built on SNAP-IV, a standard rating scale for attention and behaviour. Instead of a teacher or parent rating its 26 items (about 10 minutes), the child answers 12 short onboarding questions (about 2 minutes, estimated), 8 of which feed the model, and the model returns the same three risk levels, so families get an early signal of whether to talk to a specialist.",
       },
       {
         kind: "milestone",
@@ -1898,16 +1936,24 @@ const projects = [
         kind: "implemented",
         text: "Three scikit-learn Random Forest classifiers (200, 200 and 100 trees), one per SNAP-IV subscale, served from a Django endpoint. The predicted levels are stored on the child's profile to match nudges and inform the parent chat assistant.",
       },
+      {
+        kind: "implemented",
+        text: "100 offline nudges pre-generated with DeepSeek, each tagged with the age, screen habits and levels it suits, and a parent Coach that answers with the child's profile and matching parenting tips.",
+      },
+      {
+        kind: "milestone",
+        text: "Presented at IBPAP in Cebu, 2025.",
+      },
     ],
     evidenceNote:
       "The screen-time figure is a projection, not a result measured with GabAI users. It applies the meta-analysis's effect for goals, feedback and planning (0.145 standard deviations; Jones et al., 2021, International Journal of Behavioral Nutrition and Physical Activity) to an assumed spread of 2.5 hours a day. Using its overall effect instead gives ~105 hours a year.",
     limitations:
-      "GabAI is a prototype, and its model is a screening aid, not a diagnostic tool. It was trained on a limited survey sample from local public and private elementary schools, so its levels are indicative only, and its agreement with full SNAP-IV ratings isn't reported here. The app hasn't been released, so the screen-time saving is projected, not measured.",
+      "GabAI isn't released yet, and its model is a screening aid, not a diagnostic tool. It was trained on a limited survey sample from local public and private elementary schools, so its levels are indicative only, and its agreement with full SNAP-IV ratings isn't reported here. Until families use it, the screen-time saving is projected, not measured.",
     nextSteps:
       "A pilot with families that logs screen time before and during use would show whether the projected saving holds, and checking the model against full SNAP-IV ratings on new children would show how far its levels can be trusted.",
     story: {
       kpis: [
-        { value: "8", label: "Short questions in place of a 26-item rating scale" },
+        { value: "12", label: "Short onboarding questions in place of a 26-item rating scale" },
         { value: "~130", label: "Fewer screen hours a year per child (projected)" },
         { value: "3", label: "Random Forest models, one per SNAP-IV subscale" },
       ],
@@ -1916,31 +1962,30 @@ const projects = [
         audience: "Children aged 6–15 and the family members who join them in the app.",
       },
       ownership: {
-        summary: "The model and the app, end to end.",
+        summary: "Led from the idea to a working app.",
         phases: [
-          { label: "Survey data", mine: true, text: "Collected with the team" },
+          { label: "Idea", mine: true, text: "Screening turned into play" },
+          { label: "Data", mine: true, text: "School surveys, teacher-rated" },
           { label: "Models", mine: true, text: "Three Random Forests" },
-          { label: "API", mine: true, text: "Served from Django" },
           { label: "App", mine: true, text: "Ionic and Angular, Android" },
-          { label: "Nudges", mine: true, text: "Pre-generated, reviewable" },
+          { label: "AI", mine: true, text: "Nudges and a parent coach" },
         ],
       },
       flow: {
         kind: "features",
         items: [
-          { title: "Playful onboarding", body: "Eight short questions that feed the attention-risk models." },
-          { title: "Family accounts", body: "Family members join one account and play together." },
-          { title: "Quests and badges", body: "Offline quests, points, badges and a family leaderboard." },
-          { title: "Rewards", body: "Points redeemed for rewards, with a wishlist." },
-          { title: "Mood and reminders", body: "A mood tracker and reminders that keep habits going." },
-          { title: "Nudges and chat", body: "Nudges matched to the child, and a chat assistant for parents." },
+          { title: "Playful onboarding", body: "Short questions about screen habits that feed the attention-risk models." },
+          { title: "Mood check-in", body: "A daily \"how are you feeling today?\" with five faces and a note." },
+          { title: "Gift Quests", body: "Offline quests picked by the child's superpower, earning bituin and badges." },
+          { title: "Rewards", body: "Bituin spent on family rewards, with a wishlist." },
+          { title: "Take a Breather", body: "Short offline nudges matched to the child's profile." },
+          { title: "Parent snapshot", body: "Screen time, sleep and activity per child, and a Coach chat." },
         ],
       },
       decisionsHeadline: "Three choices that keep a child-facing model safe.",
-      // The deck. Draft structure: most journey steps have no screenshots
-      // yet (dev shows a frame to fill).
-      // A parent and child sharing a tablet in the dark, the kicker, logo
-      // and tagline at its bottom left.
+      // The deck. Journey screens are frames from the app's demo
+      // recording. The cover: a parent and child sharing a tablet in the
+      // dark, the kicker, logo and tagline at its bottom left.
       cover: {
         layout: "overlay",
         caption: true,
@@ -1965,16 +2010,25 @@ const projects = [
         muted: "#8a96ab",
         accent: "#1aa7e6",
         font: "Poppins, sans-serif",
+        // plays the case study's video (story.video) from the card, in a
+        // popup; the card shows the /work tile as its thumbnail
+        showVideo: true,
         thumb: "tile",
-        lead: "GabAI is a family habit app that screens a child's attention risk from screen habits,",
-        rest: "then turns it into offline quests and nudges the whole family can join.",
+        lead: "GabAI is a family habit app that screens a child's attention risk from their screen habits,",
+        rest: "then quietly shapes the quests, rewards and nudges the whole family shares.",
         meta: [
-          ["Users", "Children 6–15"],
+          ["Users", "Children 6–15 and parents"],
           ["Year", "2025"],
           ["Platform", "Android (Ionic)"],
-          ["Role", "ML & app developer"],
+          ["Role", "Idea & product lead"],
         ],
         tags: ["Survey data", "Machine learning", "Django API", "Mobile app", "LLM nudges", "Child-safe design"],
+      },
+      // The promotional video, built in Remotion on the app's demo recording.
+      video: {
+        src: "/assets/gabai/promo.mp4",
+        duration: "0:34",
+        alt: "GabAI promotional video: offline quests, a parent's daily snapshot, and rewards a family enjoys together",
       },
       why: {
         background: "#0a1838",
@@ -1983,20 +2037,21 @@ const projects = [
         accent: "#1aa7e6",
         font: "Poppins, sans-serif",
         titleStyle: "plain",
+        // the welcome and home screens on two phones, standing free
         image: {
-          src: "/assets/gabai/gabai_2.png",
-          alt: "GabAI pitch visual of a parent and child making shadow puppets",
-          frame: true,
+          src: "/assets/gabai/phones-why.webp",
+          alt: "Two phones showing GabAI: the welcome screen, and a child's home screen with bituin and recent adventures",
+          float: true,
         },
         lines: ["Why", "GabAI?"],
         subhead: "Because attention concerns surface late, and screen rules start fights.",
         text: "A standard screen like SNAP-IV asks a teacher or parent to rate 26 items, which few families do at home. GabAI makes the screen part of play, then shapes offline habits around it.",
         points: [
           {
-            value: "8",
+            value: "12",
             unit: "questions",
             title: "A screen a child can take",
-            text: "Eight playful questions stand in for SNAP-IV's 26-item rating scale.",
+            text: "Twelve playful questions stand in for SNAP-IV's 26-item rating scale.",
           },
           {
             value: "3",
@@ -2021,44 +2076,55 @@ const projects = [
           font: "Poppins, sans-serif",
           plain: true,
         },
-        title: "From eight questions to family quests.",
+        title: "From a few questions to family quests.",
         titleAccent: ["family", "quests"],
-        intro: "Follow one child from onboarding to the quests and nudges the app picks for them.",
+        intro: "Follow one family through the app, from the child's onboarding to the parent's daily snapshot. The screens are from its demo recording.",
         steps: [
           {
             label: "Answer",
-            title: "Eight playful questions",
-            text: "During onboarding, the child answers short questions about their screen habits.",
+            title: "Questions a kid can answer",
+            text: "Screens at meals, hours a day, slow or fast shows. The answers feed three models, and the levels stay private.",
+            image: "/assets/gabai/journey-answer.webp",
+            alt: "GabAI's Tell Us About Yourself screen: screens while eating, hours a day on screens, slow or fast shows, and how often an adult talks about what you watch",
             tint: "#ffffff",
             chip: { label: "In place of", value: "26 items" },
           },
           {
-            label: "Screen",
-            title: "Three levels, kept private",
-            text: "Three Random Forests place the child on each SNAP-IV subscale; the levels shape the plan, never a label.",
+            label: "Play",
+            title: "Quests matched to a superpower",
+            text: "The child picks a superpower, from drawing to cooking, then does offline quests like recording a story for lolo or lola. Each one earns bituin, the app's star points, and badges.",
+            image: "/assets/gabai/journey-play.webp",
+            alt: "GabAI's Gift Quests screen, where the child picks a superpower and sees today's quests, and the My Badges screen with growth progress",
+            fit: "mock",
             tile: "wide",
             tint: "#e1f1fb",
-            chip: { label: "Models", value: "3 Random Forests" },
+            place: { left: "-2%", top: "-14px", width: "100%" },
+            chip: { label: "Each quest", value: "10–20 min" },
           },
           {
-            label: "Play",
-            title: "Quests the family does together",
-            text: "Offline quests earn points and badges on a family leaderboard.",
-            image: "/assets/gabai/gabai_1.png",
-            alt: "GabAI welcome screen and home screen with quests, badges and recent adventures",
-            fit: "screen",
+            label: "Reward",
+            title: "Points the family spends together",
+            text: "Bituin buy family rewards like a movie night or one-on-one time with mom or dad, and a wishlist opens at 200 points.",
+            image: "/assets/gabai/journey-reward.webp",
+            alt: "GabAI's Rewards Store with a Family Movie Night redeemed for 100 points, and the child's home screen with 276 bituin and recent adventures",
+            fit: "mock",
             tile: "wide",
             tint: "#e9eef6",
+            place: { left: "-2%", top: "-14px", width: "100%" },
+            chip: { label: "Family Movie Night", value: "100 bituin" },
           },
           {
-            label: "Nudge",
-            title: "Nudges that fit the child",
-            text: "Pre-generated nudges matched to the child's profile, and a chat assistant for parents.",
+            label: "Guide",
+            title: "A daily snapshot for parents",
+            text: "Screen time, sleep and activity for each child, Take a Breather nudges, and a Coach to ask.",
+            image: "/assets/gabai/journey-guide.webp",
+            alt: "GabAI's parent home: a daily snapshot per child with today's digital rhythm, screen time, sleep and activity",
             tint: "#ffffff",
+            chip: { label: "Today's rhythm", value: "Balanced" },
           },
         ],
       },
-      builtTitleAccent: ["end", "to"],
+      builtTitleAccent: ["working", "app"],
       builtTheme: {
         background: "#0a1838",
         ink: "#ffffff",
@@ -2077,9 +2143,10 @@ const projects = [
       },
       outcome: {
         // a soft hyphen (­) lets the long word break if it must
-        headline: "A working prototype, reviewed by a psycho­metrician.",
+        headline: "A working app, reviewed by a psycho­metrician.",
         titleAccent: ["reviewed"],
-        text: "The models run behind the app's onboarding and shape every quest and nudge. It hasn't been released, so the screen-time saving is projected, and the model is a screening aid, not a diagnosis.",
+        status: "Presented at IBPAP · Cebu, 2025",
+        text: "The models run behind the app's onboarding and shape every quest and nudge, and the parent Coach answers with the child's profile in mind. It isn't released yet, so the screen-time saving is projected, and the model is a screening aid, not a diagnosis.",
         noteLabel: "how the projection was made",
         impactsLabel: "Estimated and projected, not yet measured",
         impacts: [
@@ -2088,10 +2155,10 @@ const projects = [
             label: "for a first attention screen, down from about 10 for SNAP-IV's 26 items (est.)",
             tone: "accent",
             chart: {
-              summary: "Time for a first attention screen: about 10 minutes for SNAP-IV's 26 items, about 2 minutes for GabAI's 8 questions.",
+              summary: "Time for a first attention screen: about 10 minutes for SNAP-IV's 26 items, about 2 minutes for GabAI's 12 questions.",
               groups: [
                 { label: "SNAP-IV, 26 items", values: [10], text: ["~10 min"] },
-                { label: "GabAI, 8 questions", values: [2], text: ["~2 min"], on: true },
+                { label: "GabAI, 12 questions", values: [2], text: ["~2 min"], on: true },
               ],
             },
           },
@@ -2119,10 +2186,18 @@ const projects = [
         title: "Need something like this?",
         cta: "tell me about it",
         text: "Turn your data into a model people can actually use.",
+        // a hand holding a phone on GabAI's loading screen, tilted left with
+        // the phone in the space right of the copy, the arm leaving through
+        // the slide's bottom edge; capped by width, so on taller screens it
+        // stays clear of the question
         cutout: {
-          src: "/assets/gabai/gabai_logo_icon.png",
-          alt: "GabAI's logo",
-          mark: true,
+          height: "min(122%, 56vw)",
+          bottom: "max(-30%, -13.8vw)",
+          right: "-2vw",
+          rotate: "-6deg",
+          corner: true,
+          src: "/assets/gabai/hand-phone.webp",
+          alt: "A hand holding a phone showing GabAI's loading screen",
         },
       },
       skills: [
@@ -2414,7 +2489,7 @@ const projects = [
         accent: "#6f93c7",
         font: "Poppins, sans-serif",
         thumb: "card",
-        lead: "Gender Reveal RSVP is a phone-first RSVP site for a family gender reveal,",
+        lead: "Gender Reveal RSVP is a mobile responsive RSVP site for a family gender reveal,",
         rest: "with every reply synced to a Google Sheets dashboard the hosts already use.",
         meta: [
           ["Client", "Family event"],
@@ -3950,11 +4025,13 @@ const projects = [
         ],
       },
       decisionsHeadline: "Three decisions that made the suite last.",
-      // The deck, in the suite's colours (lime on a dark editor). The cover
-      // keeps the suite card until its photo is in.
+      // The deck, in the suite's colours (lime on a dark editor). The cover:
+      // a sample Cypress run (an invented app) on a laptop by a port at
+      // dusk; the kicker, name and tagline on the dark wall to its left.
       cover: {
         layout: "overlay",
-        background: "#141418",
+        caption: true,
+        background: "#0e1016",
         text: "#f2efe9",
         highlight: "#d4f53c",
         font: "Poppins, sans-serif",
@@ -3963,10 +4040,16 @@ const projects = [
         tagline: "Every release, checked the same way.",
         accent: ["the", "same", "way"],
         image: {
-          src: "/assets/qa-test-automation/card.webp",
-          alt: "The test suite's folders in a terminal: customer-side and employee-side suites, navigation, page objects, shared commands and reports",
-          frame: true,
+          src: "/assets/qa-test-automation/cover-laptop.webp",
+          alt: "A laptop showing a sample Cypress run passing beside an invented logistics app, with a lime mug, shipping boxes and a container port at dusk through the window",
         },
+        // the laptop right of centre on wide screens, the screen on phones;
+        // no tint, as the wall is already dark
+        focus: "40% center",
+        focusMobile: "58% center",
+        wash: "transparent",
+        washMobile: "transparent",
+        stack: true,
       },
       overview: {
         background: "#f6f8ee",
